@@ -1,4 +1,4 @@
-namespace ProductionManagement
+namespace ProductionManagement.Web
 {
     public class WeatherForecast
     {
