@@ -4,3 +4,5 @@ ProductionManagement.Web/ClientApp/.angular/cache/*
 *.dll
 *.pdb
 *.cache
+ProductionManagement.Model/obj/*
+ProductionManagement.Model/bin/Debug/net6.0/ProductionManagement.Model.deps.json
