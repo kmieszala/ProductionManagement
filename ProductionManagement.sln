@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductionManagement.Model"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductionManagement.DbMigrator", "ProductionManagement.DbMigrator\ProductionManagement.DbMigrator.csproj", "{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductionManagement.Common", "ProductionManagement.Common\ProductionManagement.Common.csproj", "{570D494C-37E3-41AB-94B6-775301C142A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}.Release|Any CPU.Build.0 = Release|Any CPU
+		{570D494C-37E3-41AB-94B6-775301C142A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{570D494C-37E3-41AB-94B6-775301C142A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{570D494C-37E3-41AB-94B6-775301C142A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{570D494C-37E3-41AB-94B6-775301C142A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

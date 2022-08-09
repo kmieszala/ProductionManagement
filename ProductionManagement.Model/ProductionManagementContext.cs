@@ -1,6 +1,8 @@
 ﻿namespace ProductionManagement.Model
 {
     using Microsoft.EntityFrameworkCore;
+    using ProductionManagement.Common.Enums;
+    using ProductionManagement.Common.Extensions;
     using ProductionManagement.Model.Core;
     using ProductionManagement.Model.DbSets;
 
@@ -21,11 +23,17 @@
 
         public virtual DbSet<Role> Role { get; set; }
 
-        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         public virtual DbSet<UserRoles> UserRoles { get; set; }
 
         public virtual DbSet<Tank> Tank { get; set; }
+
+        public virtual DbSet<Log> Log { get; set; }
+
+        public virtual DbSet<LogCodeDict> LogCodeDict { get; set; }
+
+        public virtual DbSet<UserStatusDict> UserStatusDict { get; set; }
 
         public override int SaveChanges()
         {
@@ -44,9 +52,39 @@
             base.OnModelCreating(modelBuilder);
 
             modelBuilder
-                .Entity<User>()
+                .Entity<Users>()
                 .HasIndex(e => e.Email)
                 .IncludeProperties(e => new { e.Password });
+
+            SeedDictionary<LogCodeEnum, LogCodeDict>(modelBuilder);
+            SeedDictionary<UserStatusEnum, UserStatusDict>(modelBuilder);
+        }
+
+        private void SeedDictionary<TEnum, TEntity>(ModelBuilder modelBuilder)
+            where TEnum : System.Enum
+            where TEntity : class, new()
+        {
+            var type = typeof(TEntity);
+
+            foreach (var e in System.Enum.GetValues(typeof(TEnum)))
+            {
+                var entity = new TEntity();
+
+                type.GetProperty("Id")?.SetValue(entity, (TEnum)e, null);
+                type.GetProperty("Name")?.SetValue(entity, ((TEnum)e).GetDisplayName(), null);
+                type.GetProperty("Active")?.SetValue(entity, !IsObsolete((TEnum)e), null);
+
+                modelBuilder.Entity<TEntity>().HasData(entity);
+            }
+        }
+
+        private bool IsObsolete<TEnum>(TEnum value)
+            where TEnum : System.Enum
+        {
+            var enumType = value.GetType();
+            var enumName = enumType.GetEnumName(value);
+            var fieldInfo = enumType.GetField(enumName);
+            return Attribute.IsDefined(fieldInfo, typeof(ObsoleteAttribute));
         }
 
         private void FillTrackableData()

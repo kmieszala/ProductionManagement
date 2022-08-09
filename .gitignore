@@ -8,3 +8,5 @@ ProductionManagement.Model/obj/*
 ProductionManagement.Model/bin/*
 ProductionManagement.DbMigrator/obj/*
 ProductionManagement.DbMigrator/bin/*
+ProductionManagement.Common/obj/*
+ProductionManagement.Common/bin/*
