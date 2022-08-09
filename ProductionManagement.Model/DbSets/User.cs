@@ -21,6 +21,9 @@
         [Required]
         public string LastName { get; set; }
 
+        [MaxLength(50)]
+        public string Password { get; set; }
+
         [MaxLength(100)]
         public string Email { get; set; }
 

@@ -2,9 +2,15 @@
 {
     using Microsoft.EntityFrameworkCore;
     using ProductionManagement.Model.Core;
+    using ProductionManagement.Model.DbSets;
 
     public class ProductionManagementContext : DbContext
     {
+
+        public ProductionManagementContext(string connectionString) : base()
+        {
+            _connectionString = connectionString;
+        }
 
         public ProductionManagementContext(DbContextOptions<ProductionManagementContext> options)
             : base(options)
@@ -18,6 +24,14 @@
         }
 
         public int UserId { get; set; } = 0;
+
+        public virtual DbSet<Role> Role { get; set; }
+
+        public virtual DbSet<User> User { get; set; }
+
+        public virtual DbSet<UserRoles> UserRoles { get; set; }
+
+        public virtual DbSet<Tank> Tank { get; set; }
 
         public override int SaveChanges()
         {
@@ -34,6 +48,11 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<User>()
+                .HasIndex(e => e.Email)
+                .IncludeProperties(e => new { e.Password });
         }
 
         private void FillTrackableData()

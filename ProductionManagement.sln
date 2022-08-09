@@ -5,7 +5,9 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductionManagement.Web", "ProductionManagement.Web\ProductionManagement.Web.csproj", "{6B3DF0CD-F671-42DA-BDFD-AF7115A1BCD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductionManagement.Model", "ProductionManagement.Model\ProductionManagement.Model.csproj", "{A0A13C7C-07E1-45E6-911B-3E87728DB335}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductionManagement.Model", "ProductionManagement.Model\ProductionManagement.Model.csproj", "{A0A13C7C-07E1-45E6-911B-3E87728DB335}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductionManagement.DbMigrator", "ProductionManagement.DbMigrator\ProductionManagement.DbMigrator.csproj", "{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A0A13C7C-07E1-45E6-911B-3E87728DB335}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0A13C7C-07E1-45E6-911B-3E87728DB335}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0A13C7C-07E1-45E6-911B-3E87728DB335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3865E62-E0D8-4C1C-8C94-A904E2FE2832}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

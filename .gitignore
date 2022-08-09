@@ -6,3 +6,4 @@ ProductionManagement.Web/ClientApp/.angular/cache/*
 *.cache
 ProductionManagement.Model/obj/*
 ProductionManagement.Model/bin/Debug/net6.0/ProductionManagement.Model.deps.json
+ProductionManagement.DbMigrator/obj/*
