@@ -6,12 +6,6 @@
 
     public class ProductionManagementContext : DbContext
     {
-
-        public ProductionManagementContext(string connectionString) : base()
-        {
-            _connectionString = connectionString;
-        }
-
         public ProductionManagementContext(DbContextOptions<ProductionManagementContext> options)
             : base(options)
         {

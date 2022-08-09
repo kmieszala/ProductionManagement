@@ -1,9 +1,10 @@
 
 .vs/*
-ProductionManagement.Web/ClientApp/.angular/cache/*
 *.dll
 *.pdb
 *.cache
+ProductionManagement.Web/ClientApp/*
 ProductionManagement.Model/obj/*
-ProductionManagement.Model/bin/Debug/net6.0/ProductionManagement.Model.deps.json
+ProductionManagement.Model/bin/*
 ProductionManagement.DbMigrator/obj/*
+ProductionManagement.DbMigrator/bin/*
