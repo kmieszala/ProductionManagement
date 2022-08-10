@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,7 +9,8 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="Sql\Triggers\CreateOrUpdateUser.sql" />
+    <None Remove="Sql\Triggers\CreateUser.sql" />
+    <None Remove="Sql\Triggers\UpdateUser.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,9 +21,12 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sql\Triggers\CreateOrUpdateUser.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Sql\Triggers\UpdateUser.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sql\Triggers\CreateUser.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

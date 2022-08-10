@@ -18,6 +18,8 @@
         [MaxLength(200)]
         public string Description { get; set; }
 
+        public DateTime Date { get; set; }
+
         public virtual LogCodeDict LogCodeDict { get; set; }
     }
 }

@@ -58,6 +58,20 @@
 
             SeedDictionary<LogCodeEnum, LogCodeDict>(modelBuilder);
             SeedDictionary<UserStatusEnum, UserStatusDict>(modelBuilder);
+
+            PredefineUser(modelBuilder);
+        }
+
+        private void PredefineUser(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Users>().HasData(new
+            {
+                Id = 1,
+                FirstName = "Admin",
+                LastName = "Admin",
+                Status = 1,
+                Password = PasswordHashHelper.
+            });
         }
 
         private void SeedDictionary<TEnum, TEntity>(ModelBuilder modelBuilder)
