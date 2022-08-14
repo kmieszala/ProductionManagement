@@ -2,12 +2,12 @@
 {
     public enum UserStatusEnum
     {
-        New = 0,
+        New = 1,
 
-        Active = 1,
+        Active = 2,
 
-        TimeBlocked = 2,
+        TimeBlocked = 3,
 
-        Deleted = 3,
+        Deleted = 4,
     }
 }

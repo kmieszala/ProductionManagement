@@ -5,15 +5,19 @@
 
     public static class SHAxxxExtensions
     {
-        public static string ToSHA1String(this string @this)
+        public static string ComputeSha256Hash(this string @this)
         {
-            byte[] buffer = Encoding.Default.GetBytes(@this + new string(@this.Reverse().ToArray()));
-            using var sha1 = SHA1.Create();
+            using SHA256 sha256Hash = SHA256.Create();
 
-            sha1.Initialize();
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(@this));
 
-            var bytes = sha1.ComputeHash(buffer);
-            return buffer.ToString();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+
+            return builder.ToString();
         }
     }
 }

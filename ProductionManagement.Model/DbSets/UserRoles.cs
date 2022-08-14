@@ -1,6 +1,7 @@
 ﻿namespace ProductionManagement.Model.DbSets
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using ProductionManagement.Common.Enums;
 
     public class UserRoles
     {
@@ -10,7 +11,7 @@
         public int UserId { get; set; }
 
         [ForeignKey("Role")]
-        public int RoleId { get; set; }
+        public RolesEnum RoleId { get; set; }
 
         public virtual Users User { get; set; }
 

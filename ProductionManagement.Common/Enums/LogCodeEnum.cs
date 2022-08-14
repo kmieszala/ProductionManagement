@@ -5,21 +5,21 @@
     public enum LogCodeEnum
     {
         [Display(Name = "AddUser")]
-        AddUser = 0,
+        AddUser = 1,
 
         [Display(Name = "EditUser")]
-        EditUser = 1,
+        EditUser = 2,
 
         [Display(Name = "AddRoles")]
-        AddRoles = 2,
+        AddRoles = 3,
 
         [Display(Name = "EditRoles")]
-        EditRoles = 3,
+        EditRoles = 4,
 
         [Display(Name = "AddTank")]
-        AddTank = 4,
+        AddTank = 5,
 
         [Display(Name = "EditTank")]
-        EditTank = 5,
+        EditTank = 6,
     }
 }

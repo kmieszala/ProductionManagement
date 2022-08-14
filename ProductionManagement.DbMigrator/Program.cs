@@ -12,4 +12,3 @@ using (var db = dbFactory.CreateDbContext(null))
 Console.WriteLine("Migration - STOP");
 Console.WriteLine("Press any key");
 Console.ReadKey();
-

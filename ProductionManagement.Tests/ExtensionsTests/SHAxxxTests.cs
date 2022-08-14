@@ -5,13 +5,17 @@
 
     public class SHAxxxTests
     {
-        [Test]
-        public void CheckPasswordTest()
+        [TestCase("")]
+        [TestCase("test")]
+        [TestCase("!@#$%")]
+        [TestCase("123asd")]
+        [TestCase("123ASD!@#asd")]
+        public void CheckPasswordTest(string value)
         {
-            var password = "test123".ToSHA1String();
+            var password = value.ComputeSha256Hash();
 
-            Assert.AreEqual("test123".ToSHA1String(), password, "The passwords are the same.");
-            Assert.AreNotEqual("test124".ToSHA1String(), password, "Passwords do not match.");
+            Assert.AreEqual(value.ComputeSha256Hash(), password, "The passwords are the same.");
+            Assert.AreNotEqual($"{value}1".ComputeSha256Hash(), password, "Passwords do not match.");
         }
     }
 }

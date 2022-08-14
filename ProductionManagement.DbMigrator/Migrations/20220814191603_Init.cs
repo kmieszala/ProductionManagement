@@ -1,10 +1,9 @@
-﻿#nullable disable
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace ProductionManagement.DbMigrator.Migrations
 {
-    using System;
-    using Microsoft.EntityFrameworkCore.Migrations;
-
     public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,10 +25,9 @@ namespace ProductionManagement.DbMigrator.Migrations
                 name: "Role",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -50,29 +48,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_UserStatusDict_Status",
-                        column: x => x.Status,
-                        principalTable: "UserStatusDict",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Log",
                 columns: table => new
                 {
@@ -80,7 +55,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LogCode = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -91,10 +66,29 @@ namespace ProductionManagement.DbMigrator.Migrations
                         principalTable: "LogCodeDict",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    RegisteredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ActivationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Log_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_Users_UserStatusDict_Status",
+                        column: x => x.Status,
+                        principalTable: "UserStatusDict",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -155,11 +149,22 @@ namespace ProductionManagement.DbMigrator.Migrations
                 columns: new[] { "Id", "Active", "Name" },
                 values: new object[,]
                 {
-                    { 0, true, "AddUser" },
-                    { 1, true, "Edituser" },
-                    { 2, true, "EditRoles" },
-                    { 3, true, "AddTank" },
-                    { 4, true, "EditTank" }
+                    { 1, true, "AddUser" },
+                    { 2, true, "EditUser" },
+                    { 3, true, "AddRoles" },
+                    { 4, true, "EditRoles" },
+                    { 5, true, "AddTank" },
+                    { 6, true, "EditTank" },
+                });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "Id", "Active", "Name" },
+                values: new object[,]
+                {
+                    { 1, true, "Administrator" },
+                    { 2, true, "Editor" },
+                    { 3, true, "Reader" },
                 });
 
             migrationBuilder.InsertData(
@@ -167,21 +172,26 @@ namespace ProductionManagement.DbMigrator.Migrations
                 columns: new[] { "Id", "Active", "Name" },
                 values: new object[,]
                 {
-                    { 0, true, "New" },
-                    { 1, true, "Active" },
-                    { 2, true, "TimeBlocked" },
-                    { 3, true, "Deleted" }
+                    { 1, true, "New" },
+                    { 2, true, "Active" },
+                    { 3, true, "TimeBlocked" },
+                    { 4, true, "Deleted" },
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "ActivationDate", "Email", "FirstName", "LastName", "Password", "RegisteredDate", "Status" },
+                values: new object[] { 1, new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5157), "", "Admin", "Admin", "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5256), 2 });
+
+            migrationBuilder.InsertData(
+                table: "UserRoles",
+                columns: new[] { "Id", "RoleId", "UserId" },
+                values: new object[] { 1, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Log_LogCode",
                 table: "Log",
                 column: "LogCode");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Log_UserId",
-                table: "Log",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tank_ModificationUserId",

@@ -12,7 +12,7 @@ using ProductionManagement.Model;
 namespace ProductionManagement.DbMigrator.Migrations
 {
     [DbContext(typeof(ProductionManagementContext))]
-    [Migration("20220809200214_Init")]
+    [Migration("20220814191603_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -40,15 +43,9 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Property<int>("LogCode")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("LogCode");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Log");
                 });
@@ -73,31 +70,37 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
+                            Id = 1,
                             Active = true,
                             Name = "AddUser"
                         },
                         new
                         {
-                            Id = 1,
-                            Active = true,
-                            Name = "Edituser"
-                        },
-                        new
-                        {
                             Id = 2,
                             Active = true,
-                            Name = "EditRoles"
+                            Name = "EditUser"
                         },
                         new
                         {
                             Id = 3,
                             Active = true,
-                            Name = "AddTank"
+                            Name = "AddRoles"
                         },
                         new
                         {
                             Id = 4,
+                            Active = true,
+                            Name = "EditRoles"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Active = true,
+                            Name = "AddTank"
+                        },
+                        new
+                        {
+                            Id = 6,
                             Active = true,
                             Name = "EditTank"
                         });
@@ -106,15 +109,10 @@ namespace ProductionManagement.DbMigrator.Migrations
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Role", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -124,6 +122,26 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            Name = "Administrator"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            Name = "Editor"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            Name = "Reader"
+                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Tank", b =>
@@ -187,6 +205,14 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RoleId = 1,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Users", b =>
@@ -196,6 +222,9 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("ActivationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -214,8 +243,11 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("RegisteredDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -229,6 +261,19 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActivationDate = new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5157),
+                            Email = "",
+                            FirstName = "Admin",
+                            LastName = "Admin",
+                            Password = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+                            RegisteredDate = new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5256),
+                            Status = 2
+                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.UserStatusDict", b =>
@@ -251,25 +296,25 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 0,
+                            Id = 1,
                             Active = true,
                             Name = "New"
                         },
                         new
                         {
-                            Id = 1,
+                            Id = 2,
                             Active = true,
                             Name = "Active"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 3,
                             Active = true,
                             Name = "TimeBlocked"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 4,
                             Active = true,
                             Name = "Deleted"
                         });
@@ -283,15 +328,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProductionManagement.Model.DbSets.Users", "User")
-                        .WithMany("Log")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("LogCodeDict");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Tank", b =>
@@ -347,8 +384,6 @@ namespace ProductionManagement.DbMigrator.Migrations
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Users", b =>
                 {
-                    b.Navigation("Log");
-
                     b.Navigation("Tank");
 
                     b.Navigation("UserRoles");

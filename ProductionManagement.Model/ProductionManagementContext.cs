@@ -58,6 +58,7 @@
 
             SeedDictionary<LogCodeEnum, LogCodeDict>(modelBuilder);
             SeedDictionary<UserStatusEnum, UserStatusDict>(modelBuilder);
+            SeedDictionary<RolesEnum, Role>(modelBuilder);
 
             PredefineUser(modelBuilder);
         }
@@ -69,8 +70,18 @@
                 Id = 1,
                 FirstName = "Admin",
                 LastName = "Admin",
-                Status = 1,
-                Password = PasswordHashHelper.
+                Status = UserStatusEnum.Active,
+                Email = string.Empty,
+                Password = "admin123".ComputeSha256Hash(),
+                ActivationDate = DateTime.Now,
+                RegisteredDate = DateTime.Now,
+            });
+
+            modelBuilder.Entity<UserRoles>().HasData(new
+            {
+                Id = 1,
+                UserId = 1,
+                RoleId = RolesEnum.Administrator,
             });
         }
 

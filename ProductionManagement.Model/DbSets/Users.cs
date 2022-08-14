@@ -26,11 +26,15 @@
         [ForeignKey("UserStatusDict")]
         public UserStatusEnum Status { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(64)]
         public string Password { get; set; }
 
         [MaxLength(100)]
         public string Email { get; set; }
+
+        public DateTime RegisteredDate { get; set; }
+
+        public DateTime ActivationDate { get; set; }
 
         public virtual ICollection<UserRoles> UserRoles { get; set; }
 

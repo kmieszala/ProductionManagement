@@ -1,6 +1,7 @@
 ﻿namespace ProductionManagement.Model.DbSets
 {
     using System.ComponentModel.DataAnnotations;
+    using ProductionManagement.Common.Enums;
 
     public class Role
     {
@@ -10,15 +11,13 @@
         }
 
         [Key]
-        public int Id { get; set; }
+        public RolesEnum Id { get; set; }
 
         [MaxLength(100)]
         [Required]
         public string Name { get; set; }
 
-        [MaxLength(300)]
-        [Required]
-        public string Description { get; set; }
+        public bool Active { get; set; }
 
         public virtual ICollection<UserRoles> UserRoles { get; set; }
     }
