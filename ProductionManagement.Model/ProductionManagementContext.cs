@@ -35,6 +35,8 @@
 
         public virtual DbSet<UserStatusDict> UserStatusDict { get; set; }
 
+        public virtual DbSet<Parts> Parts { get; set; }
+
         public override int SaveChanges()
         {
             FillTrackableData();

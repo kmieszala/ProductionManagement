@@ -1,0 +1,5 @@
+<div *ngIf="targetControl.invalid && (targetControl.touched || targetControl.dirty)" class="text-danger">
+  <div *ngIf="targetControl.errors?.required">
+    To pole jest wymagane
+  </div>
+</div>

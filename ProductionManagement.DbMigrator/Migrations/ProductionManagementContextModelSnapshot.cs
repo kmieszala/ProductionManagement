@@ -104,6 +104,29 @@ namespace ProductionManagement.DbMigrator.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Parts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Parts");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -264,12 +287,12 @@ namespace ProductionManagement.DbMigrator.Migrations
                         new
                         {
                             Id = 1,
-                            ActivationDate = new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5157),
+                            ActivationDate = new DateTime(2022, 9, 7, 21, 28, 18, 924, DateTimeKind.Local).AddTicks(489),
                             Email = "",
                             FirstName = "Admin",
                             LastName = "Admin",
                             Password = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-                            RegisteredDate = new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5256),
+                            RegisteredDate = new DateTime(2022, 9, 7, 21, 28, 18, 924, DateTimeKind.Local).AddTicks(527),
                             Status = 2
                         });
                 });

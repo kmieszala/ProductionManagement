@@ -1,0 +1,43 @@
+<div class="modal-header pb-0">
+  <h4 class="modal-title pull-left">
+    Dodaj część
+  </h4>
+</div>
+<form class="modal-body" [formGroup]="form" *ngIf="!loading" (ngSubmit)="addPart()">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Nazwa
+        </div>
+        <div class="widget-body">
+          <div class="input-group has-validation">
+            <input type="text" id="formMyDocument" class="form-control" formControlName="formPartName" />
+          </div>
+          <form-error [targetControl]="formPartName"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Opis
+        </div>
+        <div class="widget-body">
+          <div class="input-group has-validation">
+            <input type="text" id="formMyDocument" class="form-control" formControlName="formPartDesc" />
+          </div>
+          <form-error [targetControl]="formPartDesc"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <button class="btn btn-light btn-sm me-2" type="button" (click)="bsModalRef.hide()"><i class="fas fa-save"></i> Anuluj</button>
+      <button [disabled]="addDisable" class="btn btn-primary btn-sm" type="submit" ><i class="fas fa-save"></i> Zapisz</button>
+    </div>
+  </div>
+</form>
