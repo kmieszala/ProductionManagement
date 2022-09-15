@@ -9,7 +9,7 @@
         public Users()
         {
             UserRoles = new HashSet<UserRoles>();
-            Tank = new HashSet<Tank>();
+            Tank = new HashSet<Tanks>();
         }
 
         [Key]
@@ -38,7 +38,7 @@
 
         public virtual ICollection<UserRoles> UserRoles { get; set; }
 
-        public virtual ICollection<Tank> Tank { get; set; }
+        public virtual ICollection<Tanks> Tank { get; set; }
 
         public virtual UserStatusDict UserStatusDict { get; set; }
     }

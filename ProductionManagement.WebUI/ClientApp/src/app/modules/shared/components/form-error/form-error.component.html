@@ -2,4 +2,10 @@
   <div *ngIf="targetControl.errors?.required">
     To pole jest wymagane
   </div>
+  <div *ngIf="targetControl.errors?.max && !targetControl.errors.required">
+    Nieprawidłowa wartość
+  </div>
+  <div *ngIf="targetControl.errors?.min && !targetControl.errors.required">
+    Nieprawidłowa wartość
+  </div>
 </div>

@@ -27,7 +27,7 @@
 
         public virtual DbSet<UserRoles> UserRoles { get; set; }
 
-        public virtual DbSet<Tank> Tank { get; set; }
+        public virtual DbSet<Tanks> Tanks { get; set; }
 
         public virtual DbSet<Log> Log { get; set; }
 
@@ -36,6 +36,8 @@
         public virtual DbSet<UserStatusDict> UserStatusDict { get; set; }
 
         public virtual DbSet<Parts> Parts { get; set; }
+
+        public virtual DbSet<TankParts> TankParts { get; set; }
 
         public override int SaveChanges()
         {

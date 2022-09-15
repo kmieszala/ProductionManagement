@@ -5,12 +5,18 @@ import { PartsFormComponent } from './components/parts-form/parts-form.component
 import { RouterModule } from '@angular/router';
 import { PartsMainComponent } from './components/parts-main/parts-main.component';
 import { SharedModule } from '../shared/shared.module';
+import { TanksListComponent } from './components/tanks-list/tanks-list.component';
+import { TanksFormComponent } from './components/tanks-form/tanks-form.component';
+import { TanksMainComponent } from './components/tanks-main/tanks-main.component';
 
 @NgModule({
   declarations: [
     PartsListComponent,
     PartsFormComponent,
-    PartsMainComponent
+    PartsMainComponent,
+    TanksListComponent,
+    TanksFormComponent,
+    TanksMainComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +27,13 @@ import { SharedModule } from '../shared/shared.module';
         children: [
           { path: '', component: PartsListComponent, pathMatch: 'full', data: { breadcrumb: 'list' } },
           { path: 'list', component: PartsListComponent, data: { breadcrumb: 'list' } },
-          { path: 'add', component: PartsFormComponent, data: { breadcrumb: 'add' } },
+        ]
+      },
+      {
+        path: 'tanks', component: TanksMainComponent, data: { breadcrumb: 'tanks' },
+        children: [
+          { path: '', component: TanksListComponent, pathMatch: 'full', data: { breadcrumb: 'list' } },
+          { path: 'list', component: TanksListComponent, data: { breadcrumb: 'list' } },
         ]
       },
     ])

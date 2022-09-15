@@ -1,0 +1,55 @@
+<div class="row container-default">
+  <div class="col-md-9 col-lg-10">
+    <div class="card card-simple animate__animated animate__fadeIn shadow-default">
+      <div class="card-header">
+        <span>Zbiorniki</span>
+        <div class="float-end">
+          <button type="button" class="btn btn-primary btn-sm" (click)="addNewTank()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-default table-hover table-sm">
+          <thead>
+            <tr>
+              <th class="th-priority">Nazwa części</th>
+              <th >Liczba dni</th>
+              <th ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of tanks">
+              <tr (click)="showDetails(item)">
+                <td>{{ item.name }}</td>
+                <td>{{ item.productionDays }}</td>
+                <td>
+                  <div class="float-end">
+                    <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editTank(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="item.showDetails">
+                <td colspan="3" >
+                  <div class="row ms-3">
+                    <div class="col-1 fw-bold">Ilość</div>
+                    <div class="col-11 fw-bold">Nazwa części</div>
+                  </div>
+                  <div *ngFor="let part of item.parts">
+                    <div class="row ms-3">
+                      <div class="col-1">{{ part.partsNumber }}</div>
+                      <div class="col-11">{{ part.partsName }}</div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <!-- <div class="row mt-3">
+          <div class="col-md-12">
+            paginacja
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>

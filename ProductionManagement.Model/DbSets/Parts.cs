@@ -4,6 +4,11 @@ namespace ProductionManagement.Model.DbSets
 {
     public class Parts
     {
+        public Parts()
+        {
+            TankParts = new HashSet<TankParts>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -14,5 +19,7 @@ namespace ProductionManagement.Model.DbSets
         [MaxLength(500)]
         [Required]
         public string Description { get; set; }
+
+        public virtual ICollection<TankParts> TankParts { get; set; }
     }
 }

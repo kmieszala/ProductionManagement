@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormErrorComponent } from './components/form-error/form-error.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
@@ -10,12 +11,14 @@ import { FormErrorComponent } from './components/form-error/form-error.component
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    NgSelectModule
   ],
   exports: [
     ModalModule,
     ReactiveFormsModule,
-    FormErrorComponent
+    FormErrorComponent,
+    NgSelectModule
   ]
 })
 export class SharedModule { }

@@ -27,11 +27,24 @@ namespace ProductionManagement.WebUI.Areas.Parts
             return Ok("Elo");
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetParts()
+        {
+            var result = await _partsService.GetPartsAsync();
+            return Ok(result);
+        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> AddPart(PartRequestVM model)
         {
             var result = await _partsService.AddPartAsync(_mapper.Map<PartModel>(model));
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> EditPart(PartRequestVM model)
+        {
+            var result = await _partsService.EditPartAsync(_mapper.Map<PartModel>(model));
             return Ok(result);
         }
     }

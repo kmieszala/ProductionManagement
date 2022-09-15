@@ -13,13 +13,19 @@
             <tr>
               <th class="th-priority">Nazwa części</th>
               <th >Opis</th>
+              <th ></th>
             </tr>
           </thead>
           <tbody>
-            <ng-container>
+            <ng-container *ngFor="let item of parts">
               <tr>
-                <td>test</td>
-                <td>test</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>
+                  <div class="float-end">
+                    <button type="button" class="btn btn-light btn-sm" (click)="editPart(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                  </div>
+                </td>
               </tr>
             </ng-container>
           </tbody>

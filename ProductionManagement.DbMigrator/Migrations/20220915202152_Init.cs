@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -14,11 +15,25 @@ namespace ProductionManagement.DbMigrator.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LogCodeDict", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Parts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Parts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -27,7 +42,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,7 +55,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,7 +70,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LogCode = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,7 +95,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                     Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     RegisteredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ActivationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ActivationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,7 +109,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tank",
+                name: "Tanks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -104,18 +119,16 @@ namespace ProductionManagement.DbMigrator.Migrations
                     ProductionDays = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModificationUserId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tank", x => x.Id);
+                    table.PrimaryKey("PK_Tanks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tank_Users_ModificationUserId",
-                        column: x => x.ModificationUserId,
+                        name: "FK_Tanks_Users_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -125,7 +138,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,6 +157,33 @@ namespace ProductionManagement.DbMigrator.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TankParts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PartsNumber = table.Column<int>(type: "int", nullable: false),
+                    TankId = table.Column<int>(type: "int", nullable: false),
+                    PartsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TankParts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TankParts_Parts_PartsId",
+                        column: x => x.PartsId,
+                        principalTable: "Parts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TankParts_Tanks_TankId",
+                        column: x => x.TankId,
+                        principalTable: "Tanks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "LogCodeDict",
                 columns: new[] { "Id", "Active", "Name" },
@@ -154,7 +194,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                     { 3, true, "AddRoles" },
                     { 4, true, "EditRoles" },
                     { 5, true, "AddTank" },
-                    { 6, true, "EditTank" },
+                    { 6, true, "EditTank" }
                 });
 
             migrationBuilder.InsertData(
@@ -164,7 +204,7 @@ namespace ProductionManagement.DbMigrator.Migrations
                 {
                     { 1, true, "Administrator" },
                     { 2, true, "Editor" },
-                    { 3, true, "Reader" },
+                    { 3, true, "Reader" }
                 });
 
             migrationBuilder.InsertData(
@@ -175,13 +215,13 @@ namespace ProductionManagement.DbMigrator.Migrations
                     { 1, true, "New" },
                     { 2, true, "Active" },
                     { 3, true, "TimeBlocked" },
-                    { 4, true, "Deleted" },
+                    { 4, true, "Deleted" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "ActivationDate", "Email", "FirstName", "LastName", "Password", "RegisteredDate", "Status" },
-                values: new object[] { 1, new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5157), "", "Admin", "Admin", "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", new DateTime(2022, 8, 14, 21, 16, 3, 62, DateTimeKind.Local).AddTicks(5256), 2 });
+                values: new object[] { 1, new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7149), "", "Admin", "Admin", "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7208), 2 });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",
@@ -194,9 +234,19 @@ namespace ProductionManagement.DbMigrator.Migrations
                 column: "LogCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tank_ModificationUserId",
-                table: "Tank",
-                column: "ModificationUserId");
+                name: "IX_TankParts_PartsId",
+                table: "TankParts",
+                column: "PartsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TankParts_TankId",
+                table: "TankParts",
+                column: "TankId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tanks_UsersId",
+                table: "Tanks",
+                column: "UsersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
@@ -226,13 +276,19 @@ namespace ProductionManagement.DbMigrator.Migrations
                 name: "Log");
 
             migrationBuilder.DropTable(
-                name: "Tank");
+                name: "TankParts");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "LogCodeDict");
+
+            migrationBuilder.DropTable(
+                name: "Parts");
+
+            migrationBuilder.DropTable(
+                name: "Tanks");
 
             migrationBuilder.DropTable(
                 name: "Role");

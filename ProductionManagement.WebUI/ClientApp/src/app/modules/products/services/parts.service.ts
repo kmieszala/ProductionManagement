@@ -12,7 +12,15 @@ export class PartsService {
     private _http: HttpClientService) {
   }
 
-  addPart(filters: PartModel): Observable<number> {
-    return this._http.post<number>('api/parts/addPart', filters);
+  addPart(model: PartModel): Observable<number> {
+    return this._http.post<number>('api/parts/addPart', model);
+  }
+
+  getParts(): Observable<PartModel[]> {
+    return this._http.get<PartModel[]>('api/parts/getParts');
+  }
+
+  editPart(model: PartModel) : Observable<boolean> {
+    return this._http.post<boolean>('api/parts/editPart', model);
   }
 }

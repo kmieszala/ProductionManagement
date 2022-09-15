@@ -4,8 +4,13 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using ProductionManagement.Model.Core;
 
-    public class Tank : ITrackable
+    public class Tanks //: ITrackable
     {
+        public Tanks()
+        {
+            TankParts = new HashSet<TankParts>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -29,11 +34,13 @@
 
         public DateTime CreationDate { get; set; }
 
-        public DateTime ModificationDate { get; set; }
+        //public DateTime ModificationDate { get; set; }
 
-        [ForeignKey("User")]
-        public int ModificationUserId { get; set; }
+        //[ForeignKey("User")]
+        //public int ModificationUserId { get; set; }
 
-        public virtual Users User { get; set; }
+       // public virtual Users User { get; set; }
+
+        public virtual ICollection<TankParts> TankParts { get; set; }
     }
 }

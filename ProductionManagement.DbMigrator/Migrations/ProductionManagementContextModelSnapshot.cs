@@ -165,7 +165,33 @@ namespace ProductionManagement.DbMigrator.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ProductionManagement.Model.DbSets.Tank", b =>
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.TankParts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("PartsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PartsNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TankId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PartsId");
+
+                    b.HasIndex("TankId");
+
+                    b.ToTable("TankParts");
+                });
+
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Tanks", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -184,12 +210,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<DateTime>("ModificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModificationUserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -198,11 +218,14 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Property<decimal>("ProductionDays")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ModificationUserId");
+                    b.HasIndex("UsersId");
 
-                    b.ToTable("Tank");
+                    b.ToTable("Tanks");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.UserRoles", b =>
@@ -287,12 +310,12 @@ namespace ProductionManagement.DbMigrator.Migrations
                         new
                         {
                             Id = 1,
-                            ActivationDate = new DateTime(2022, 9, 7, 21, 28, 18, 924, DateTimeKind.Local).AddTicks(489),
+                            ActivationDate = new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7149),
                             Email = "",
                             FirstName = "Admin",
                             LastName = "Admin",
                             Password = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-                            RegisteredDate = new DateTime(2022, 9, 7, 21, 28, 18, 924, DateTimeKind.Local).AddTicks(527),
+                            RegisteredDate = new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7208),
                             Status = 2
                         });
                 });
@@ -352,15 +375,30 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Navigation("LogCodeDict");
                 });
 
-            modelBuilder.Entity("ProductionManagement.Model.DbSets.Tank", b =>
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.TankParts", b =>
                 {
-                    b.HasOne("ProductionManagement.Model.DbSets.Users", "User")
-                        .WithMany("Tank")
-                        .HasForeignKey("ModificationUserId")
+                    b.HasOne("ProductionManagement.Model.DbSets.Parts", "Parts")
+                        .WithMany("TankParts")
+                        .HasForeignKey("PartsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("ProductionManagement.Model.DbSets.Tanks", "Tank")
+                        .WithMany("TankParts")
+                        .HasForeignKey("TankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parts");
+
+                    b.Navigation("Tank");
+                });
+
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Tanks", b =>
+                {
+                    b.HasOne("ProductionManagement.Model.DbSets.Users", null)
+                        .WithMany("Tank")
+                        .HasForeignKey("UsersId");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.UserRoles", b =>
@@ -398,9 +436,19 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Navigation("Log");
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Parts", b =>
+                {
+                    b.Navigation("TankParts");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Role", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Tanks", b =>
+                {
+                    b.Navigation("TankParts");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Users", b =>
