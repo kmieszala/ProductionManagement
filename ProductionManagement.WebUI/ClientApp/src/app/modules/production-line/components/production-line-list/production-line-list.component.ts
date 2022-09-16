@@ -33,7 +33,6 @@ export class ProductionLineListComponent implements OnInit {
       .subscribe(result => {
         this.tanks = result.tanks;
         this.productionLines = result.lines;
-        //this.loading = false;
       });
   }
 
@@ -49,12 +48,25 @@ export class ProductionLineListComponent implements OnInit {
     };
 
     this.bsModalRef = this._modalService.show(ProductionLineFormComponent, initialState);
-    this.subscriptions.push(this.bsModalRef.content.newTank.subscribe((res: TankModel) => {
-      this.tanks.push(res); // add new tank to tanks list
+    this.subscriptions.push(this.bsModalRef.content.newTank.subscribe((res: ProductionLine) => {
+      this.productionLines.push(res); // add new tank to tanks list
     }));
   }
 
   editLine(model: ProductionLine) {
+    const initialState: ModalOptions = {
+      initialState: {
+        tanks: this.tanks,
+        editLine: model
+      }
+    };
 
+    this.bsModalRef = this._modalService.show(ProductionLineFormComponent, initialState);
+    this.subscriptions.push(this.bsModalRef.content.newTank.subscribe((res: ProductionLine) => {
+      let tmp = this.productionLines.filter(x => x.id == res.id)[0];
+      tmp.name = res.name;
+      tmp.active = res.active;
+      tmp.tanks = res.tanks;
+    }));
   }
 }
