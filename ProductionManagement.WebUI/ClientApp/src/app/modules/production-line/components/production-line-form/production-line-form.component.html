@@ -1,0 +1,76 @@
+<div class="modal-header pb-0">
+  <h4 *ngIf="!editLine" class="modal-title pull-left">
+    Dodaj linię produkcyjną
+  </h4>
+  <h4 *ngIf="editLine" class="modal-title pull-left">
+    Edytuj linię produkcyjną
+  </h4>
+</div>
+<form class="modal-body" [formGroup]="form" *ngIf="!loading" (ngSubmit)="saveLine()">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Nazwa
+        </div>
+        <div class="widget-body">
+          <div class="input-group has-validation">
+            <input type="text" id="formLineName" class="form-control" formControlName="formLineName" />
+          </div>
+          <form-error [targetControl]="formLineName"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Linia aktywna
+        </div>
+        <div class="widget-body">
+          <div class="input-group form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="formActiveLine" formControlName="formActiveLine">
+          </div>
+          <form-error [targetControl]="formActiveLine"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-6">
+      <div class="widget widget-simple">
+        <div class="widget-body">
+          <ng-select id="formTank" formControlName="formTank" notFoundText="Najpierw dodaj części" [multiple]="false">
+            <ng-option *ngFor="let item of tanks" [value]="item">{{item.name}}</ng-option>
+          </ng-select>
+          <form-error [targetControl]="formTank"></form-error>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="widget widget-simple">
+        <div class="widget-body">
+          <div class="input-group w-100">
+            <button type="button" class="btn btn-primary btn-sm w-100" (click)="addTank()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2" *ngFor="let item of listTanks">
+    <div class="col-md-9">{{ item.tankName }}</div>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-danger btn-sm w-100" (click)="deleteTank(item)"><i class="fa fa-trash" aria-hidden="true"></i> Usuń</button>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <button class="btn btn-light btn-sm me-2" type="button" (click)="bsModalRef.hide()"><i class="fas fa-undo"></i> Anuluj</button>
+      <button [disabled]="addDisable" class="btn btn-primary btn-sm" type="submit" ><i class="fas fa-save"></i> Zapisz</button>
+    </div>
+  </div>
+</form>

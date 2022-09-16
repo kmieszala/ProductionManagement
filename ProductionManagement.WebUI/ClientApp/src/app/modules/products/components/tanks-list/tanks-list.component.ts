@@ -20,23 +20,22 @@ export class TanksListComponent implements OnInit {
   parts: PartModel[];
   loading = true;
   constructor(
-    private modalService: BsModalService,
+    private _modalService: BsModalService,
     private _tanksService: TanksService,
     private _partsService: PartsService
   ) {}
 
   ngOnInit(): void {
-
-forkJoin(
-  {
-    tanks: this._tanksService.getTanks(),
-    parts: this._partsService.getParts()
-  })
-  .subscribe(result => {
-    this.tanks = result.tanks;
-    this.parts = result.parts;
-    this.loading = false;
-  });
+    forkJoin(
+    {
+      tanks: this._tanksService.getTanks(),
+      parts: this._partsService.getParts()
+    })
+    .subscribe(result => {
+      this.tanks = result.tanks;
+      this.parts = result.parts;
+      this.loading = false;
+    });
   }
 
   ngOnDestroy(): void {
@@ -56,7 +55,7 @@ forkJoin(
       }
     };
 
-    this.bsModalRef = this.modalService.show(TanksFormComponent, initialState);
+    this.bsModalRef = this._modalService.show(TanksFormComponent, initialState);
     this.subscriptions.push(this.bsModalRef.content.newTank.subscribe((res: TankModel) => {
       let tmp = this.tanks.filter(x => x.id == res.id)[0];
       tmp.name = res.name;
@@ -72,7 +71,7 @@ forkJoin(
       }
     };
 
-    this.bsModalRef = this.modalService.show(TanksFormComponent, initialState);
+    this.bsModalRef = this._modalService.show(TanksFormComponent, initialState);
     this.subscriptions.push(this.bsModalRef.content.newTank.subscribe((res: TankModel) => {
       this.tanks.push(res); // add new tank to tanks list
     }));

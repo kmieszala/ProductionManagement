@@ -4,10 +4,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormErrorComponent } from './components/form-error/form-error.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { StatusDirective } from './common/directives/status-active.directive';
 
 
 @NgModule({
-  declarations: [FormErrorComponent],
+  declarations: [FormErrorComponent, StatusDirective],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -18,7 +19,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ModalModule,
     ReactiveFormsModule,
     FormErrorComponent,
-    NgSelectModule
+    NgSelectModule,
+
+    StatusDirective
   ]
 })
 export class SharedModule { }

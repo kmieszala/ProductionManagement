@@ -2,22 +2,63 @@
   <div class="col-md-9 col-lg-10">
     <div class="card card-simple animate__animated animate__fadeIn shadow-default">
       <div class="card-header">
-        <span>Zamówienia</span>
+        <span>Zlecenia</span>
       </div>
       <div class="card-body">
         <table class="table table-default table-hover table-sm">
           <thead>
             <tr>
               <th class="th-priority">Nazwa zlecenia</th>
-              <th >Zbiornik</th>
-              <th >Opis</th>
-              <th >Preferowane gniazdo</th>
-              <th >Liczba dni</th>
+              <th>Zbiornik</th>
+              <th>Opis</th>
+              <th>Preferowane gniazdo</th>
+              <th>Liczba dni</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
+            <tr [formGroup]="form">
+              <td>
+                <div class="widget widget-simple">
+                  <div class="widget-body">
+                    <div class="input-group has-validation">
+                      <input type="text" id="formOrderName" class="form-control" formControlName="formOrderName" />
+                    </div>
+                    <form-error [targetControl]="formOrderName"></form-error>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="widget widget-simple">
+                  <div class="widget-body">
+                    <ng-select id="formTank" formControlName="formTank" notFoundText="Najpierw dodaj części" [multiple]="false">
+                      <ng-option *ngFor="let item of tanks" [value]="item">{{item.name}}</ng-option>
+                    </ng-select>
+                    <form-error [targetControl]="formTank"></form-error>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="widget widget-simple">
+                  <div class="widget-body">
+                    <div class="input-group has-validation">
+                      <input type="text" id="formDescription" class="form-control" formControlName="formDescription" />
+                    </div>
+                    <form-error [targetControl]="formDescription"></form-error>
+                  </div>
+                </div>
+              </td>
+              <td></td>
+              <td></td>
+              <td>
+                <div class="float-end">
+                  <button type="button" class="btn btn-primary btn-sm" (click)="addNewOrder()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+                </div>
+              </td>
+            </tr>
             <ng-container>
               <tr>
+                <td>test</td>
                 <td>test</td>
                 <td>test</td>
                 <td>test</td>

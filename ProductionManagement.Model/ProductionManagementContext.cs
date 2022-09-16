@@ -39,6 +39,10 @@
 
         public virtual DbSet<TankParts> TankParts { get; set; }
 
+        public virtual DbSet<LineTank> LineTank { get; set; }
+
+        public virtual DbSet<ProductionLine> ProductionLine { get; set; }
+
         public override int SaveChanges()
         {
             FillTrackableData();

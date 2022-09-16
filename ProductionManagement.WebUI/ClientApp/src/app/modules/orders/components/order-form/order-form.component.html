@@ -1,0 +1,61 @@
+<div class="modal-header pb-0">
+  <h4 *ngIf="!editedOrder" class="modal-title pull-left">
+    Dodaj zlecenie
+  </h4>
+  <h4 *ngIf="editedOrder" class="modal-title pull-left">
+    Edytuj zlecenie
+  </h4>
+</div>
+<form class="modal-body" [formGroup]="form" *ngIf="!loading" (ngSubmit)="saveOrder()">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Nazwa zlecenia
+        </div>
+        <div class="widget-body">
+          <div class="input-group has-validation">
+            <input type="text" id="formOrderName" class="form-control" formControlName="formOrderName" />
+          </div>
+          <form-error [targetControl]="formOrderName"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Zbiornik
+        </div>
+        <div class="widget-body">
+          <ng-select id="formTank" formControlName="formTank" notFoundText="Najpierw dodaj części" [multiple]="false">
+            <ng-option *ngFor="let item of tanks" [value]="item">{{item.name}}</ng-option>
+          </ng-select>
+          <form-error [targetControl]="formTank"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Dodatkowy opis
+        </div>
+        <div class="widget-body">
+          <div class="input-group has-validation">
+            <input type="text" id="formDescription" class="form-control" formControlName="formDescription" />
+          </div>
+          <form-error [targetControl]="formDescription"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <button class="btn btn-light btn-sm me-2" type="button" (click)="bsModalRef.hide()"><i class="fas fa-undo"></i> Anuluj</button>
+      <button [disabled]="addDisable" class="btn btn-primary btn-sm" type="submit" ><i class="fas fa-save"></i> Zapisz</button>
+    </div>
+  </div>
+</form>

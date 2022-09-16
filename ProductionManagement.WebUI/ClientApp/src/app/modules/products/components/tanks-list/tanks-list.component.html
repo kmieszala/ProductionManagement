@@ -18,7 +18,7 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let item of tanks">
-              <tr (click)="showDetails(item)">
+              <tr (click)="showDetails(item)" class="pointer">
                 <td>{{ item.name }}</td>
                 <td>{{ item.productionDays }}</td>
                 <td>

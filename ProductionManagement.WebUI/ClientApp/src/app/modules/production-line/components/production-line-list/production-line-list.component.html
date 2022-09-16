@@ -1,0 +1,58 @@
+<div class="row container-default">
+  <div class="col-md-9 col-lg-10">
+    <div class="card card-simple animate__animated animate__fadeIn shadow-default">
+      <div class="card-header">
+        <span>Linie produkcyjne</span>
+        <div class="float-end">
+          <button type="button" class="btn btn-primary btn-sm" (click)="addNewLine()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-default table-hover table-sm">
+          <thead>
+            <tr>
+              <th class="th-priority">Nazwa linii</th>
+              <th>Aktywna</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of productionLines">
+              <tr (click)="showDetails(item)" class="pointer">
+                <td>{{ item.name }}</td>
+                <td><div statusActive="{{item.active}}"></div></td>
+                <td>
+                  <div class="float-end">
+                    <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editLine(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="item.showDetails">
+                <td colspan="3" *ngIf="item.tanks && item.tanks.length > 0">
+                  <div class="row ms-3">
+                    <div class="col-12 fw-bold">Specjalizacja</div>
+                  </div>
+                  <div *ngFor="let part of item.tanks">
+                    <div class="row ms-3">
+                      <div class="col-12">{{ part.tankName }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td colspan="3" *ngIf="!item.tanks || item.tanks.length == 0">
+                  <div class="row ms-3">
+                    <div class="col-12 fw-bold">Brak specjalizacji</div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <!-- <div class="row mt-3">
+          <div class="col-md-12">
+            paginacja
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>

@@ -36,7 +36,8 @@ import { TanksMainComponent } from './components/tanks-main/tanks-main.component
           { path: 'list', component: TanksListComponent, data: { breadcrumb: 'list' } },
         ]
       },
-    ])
-  ]
+    ]),
+  ],
+  entryComponents: [TanksFormComponent, PartsFormComponent],
 })
 export class ProductsModule { }

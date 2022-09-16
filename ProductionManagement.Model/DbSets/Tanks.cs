@@ -9,6 +9,7 @@
         public Tanks()
         {
             TankParts = new HashSet<TankParts>();
+            LineTank = new HashSet<LineTank>();
         }
 
         [Key]
@@ -39,8 +40,10 @@
         //[ForeignKey("User")]
         //public int ModificationUserId { get; set; }
 
-       // public virtual Users User { get; set; }
+        // public virtual Users User { get; set; }
 
         public virtual ICollection<TankParts> TankParts { get; set; }
+
+        public virtual ICollection<LineTank> LineTank { get; set; }
     }
 }

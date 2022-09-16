@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using ProductionManagement.Model;
 using ProductionManagement.Services.Configuration;
 using ProductionManagement.Services.Services.Parts;
+using ProductionManagement.Services.Services.ProductionLine;
 using ProductionManagement.Services.Services.Tanks;
 using ProductionManagement.WebUI.Configuration;
 using Serilog;
@@ -42,6 +43,7 @@ namespace ProductionManagement.WebUI
 
             services.AddTransient<IPartsService, PartsService>();
             services.AddTransient<ITanksService, TanksService>();
+            services.AddTransient<IProductionLineService, ProductionLineService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

@@ -10,6 +10,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { OrdersListComponent } from './modules/orders/components/orders-list/orders-list.component';
 import { ProductsModule } from './modules/products/products.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { ProductionLineModule } from './modules/production-line/production-line.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { SharedModule } from './modules/shared/shared.module';
     OrdersModule,
     ProductsModule,
     SharedModule,
+    ProductionLineModule,
     RouterModule.forRoot([
       { path: '', component: OrdersListComponent, pathMatch: 'full' },
     ])

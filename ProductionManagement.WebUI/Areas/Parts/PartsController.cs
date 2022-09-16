@@ -22,12 +22,6 @@ namespace ProductionManagement.WebUI.Areas.Parts
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> Echo()
-        {
-            return Ok("Elo");
-        }
-
-        [HttpGet("[action]")]
         public async Task<IActionResult> GetParts()
         {
             var result = await _partsService.GetPartsAsync();
