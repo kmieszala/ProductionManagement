@@ -1,6 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
 
-/* Provide sufficient contrast against white background */
+@for $width from 1 through 20 {
+  .w-#{$width*10}px {
+    width: $width * 10px !important;
+  }
+}
+
+@for $height from 1 through 20 {
+  .h-#{$height*10}px {
+    height: $height * 10px !important;
+  }
+}
+
 a {
   color: #0366d6;
 }

@@ -43,6 +43,8 @@
 
         public virtual DbSet<ProductionLine> ProductionLine { get; set; }
 
+        public virtual DbSet<Orders> Orders { get; set; }
+
         public override int SaveChanges()
         {
             FillTrackableData();

@@ -1,0 +1,79 @@
+<div class="modal-header pb-0">
+  <h4 class="modal-title pull-left">
+    Generuj dokument dla magazyniera
+  </h4>
+</div>
+<div class="modal-body">
+
+  <div class="card-body">
+    <table class="table table-default table-hover table-sm">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="th-priority">Nazwa zlecenia</th>
+          <th class="w-180px">Zbiornik</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <tr *ngFor="let item of checkedOrders">
+            <td [style.backgroundColor]="item.color">
+            </td>
+            <td>{{ item.orderName }}</td>
+            <td>{{ item.tankName }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <!-- <div class="row mt-3">
+      <div class="col-md-12">
+        paginacja
+      </div>
+    </div> -->
+
+    <div class="widget widget-simple mt-2">
+      <div class="widget-header">
+        Części zbiornika
+      </div>
+      <div class="row" [formGroup]="form">
+        <div class="col-md-6" >
+          <div class="widget-body">
+            <ng-select id="formPart" formControlName="formPart" notFoundText="Najpierw dodaj części" [multiple]="false">
+              <ng-option *ngFor="let part of parts" [value]="part">{{part.name}}</ng-option>
+            </ng-select>
+            <form-error [targetControl]="formPart"></form-error>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="widget-body">
+            <div class="input-group has-validation">
+              <input type="number" id="formPartsAmount" class="form-control" formControlName="formPartsAmount" placeholder="ilość"/>
+            </div>
+            <form-error [targetControl]="formPartsAmount"></form-error>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="widget-body">
+            <div class="input-group w-100">
+              <button type="button" class="btn btn-primary btn-sm w-100" (click)="addPart()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2" *ngFor="let item of addedParts">
+      <div class="col-md-6">{{ item.partsName }}</div>
+      <div class="col-md-3">{{ item.partsNumber }}</div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-danger btn-sm w-100" (click)="deletePart(item.id)"><i class="fa fa-trash" aria-hidden="true"></i> Usuń</button>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <button class="btn btn-light btn-sm me-2" type="button" (click)="_bsModalRef.hide()"><i class="fas fa-undo"></i> Anuluj</button>
+      <button class="btn btn-primary btn-sm" type="button" (click)="prepareDocument()"><i class="fa-solid fa-file-arrow-down"></i> Generuj</button>
+    </div>
+  </div>
+</div>

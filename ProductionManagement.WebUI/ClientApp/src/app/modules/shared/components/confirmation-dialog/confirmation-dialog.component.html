@@ -1,0 +1,17 @@
+<div class="modal-header pb-0">
+  <h4 class="modal-title pull-left">
+    {{ options.title }}
+  </h4>
+</div>
+<form class="modal-body">
+  <div class="row mt-2">
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12 text-center">
+      <button *ngIf="options.noButton" class="btn btn-light btn-sm me-2" type="button" (click)="close(false)"><i class="fas fa-undo"></i> Anuluj</button>
+      <button *ngIf="options.yesButton" class="btn btn-primary btn-sm" type="button" (click)="close(true)" ><i class="fas fa-save"></i> Tak</button>
+      <button *ngIf="options.okButton" class="btn btn-primary btn-sm" type="button" (click)="close(true)"><i class="fa-solid fa-check"></i> Ok</button>
+    </div>
+  </div>
+</form>

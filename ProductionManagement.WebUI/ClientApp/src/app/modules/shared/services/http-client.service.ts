@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,21 @@ export class HttpClientService {
 
   getFile<Blob>(url: string): Observable<Blob> {
     return this.http.get<Blob>(this.baseUrl + url, { headers: this.headers, responseType: 'blob' as 'json' });
+  }
+
+  postFile<Blob>(url: string, body: any): Observable<Blob> {
+    return this.http.post<Blob>(this.baseUrl + url, body, { headers: this.headers, responseType: 'blob' as 'json' });
+  }
+
+  saveFile(file: Blob, fileName?: string): void {
+    let blob = new Blob([file], { type: 'application/txt' });
+
+    if (fileName == null) {
+      fileName = new Date().toISOString() + '.txt';
+    }
+    // zapis pliku
+    saveAs(blob, fileName);
+
+    return;
   }
 }

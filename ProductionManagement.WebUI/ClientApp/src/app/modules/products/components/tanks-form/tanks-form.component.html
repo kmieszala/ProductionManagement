@@ -7,78 +7,117 @@
   </h4>
 </div>
 <form class="modal-body" [formGroup]="form" *ngIf="!loading" (ngSubmit)="saveTank()">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="widget widget-simple">
-        <div class="widget-header">
-          Nazwa
-        </div>
-        <div class="widget-body">
-          <div class="input-group has-validation">
-            <input type="text" id="formTankName" class="form-control" formControlName="formTankName" />
-          </div>
-          <form-error [targetControl]="formTankName"></form-error>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="widget widget-simple">
-        <div class="widget-header">
-          Liczba dni
-        </div>
-        <div class="widget-body">
-          <div class="input-group has-validation">
-            <input type="number" id="formDaysNumber" class="form-control" formControlName="formDaysNumber" />
-          </div>
-          <form-error [targetControl]="formDaysNumber"></form-error>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="row mt-2">
+    <!-- LEFT -->
     <div class="col-md-6">
-      <div class="widget widget-simple">
-        <div class="widget-body">
-          <ng-select id="formPart" formControlName="formPart" notFoundText="Najpierw dodaj części" [multiple]="false">
-            <ng-option *ngFor="let part of parts" [value]="part">{{part.name}}</ng-option>
-          </ng-select>
-          <form-error [targetControl]="formPart"></form-error>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="widget widget-simple">
-        <div class="widget-body">
-          <div class="input-group has-validation">
-            <input type="number" id="formPartsAmount" class="form-control" formControlName="formPartsAmount" placeholder="ilość"/>
-          </div>
-          <form-error [targetControl]="formPartsAmount"></form-error>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="widget widget-simple">
-        <div class="widget-body">
-          <div class="input-group w-100">
-            <button type="button" class="btn btn-primary btn-sm w-100" (click)="addPart()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="widget widget-simple">
+            <div class="widget-header">
+              Nazwa
+            </div>
+            <div class="widget-body">
+              <div class="input-group has-validation">
+                <input type="text" id="formTankName" class="form-control" formControlName="formTankName" />
+              </div>
+              <form-error [targetControl]="formTankName"></form-error>
+            </div>
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="widget widget-simple">
+            <div class="widget-header">
+              Liczba dni
+            </div>
+            <div class="widget-body">
+              <div class="input-group has-validation">
+                <input type="number" id="formDaysNumber" class="form-control" formControlName="formDaysNumber" />
+              </div>
+              <form-error [targetControl]="formDaysNumber"></form-error>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="widget widget-simple">
+            <div class="widget-header">
+              Wyspecjalizowane gniazda
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="widget-body">
+                  <ng-select id="formProductionLine" formControlName="formProductionLine" notFoundText="Najpierw dodaj części" [multiple]="false">
+                    <ng-option *ngFor="let item of productionLines" [value]="item">{{item.name}}</ng-option>
+                  </ng-select>
+                  <form-error [targetControl]="formProductionLine"></form-error>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="widget-body">
+                  <div class="input-group w-100">
+                    <button type="button" class="btn btn-primary btn-sm w-100" (click)="addProductionLine()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2" *ngFor="let item of tankProductionLines">
+        <div class="col-md-6">{{ item.productionLineName }}</div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-danger btn-sm w-100" (click)="deleteProductionLine(item)"><i class="fa fa-trash" aria-hidden="true"></i> Usuń</button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="row mt-2" *ngIf="showValidError">
-    <div class="col-md-12 text-danger">Wymagana przynajmniej jedna część!</div>
-  </div>
+    <!-- RIGHT -->
+    <div class="col-md-6">
+      <div class="widget widget-simple mt-2">
+        <div class="widget-header">
+          Części zbiornika
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="widget-body">
+              <ng-select id="formPart" formControlName="formPart" notFoundText="Najpierw dodaj części" [multiple]="false">
+                <ng-option *ngFor="let part of parts" [value]="part">{{part.name}}</ng-option>
+              </ng-select>
+              <form-error [targetControl]="formPart"></form-error>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="widget-body">
+              <div class="input-group has-validation">
+                <input type="number" id="formPartsAmount" class="form-control" formControlName="formPartsAmount" placeholder="ilość"/>
+              </div>
+              <form-error [targetControl]="formPartsAmount"></form-error>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="widget-body">
+              <div class="input-group w-100">
+                <button type="button" class="btn btn-primary btn-sm w-100" (click)="addPart()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="row mt-2" *ngFor="let item of tankParts">
-    <div class="col-md-6">{{ item.partsName }}</div>
-    <div class="col-md-3">{{ item.partsNumber }}</div>
-    <div class="col-md-3">
-      <button type="button" class="btn btn-danger btn-sm w-100" (click)="deletePart(item)"><i class="fa fa-trash" aria-hidden="true"></i> Usuń</button>
+      <div class="row mt-2" *ngIf="showValidError">
+        <div class="col-md-12 text-danger">Wymagana przynajmniej jedna część!</div>
+      </div>
+
+      <div class="row mt-2" *ngFor="let item of tankParts">
+        <div class="col-md-6">{{ item.partsName }}</div>
+        <div class="col-md-3">{{ item.partsNumber }}</div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-danger btn-sm w-100" (click)="deletePart(item)"><i class="fa fa-trash" aria-hidden="true"></i> Usuń</button>
+        </div>
+      </div>
     </div>
   </div>
 

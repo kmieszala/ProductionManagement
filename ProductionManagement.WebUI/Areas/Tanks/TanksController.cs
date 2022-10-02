@@ -21,16 +21,10 @@ namespace ProductionManagement.WebUI.Areas.Tanks
             _mapper = mapper;
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Echo()
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GetTanks([FromBody] bool active)
         {
-            return Ok("Elo");
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetTanks()
-        {
-            var result = await _tanksService.GetTanksAsync();
+            var result = await _tanksService.GetTanksAsync(active);
             return Ok(result);
         }
 
@@ -45,6 +39,20 @@ namespace ProductionManagement.WebUI.Areas.Tanks
         public async Task<IActionResult> EditTank(TankRequestVM model)
         {
             var result = await _tanksService.EditTankAsync(_mapper.Map<TankModel>(model));
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> DeactiveTank([FromBody] int model)
+        {
+            var result = await _tanksService.ChangeTankStatusAsync(model, false);
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ActiveTank([FromBody] int model)
+        {
+            var result = await _tanksService.ChangeTankStatusAsync(model, true);
             return Ok(result);
         }
     }

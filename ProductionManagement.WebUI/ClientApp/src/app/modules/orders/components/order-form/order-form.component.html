@@ -30,7 +30,7 @@
         </div>
         <div class="widget-body">
           <ng-select id="formTank" formControlName="formTank" notFoundText="Najpierw dodaj części" [multiple]="false">
-            <ng-option *ngFor="let item of tanks" [value]="item">{{item.name}}</ng-option>
+            <ng-option *ngFor="let item of tanks" [value]="item.id">{{item.name}}</ng-option>
           </ng-select>
           <form-error [targetControl]="formTank"></form-error>
         </div>
@@ -48,6 +48,21 @@
             <input type="text" id="formDescription" class="form-control" formControlName="formDescription" />
           </div>
           <form-error [targetControl]="formDescription"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Kolor tła
+        </div>
+        <div class="widget-body">
+          <div class="input-group has-validation">
+            <input type="color" id="formColor" class="form-control" formControlName="formColor" />
+          </div>
+          <form-error [targetControl]="formColor"></form-error>
         </div>
       </div>
     </div>

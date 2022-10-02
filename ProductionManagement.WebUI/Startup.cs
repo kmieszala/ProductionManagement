@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProductionManagement.Model;
 using ProductionManagement.Services.Configuration;
+using ProductionManagement.Services.Services.Orders;
 using ProductionManagement.Services.Services.Parts;
 using ProductionManagement.Services.Services.ProductionLine;
 using ProductionManagement.Services.Services.Tanks;
@@ -44,6 +45,7 @@ namespace ProductionManagement.WebUI
             services.AddTransient<IPartsService, PartsService>();
             services.AddTransient<ITanksService, TanksService>();
             services.AddTransient<IProductionLineService, ProductionLineService>();
+            services.AddTransient<IOrdersService, OrdersService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

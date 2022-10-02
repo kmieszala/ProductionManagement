@@ -10,6 +10,7 @@
         {
             TankParts = new HashSet<TankParts>();
             LineTank = new HashSet<LineTank>();
+            Orders = new HashSet<Orders>();
         }
 
         [Key]
@@ -45,5 +46,7 @@
         public virtual ICollection<TankParts> TankParts { get; set; }
 
         public virtual ICollection<LineTank> LineTank { get; set; }
+
+        public virtual ICollection<Orders> Orders { get; set; }
     }
 }

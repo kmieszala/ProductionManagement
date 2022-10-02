@@ -24,5 +24,7 @@ namespace ProductionManagement.WebUI.Areas.Tanks.ViewModels.Request
         /// Parts needed to make the tank.
         /// </summary>
         public List<TankPartsVM> Parts { get; set; }
+
+        public List<ProductionLineTankVM> ProductionLines { get; set; }
     }
 }

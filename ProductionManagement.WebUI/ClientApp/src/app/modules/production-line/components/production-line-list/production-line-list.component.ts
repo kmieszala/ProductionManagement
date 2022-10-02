@@ -27,7 +27,7 @@ export class ProductionLineListComponent implements OnInit {
   ngOnInit(): void {
     forkJoin(
       {
-        tanks: this._tanksService.getTanks(),
+        tanks: this._tanksService.getTanks(true),
         lines: this._productionLineService.getLines()
       })
       .subscribe(result => {
@@ -49,7 +49,7 @@ export class ProductionLineListComponent implements OnInit {
 
     this.bsModalRef = this._modalService.show(ProductionLineFormComponent, initialState);
     this.subscriptions.push(this.bsModalRef.content.newTank.subscribe((res: ProductionLine) => {
-      this.productionLines.push(res); // add new tank to tanks list
+      this.productionLines.push(res); // add new line to line list
     }));
   }
 

@@ -22,5 +22,7 @@
         /// Parts needed to make the tank.
         /// </summary>
         public List<TankPartsModel> Parts { get; set; }
+
+        public List<ProductionLineTankModel> ProductionLines { get; set; }
     }
 }
