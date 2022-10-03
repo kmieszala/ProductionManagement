@@ -56,7 +56,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
                 bytes = ms.ToArray();
             }
 
-            return File(bytes, "xlsm", "WykazCzęści");
+            return File(bytes, "application/octet-stream");
         }
     }
 }

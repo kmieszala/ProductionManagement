@@ -49,4 +49,16 @@ export class HttpClientService {
 
     return;
   }
+
+  saveXlsmFile(file: Blob, fileName?: string): void {
+    let blob = new Blob([file], { type: 'application/octet-stream' });
+
+    if (fileName == null) {
+      fileName = new Date().toISOString() + '.xls';
+    }
+    // zapis pliku
+    saveAs(blob, fileName);
+
+    return;
+  }
 }

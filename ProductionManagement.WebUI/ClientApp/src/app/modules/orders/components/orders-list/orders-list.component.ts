@@ -25,6 +25,7 @@ export class OrdersListComponent implements OnInit {
   orders: OrderModel[];
   tanks: TankModel[];
   parts: PartModel[];
+  checkedButton = false;
 
   constructor(
     private _modalService: BsModalService,
@@ -43,6 +44,11 @@ export class OrdersListComponent implements OnInit {
         this.tanks = result.tanks;
         this.orders = result.orders;
       });
+  }
+
+  checkAll() {
+    this.checkedButton = !this.checkedButton;
+    this.orders.forEach(x => x.checked = this.checkedButton);
   }
 
   editOrder(model: OrderModel) {
@@ -106,6 +112,9 @@ export class OrdersListComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+
+    // dopracować kolejność i jej zapisywanie
+
     moveItemInArray(this.orders, event.previousIndex, event.currentIndex);
     this.orders.forEach((group, idx) => {
       group.order = idx + 1;

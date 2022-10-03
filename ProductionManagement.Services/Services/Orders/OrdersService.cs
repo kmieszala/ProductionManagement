@@ -120,28 +120,20 @@ namespace ProductionManagement.Services.Services.Orders
             workSheet.Cell(2, 1).Value = $"Data generowania:";
             workSheet.Cell(2, 2).Value = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}";
 
-            workSheet.Range(1, 1, 1, 4).Merge().AddToNamed("Title");
+            workSheet.Range(1, 1, 1, 3).Merge().AddToNamed("Title");
 
             DataTable headers = new DataTable();
             DataColumn ordinalNumberHeader = headers.Columns.Add("Liczba pojedyncza", typeof(string));
-            DataColumn dateHeader = headers.Columns.Add("Data", typeof(string));
-            DataColumn accountNumberHeader = headers.Columns.Add("Rachunek", typeof(string));
-            DataColumn amountHeader = headers.Columns.Add("Kwota", typeof(string));
-            DataColumn senderHeader = headers.Columns.Add("Nadawca", typeof(string));
-            DataColumn titleHeader = headers.Columns.Add("Tytuł", typeof(string));
-            DataColumn agencyHeader = headers.Columns.Add("Agencja", typeof(string));
+            DataColumn dateHeader = headers.Columns.Add("Nazwa części", typeof(string));
+            DataColumn accountNumberHeader = headers.Columns.Add("Ilość", typeof(string));
 
-            headers.Rows.Add("Lp.", "Data:", "Rachunek:", "Kwota:", "Nadawca:", "Tytułem:", "Agencja:");
+            headers.Rows.Add("Lp.", "Nazwa części", "Ilość");
             workSheet.Cell(4, 1).Value = headers.AsEnumerable();
 
             DataTable values = new DataTable();
             DataColumn ordinalNumberColumn = values.Columns.Add("Lp.", typeof(int));
-            DataColumn dateColumn = values.Columns.Add("Data:", typeof(DateTime));
-            DataColumn accountNumberColumn = values.Columns.Add("Rachunek:", typeof(string));
-            DataColumn amountColumn = values.Columns.Add("Kwota:", typeof(decimal));
-            DataColumn senderColumn = values.Columns.Add("Nadawca:", typeof(string));
-            DataColumn titleColumn = values.Columns.Add("Tytułem:", typeof(string));
-            DataColumn agencyColumn = values.Columns.Add("Agencja:", typeof(int));
+            DataColumn dateColumn = values.Columns.Add("Nazwa części", typeof(string));
+            DataColumn accountNumberColumn = values.Columns.Add("Ilość:", typeof(int));
 
             foreach (var deposit in reportModel.Select((value, index) => new { index, value }))
             {
@@ -154,15 +146,13 @@ namespace ProductionManagement.Services.Services.Orders
             workSheet.Cell(5, 1).Value = values.AsEnumerable();
 
             DataTable summary = new DataTable();
-            DataColumn amountSumHeader = summary.Columns.Add("Łączną kwota", typeof(string));
-            DataColumn amountSumValue = summary.Columns.Add("Kwota", typeof(decimal));
             DataColumn paymentsCountHeader = summary.Columns.Add("Łączna ilośc", typeof(string));
             DataColumn paymentsCountValue = summary.Columns.Add("Łączna ilość", typeof(int));
 
             int lastRow = values.Rows.Count;
             var partsSum = reportModel.Select(x => x.PartsNumber).ToList().Sum();
             summary.Rows.Add("Łączna ilość: ", partsSum);
-            workSheet.Cell(lastRow + 5, 3).Value = summary.AsEnumerable();
+            workSheet.Cell(lastRow + 5, 2).Value = summary.AsEnumerable();
 
             //stylowanie komórek
             workSheet.Cell(1, 1).Style.Font.Bold = true;
@@ -171,11 +161,9 @@ namespace ProductionManagement.Services.Services.Orders
             workSheet.Cell(2, 1).Style.Font.Bold = true;
             workSheet.Cell(2, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
             workSheet.Cell(2, 2).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
-            workSheet.Cell(2, 2).Style.DateFormat.Format = "yyyy-MM-dd HH:mm:ss";
+            workSheet.Cell(2, 2).Style.DateFormat.Format = "yyyy-MM-dd HH:mm";
             workSheet.Range(4, 1, 4, 7).Style.Font.Bold = true;
             workSheet.Range(lastRow + 5, 3, lastRow + 5, 6).Style.Font.Bold = true;
-           // workSheet.Column(2).Style.DateFormat.Format = "yyyy-MM-dd";
-           // workSheet.Column(4).Style.NumberFormat.Format = "0.00";
 
             //formatowanie szerokości kolumn do zawartości
             workSheet.Columns(1, 7).AdjustToContents();
