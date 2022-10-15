@@ -6,16 +6,22 @@
 
         public string OrderName { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public int TankId { get; set; }
 
-        public string TankName { get; set; }
+        public string? TankName { get; set; }
 
         public int ProductionDays { get; set; }
 
         public string Color { get; set; }
 
-        public string ProductionLinesNames { get; set; }
+        public string? ProductionLinesNames { get; set; }
+
+        public int Sequence { get; set; }
+
+        public DateTime? StopDate { get; set; }
+
+        public DateTime? StartDate { get; set; }
     }
 }

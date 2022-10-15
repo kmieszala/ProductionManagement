@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { forkJoin, Subscription } from 'rxjs';
 import { TankModel } from '../../../products/models/tank-model';
@@ -12,7 +12,7 @@ import { ProductionLineFormComponent } from '../production-line-form/production-
   templateUrl: './production-line-list.component.html',
   styleUrls: ['./production-line-list.component.scss']
 })
-export class ProductionLineListComponent implements OnInit {
+export class ProductionLineListComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
   bsModalRef?: BsModalRef;
@@ -34,6 +34,10 @@ export class ProductionLineListComponent implements OnInit {
         this.tanks = result.tanks;
         this.productionLines = result.lines;
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   showDetails(model: ProductionLine) {
@@ -67,6 +71,7 @@ export class ProductionLineListComponent implements OnInit {
       tmp.name = res.name;
       tmp.active = res.active;
       tmp.tanks = res.tanks;
+      tmp.startDate = res.startDate;
     }));
   }
 }

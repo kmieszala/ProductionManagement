@@ -12,8 +12,8 @@ using ProductionManagement.Model;
 namespace ProductionManagement.DbMigrator.Migrations
 {
     [DbContext(typeof(ProductionManagementContext))]
-    [Migration("20220916200531_LineTank")]
-    partial class LineTank
+    [Migration("20221004193330_Init2")]
+    partial class Init2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -129,6 +129,47 @@ namespace ProductionManagement.DbMigrator.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Orders", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("OrderName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StopDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TankId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TankId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Parts", b =>
                 {
                     b.Property<int>("Id")
@@ -167,6 +208,9 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -295,14 +339,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoleId = 1,
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Users", b =>
@@ -351,19 +387,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ActivationDate = new DateTime(2022, 9, 16, 22, 5, 31, 136, DateTimeKind.Local).AddTicks(8605),
-                            Email = "",
-                            FirstName = "Admin",
-                            LastName = "Admin",
-                            Password = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-                            RegisteredDate = new DateTime(2022, 9, 16, 22, 5, 31, 136, DateTimeKind.Local).AddTicks(8650),
-                            Status = 2
-                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.UserStatusDict", b =>
@@ -438,6 +461,17 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .IsRequired();
 
                     b.Navigation("LogCodeDict");
+                });
+
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Orders", b =>
+                {
+                    b.HasOne("ProductionManagement.Model.DbSets.Tanks", "Tank")
+                        .WithMany("Orders")
+                        .HasForeignKey("TankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tank");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.TankParts", b =>
@@ -519,6 +553,8 @@ namespace ProductionManagement.DbMigrator.Migrations
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Tanks", b =>
                 {
                     b.Navigation("LineTank");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("TankParts");
                 });

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { forkJoin, Subscription } from 'rxjs';
 import { TankModel } from '../../../products/models/tank-model';
@@ -10,7 +9,9 @@ import { OrdersService } from '../../services/orders.service';
 import { StorekeeperDocumentComponent } from '../storekeeper-document/storekeeper-document.component';
 import { PartsService } from '../../../products/services/parts.service';
 import { PartModel } from '../../../products/models/part-model';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Sequence } from '../../models/sequence';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-orders-list',
@@ -26,11 +27,14 @@ export class OrdersListComponent implements OnInit {
   tanks: TankModel[];
   parts: PartModel[];
   checkedButton = false;
+  updateSequenceButton = false;
+  generateButton = false;
 
   constructor(
     private _modalService: BsModalService,
     private _ordersService: OrdersService,
     private _partsService: PartsService,
+    private _toastr: ToastrService,
     private _tanksService: TanksService,
     ) { }
 
@@ -49,6 +53,25 @@ export class OrdersListComponent implements OnInit {
   checkAll() {
     this.checkedButton = !this.checkedButton;
     this.orders.forEach(x => x.checked = this.checkedButton);
+    if(!this.checkedButton) {
+      this.generateButton = false;
+    }
+  }
+
+  checkItem() {
+    setTimeout(() => {
+      this.generateButton = this.orders.find(x => x.checked) != null;
+      if(!this.generateButton) {
+        this.checkedButton = false;
+      }
+    }, 10);
+  }
+
+  generateCalendar() {
+    let orders = this.orders.filter(x => x.checked);
+    this._ordersService.generateCalendar(orders).subscribe(result => {
+// przekierowanie na widok kalendarza
+    });
   }
 
   editOrder(model: OrderModel) {
@@ -85,8 +108,21 @@ export class OrdersListComponent implements OnInit {
     }));
   }
 
-  forStorekeeper() {
+  updateSequence() {
+    var model = this.orders.filter(x => x.startDate == null).map(x => {
+      return { id: x.id, sequence: x.sequence } as Sequence;
+    });
 
+    this._ordersService.updateSequenceOrders(model).subscribe(result => {
+      if(result) {
+        this.updateSequenceButton = false;
+      } else {
+        this._toastr.error("Coś poszło nie tak, proszę spróbować za później")
+      }
+    });
+  }
+
+  forStorekeeper() {
     if(this.parts == null) {
       this._partsService.getParts().subscribe(result => {
         this.parts = result;
@@ -112,12 +148,10 @@ export class OrdersListComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-
-    // dopracować kolejność i jej zapisywanie
-
     moveItemInArray(this.orders, event.previousIndex, event.currentIndex);
     this.orders.forEach((group, idx) => {
-      group.order = idx + 1;
+      group.sequence = idx + 1;
     });
+    this.updateSequenceButton = true;
   }
 }

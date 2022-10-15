@@ -13,6 +13,7 @@
             <tr>
               <th class="th-priority">Nazwa linii</th>
               <th>Aktywna</th>
+              <th>Data uruchomienia linii</th>
               <th></th>
             </tr>
           </thead>
@@ -21,6 +22,7 @@
               <tr (click)="showDetails(item)" class="pointer">
                 <td>{{ item.name }}</td>
                 <td><div statusActive="{{item.active}}"></div></td>
+                <td>{{ item.startDate | date: 'dd-MM-YYYY' }}</td>
                 <td>
                   <div class="float-end">
                     <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editLine(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>

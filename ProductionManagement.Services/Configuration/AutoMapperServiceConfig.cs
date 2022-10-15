@@ -41,5 +41,5 @@ namespace ProductionManagement.Services.Configuration
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.LineTankId))
                 .ForMember(dest => dest.ProductionLineId, opts => opts.MapFrom(src => src.ProductionLineId));
         }
-    } 
+    }
 }

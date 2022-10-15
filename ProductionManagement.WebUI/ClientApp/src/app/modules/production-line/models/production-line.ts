@@ -5,6 +5,7 @@ export class ProductionLine {
   name: string;
   active: boolean;
   tanks: LineTank[];
+  startDate: Date;
 
   showDetails: boolean;
 }

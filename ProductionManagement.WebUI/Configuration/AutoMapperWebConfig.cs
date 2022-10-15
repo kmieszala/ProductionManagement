@@ -3,10 +3,12 @@ using ProductionManagement.Services.Services.Orders.Models;
 using ProductionManagement.Services.Services.Parts.Models;
 using ProductionManagement.Services.Services.ProductionLine.Models;
 using ProductionManagement.Services.Services.Tanks.Models;
+using ProductionManagement.Services.Services.WorkSchedule.Models;
 using ProductionManagement.WebUI.Areas.Orders.ViewModels.Request;
 using ProductionManagement.WebUI.Areas.Parts.ViewModels.Request;
 using ProductionManagement.WebUI.Areas.ProductionLine.ViewModels.Request;
 using ProductionManagement.WebUI.Areas.Tanks.ViewModels.Request;
+using ProductionManagement.WebUI.Areas.WorkSchedule.ViewModels;
 
 namespace ProductionManagement.WebUI.Configuration
 {
@@ -37,6 +39,18 @@ namespace ProductionManagement.WebUI.Configuration
 
             CreateMap<PartsStorekeeperVM, PartsStorekeeperModel>();
             CreateMap<PartsStorekeeperModel, PartsStorekeeperVM>();
+
+            CreateMap<SequenceModel, SequenceVM>();
+            CreateMap<SequenceVM, SequenceModel>();
+
+            CreateMap<FilterPlannedOrdersModel, FilterPlannedOrdersVM>();
+            CreateMap<FilterPlannedOrdersVM, FilterPlannedOrdersModel>();
+
+            CreateMap<GetProdDaysFilterModel, GetProdDaysFilterVM>();
+            CreateMap<GetProdDaysFilterVM, GetProdDaysFilterModel>();
+
+            CreateMap<ProductionDaysBasicVM, ProductionDaysBasicModel>();
+            CreateMap<ProductionDaysBasicModel, ProductionDaysBasicVM>();
         }
     }
 }

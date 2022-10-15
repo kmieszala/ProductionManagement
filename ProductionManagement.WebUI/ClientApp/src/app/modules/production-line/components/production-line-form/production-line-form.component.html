@@ -37,12 +37,27 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="widget widget-simple">
+        <div class="widget-header">
+          Data uruchomienia (w tym dniu zacznę dodawać zlecenia)
+        </div>
+        <div class="widget-body">
+          <div class="input-group">
+            <date-picker [isValid]="formStartDate?.valid" [ngTouched]="formStartDate?.touched" [dateValue]="dateToShow" (dateChange)="dateChange($event)" [formControlSize]="'sm'"></date-picker>
+          </div>
+          <form-error [targetControl]="formStartDate"></form-error>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <div class="row mt-2">
+  <div class="row mt-3">
     <div class="col-md-6">
       <div class="widget widget-simple">
         <div class="widget-body">
-          <ng-select id="formTank" formControlName="formTank" notFoundText="Najpierw dodaj części" [multiple]="false">
+          <ng-select id="formTank" formControlName="formTank" notFoundText="Najpierw dodaj zbiornik" [multiple]="false">
             <ng-option *ngFor="let item of tanks" [value]="item">{{item.name}}</ng-option>
           </ng-select>
           <form-error [targetControl]="formTank"></form-error>

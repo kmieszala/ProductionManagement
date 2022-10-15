@@ -1,3 +1,4 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 @for $width from 1 through 20 {
   .w-#{$width*10}px {
@@ -55,3 +56,14 @@ ng-select {
 .pointer {
   cursor: pointer;
 }
+
+// .tp-radio-group {
+//   display: inline-flex;
+//   flex-direction: column;
+// }
+// .tp-radio-button {
+//   margin: 5px;
+// }
+// .tp-selected-value {
+//   margin: 15px 0;
+// }

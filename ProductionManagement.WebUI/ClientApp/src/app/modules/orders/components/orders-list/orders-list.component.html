@@ -4,6 +4,8 @@
       <div class="card-header">
         <span>Zlecenia</span>
         <div class="float-end">
+          <button [disabled]="!generateButton && !checkedButton" type="button" class="btn btn-success btn-sm me-2" (click)="generateCalendar()"><i class="fa-solid fa-table-columns"></i> Generuj kalendarz</button>
+          <button [disabled]="!updateSequenceButton" type="button" class="btn btn-danger btn-sm me-2" (click)="updateSequence()"><i class="fas fa-save" aria-hidden="true"></i> Aktualizuj kolejność</button>
           <button type="button" class="btn btn-primary btn-sm me-2" (click)="forStorekeeper()"><i class="fa-regular fa-file-lines"></i> Dla magazyniera</button>
           <button type="button" class="btn btn-primary btn-sm" (click)="addNewOrder()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
         </div>
@@ -13,7 +15,7 @@
           <thead>
             <tr>
               <th>
-                <input class="form-check-input" type="checkbox" id="checkAll" (click)="checkAll()">
+                <input class="form-check-input" type="checkbox" id="checkAll" [(ngModel)]="checkedButton" (click)="checkAll()">
               </th>
               <th class="th-priority">Nazwa zlecenia</th>
               <th class="w-180px">Zbiornik</th>
@@ -27,14 +29,31 @@
           </thead>
           <tbody cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
             <ng-container *ngFor="let item of orders">
-              <tr cdkDrag class="pointer">
+              <tr *ngIf="item.startDate != null">
+                <td [style.backgroundColor]="item.color">
+                  <input (click)="checkItem()" class="form-check-input" type="checkbox" id="checkAll" [(ngModel)]="item.checked">
+                </td>
+                <td>{{ item.orderName }}</td>
+                <td>{{ item.tankName }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.productionLinesNames }}</td>
+                <td>{{ item.productionDays }}</td>
+                <td>{{ item.startDate | date: "dd.MM.yyyy" }}</td>
+                <td>{{ item.stopDate | date: "dd.MM.yyyy" }}</td>
+                <td>
+                  <div class="float-end">
+                    <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editOrder(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="item.startDate == null" cdkDrag class="pointer">
                 <td colspan="9" *cdkDragPlaceholder [style.backgroundColor]="item.color" class=" h-20px">
                   <div class="drag-handle">
                     {{ item.orderName }}
                   </div>
                 </td>
                 <td [style.backgroundColor]="item.color">
-                  <input class="form-check-input" type="checkbox" id="checkAll" [(ngModel)]="item.checked">
+                  <input (click)="checkItem()" class="form-check-input" type="checkbox" id="checkAll" [(ngModel)]="item.checked">
                 </td>
                 <td *cdkDragPreview>{{ item.orderName }}</td>
                 <td>{{ item.orderName }}</td>
@@ -42,8 +61,8 @@
                 <td>{{ item.description }}</td>
                 <td>{{ item.productionLinesNames }}</td>
                 <td>{{ item.productionDays }}</td>
-                <td></td>
-                <td></td>
+                <td>{{ item.startDate | date: "dd.MM.yyyy" }}</td>
+                <td>{{ item.stopDate | date: "dd.MM.yyyy" }}</td>
                 <td>
                   <div class="float-end">
                     <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editOrder(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>

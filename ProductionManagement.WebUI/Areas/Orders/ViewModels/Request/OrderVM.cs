@@ -1,4 +1,6 @@
-﻿namespace ProductionManagement.WebUI.Areas.Orders.ViewModels.Request
+﻿using System;
+
+namespace ProductionManagement.WebUI.Areas.Orders.ViewModels.Request
 {
     public class OrderVM
     {
@@ -10,12 +12,18 @@
 
         public int TankId { get; set; }
 
-        public string TankName { get; set; }
+        public string? TankName { get; set; }
 
         public int ProductionDays { get; set; }
 
         public string Color { get; set; }
 
         public string? ProductionLinesNames { get; set; }
+
+        public int Sequence { get; set; }
+
+        public DateTime? StopDate { get; set; }
+
+        public DateTime? StartDate { get; set; }
     }
 }

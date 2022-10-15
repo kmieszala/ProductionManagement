@@ -12,8 +12,8 @@ using ProductionManagement.Model;
 namespace ProductionManagement.DbMigrator.Migrations
 {
     [DbContext(typeof(ProductionManagementContext))]
-    [Migration("20220930204049_AddTableOrders")]
-    partial class AddTableOrders
+    [Migration("20221004211211_AddProductionDays")]
+    partial class AddProductionDays
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -143,7 +143,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -151,6 +150,15 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StopDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TankId")
                         .HasColumnType("int");
@@ -185,6 +193,35 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.ToTable("Parts");
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.ProductionDays", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("DayOff")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("OrdersId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductionLineId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrdersId");
+
+                    b.HasIndex("ProductionLineId");
+
+                    b.ToTable("ProductionDays");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.ProductionLine", b =>
                 {
                     b.Property<int>("Id")
@@ -200,6 +237,9 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -328,14 +368,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoleId = 1,
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Users", b =>
@@ -384,19 +416,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ActivationDate = new DateTime(2022, 9, 30, 22, 40, 48, 850, DateTimeKind.Local).AddTicks(3429),
-                            Email = "",
-                            FirstName = "Admin",
-                            LastName = "Admin",
-                            Password = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-                            RegisteredDate = new DateTime(2022, 9, 30, 22, 40, 48, 850, DateTimeKind.Local).AddTicks(3462),
-                            Status = 2
-                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.UserStatusDict", b =>
@@ -484,6 +503,21 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Navigation("Tank");
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.ProductionDays", b =>
+                {
+                    b.HasOne("ProductionManagement.Model.DbSets.Orders", "Orders")
+                        .WithMany("ProductionDays")
+                        .HasForeignKey("OrdersId");
+
+                    b.HasOne("ProductionManagement.Model.DbSets.ProductionLine", "ProductionLine")
+                        .WithMany("ProductionDays")
+                        .HasForeignKey("ProductionLineId");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("ProductionLine");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.TankParts", b =>
                 {
                     b.HasOne("ProductionManagement.Model.DbSets.Parts", "Parts")
@@ -545,6 +579,11 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Navigation("Log");
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Orders", b =>
+                {
+                    b.Navigation("ProductionDays");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Parts", b =>
                 {
                     b.Navigation("TankParts");
@@ -553,6 +592,8 @@ namespace ProductionManagement.DbMigrator.Migrations
             modelBuilder.Entity("ProductionManagement.Model.DbSets.ProductionLine", b =>
                 {
                     b.Navigation("LineTank");
+
+                    b.Navigation("ProductionDays");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Role", b =>

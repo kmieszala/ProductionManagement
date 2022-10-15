@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +12,7 @@ using ProductionManagement.Services.Services.Orders;
 using ProductionManagement.Services.Services.Parts;
 using ProductionManagement.Services.Services.ProductionLine;
 using ProductionManagement.Services.Services.Tanks;
+using ProductionManagement.Services.Services.WorkSchedule;
 using ProductionManagement.WebUI.Configuration;
 using Serilog;
 
@@ -36,7 +35,8 @@ namespace ProductionManagement.WebUI
                 typeof(AutoMapperServiceConfig));
 
             services.AddDbContext<ProductionManagementContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection").ToString()));
+                options.EnableSensitiveDataLogging(true)
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection").ToString()));
 
             services.AddHttpContextAccessor();
 
@@ -46,6 +46,7 @@ namespace ProductionManagement.WebUI
             services.AddTransient<ITanksService, TanksService>();
             services.AddTransient<IProductionLineService, ProductionLineService>();
             services.AddTransient<IOrdersService, OrdersService>();
+            services.AddTransient<IWorkScheduleService, WorkScheduleService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

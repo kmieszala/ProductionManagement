@@ -34,7 +34,10 @@
               <tr (click)="showDetails(item)" class="pointer">
                 <td>{{ item.name }}</td>
                 <td>{{ item.productionDays }}</td>
-                <td><div *ngIf="item.productionLines && item.productionLines.length > 0">Tak</div></td>
+                <td>
+                  <div *ngIf="item.productionLines && item.productionLines.length > 0; else elseBlock">Tak</div>
+                  <ng-template #elseBlock><div>Nie</div></ng-template>
+                </td>
                 <td>
                   <div class="float-end">
                     <button *ngIf="!statusFilter" type="button" class="btn btn-success btn-sm me-2" (click)="$event.stopPropagation();activeTank(item)"><i class="fa-solid fa-arrows-rotate"></i> Aktywuj</button>
@@ -58,7 +61,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6" *ngIf="item.productionLines && item.productionLines.length > 0">
                       <div class="row ms-3">
                         <div class="col-12 fw-bold">Wyspecjalizowane gniazda</div>
                       </div>

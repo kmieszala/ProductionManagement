@@ -8,6 +8,8 @@
 
         public bool Active { get; set; }
 
+        public DateTime StartDate { get; set; }
+
         public List<LineTankModel> Tanks { get; set; }
     }
 }

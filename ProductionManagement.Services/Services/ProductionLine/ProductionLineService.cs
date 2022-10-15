@@ -29,6 +29,7 @@ namespace ProductionManagement.Services.Services.ProductionLine
         public async Task<int> AddLineAsync(ProductionLineModel productionLineModel)
         {
             var model = _mapper.Map<Model.DbSets.ProductionLine>(productionLineModel);
+            model.StartDate = model.StartDate.Date;
 
             await _context.ProductionLine.AddAsync(model);
             await _context.SaveChangesAsync();
@@ -50,6 +51,7 @@ namespace ProductionManagement.Services.Services.ProductionLine
 
             dbModel.Active = model.Active;
             dbModel.Name = model.Name;
+            dbModel.StartDate = model.StartDate.Date;
 
             var newParts = model.LineTank.Where(x => x.Id == 0).ToList();
 
@@ -80,6 +82,7 @@ namespace ProductionManagement.Services.Services.ProductionLine
                     Active = x.Active,
                     Id = x.Id,
                     Name = x.Name,
+                    StartDate = x.StartDate,
                     Tanks = x.LineTank.Select(y => new LineTankModel()
                     {
                         Id = y.Id,

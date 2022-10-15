@@ -1,0 +1,21 @@
+<div class="input-group">
+  <input
+    id="{{name}}"
+    name="{{name}}"
+    class="form-control"
+    [ngClass]="formControlSizeClass"
+    [class.ng-invalid]="!isValid"
+    [class.ng-touched]="ngTouched"
+    type="text"
+    #datepicker="bsDatepicker"
+    bsDatepicker #datepickerControl
+    [(ngModel)]="dateValue"
+    (ngModelChange)="onModelChange()"
+    [bsConfig]="bsConfig"
+    [disabled]="isDisabled"
+    placeholder="{{placeholder}}"
+    autocomplete="off"/>
+  <div class="input-group-text" (click)="focusControl()">
+    <i class="far fa-calendar-alt"></i>
+  </div>
+</div>

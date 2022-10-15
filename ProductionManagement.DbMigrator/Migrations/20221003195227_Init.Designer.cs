@@ -12,7 +12,7 @@ using ProductionManagement.Model;
 namespace ProductionManagement.DbMigrator.Migrations
 {
     [DbContext(typeof(ProductionManagementContext))]
-    [Migration("20220915202152_Init")]
+    [Migration("20221003195227_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,29 @@ namespace ProductionManagement.DbMigrator.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.LineTank", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ProductionLineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TankId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductionLineId");
+
+                    b.HasIndex("TankId");
+
+                    b.ToTable("LineTank");
+                });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Log", b =>
                 {
@@ -106,6 +129,50 @@ namespace ProductionManagement.DbMigrator.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Orders", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("OrderName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StopDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TankId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Sequence")
+                        .IsUnique();
+
+                    b.HasIndex("TankId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Parts", b =>
                 {
                     b.Property<int>("Id")
@@ -127,6 +194,27 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Parts");
+                });
+
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.ProductionLine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductionLine");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Role", b =>
@@ -251,14 +339,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RoleId = 1,
-                            UserId = 1
-                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Users", b =>
@@ -307,19 +387,6 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ActivationDate = new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7149),
-                            Email = "",
-                            FirstName = "Admin",
-                            LastName = "Admin",
-                            Password = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-                            RegisteredDate = new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7208),
-                            Status = 2
-                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.UserStatusDict", b =>
@@ -366,6 +433,25 @@ namespace ProductionManagement.DbMigrator.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.LineTank", b =>
+                {
+                    b.HasOne("ProductionManagement.Model.DbSets.ProductionLine", "ProductionLine")
+                        .WithMany("LineTank")
+                        .HasForeignKey("ProductionLineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProductionManagement.Model.DbSets.Tanks", "Tank")
+                        .WithMany("LineTank")
+                        .HasForeignKey("TankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductionLine");
+
+                    b.Navigation("Tank");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Log", b =>
                 {
                     b.HasOne("ProductionManagement.Model.DbSets.LogCodeDict", "LogCodeDict")
@@ -375,6 +461,17 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .IsRequired();
 
                     b.Navigation("LogCodeDict");
+                });
+
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.Orders", b =>
+                {
+                    b.HasOne("ProductionManagement.Model.DbSets.Tanks", "Tank")
+                        .WithMany("Orders")
+                        .HasForeignKey("TankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tank");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.TankParts", b =>
@@ -443,6 +540,11 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Navigation("TankParts");
                 });
 
+            modelBuilder.Entity("ProductionManagement.Model.DbSets.ProductionLine", b =>
+                {
+                    b.Navigation("LineTank");
+                });
+
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Role", b =>
                 {
                     b.Navigation("UserRoles");
@@ -450,6 +552,10 @@ namespace ProductionManagement.DbMigrator.Migrations
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Tanks", b =>
                 {
+                    b.Navigation("LineTank");
+
+                    b.Navigation("Orders");
+
                     b.Navigation("TankParts");
                 });
 

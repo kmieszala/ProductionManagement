@@ -19,7 +19,7 @@ import { ProductionLineFormComponent } from './components/production-line-form/p
     SharedModule,
     RouterModule.forRoot([
       {
-        path: 'production-line', component: ProductionLineMainComponent, data: { breadcrumb: 'parts' },
+        path: 'production-line', component: ProductionLineMainComponent, data: { breadcrumb: 'production' },
         children: [
           { path: '', component: ProductionLineListComponent, pathMatch: 'full', data: { breadcrumb: 'list' } },
         ]

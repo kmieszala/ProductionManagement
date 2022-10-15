@@ -6,6 +6,8 @@ import { TankModel } from '../../../products/models/tank-model';
 import { LineTank } from '../../models/line-tank';
 import { ProductionLine } from '../../models/production-line';
 import { ProductionLineService } from '../../services/production-line.service';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { defineLocale, plLocale } from 'ngx-bootstrap/chronos';
 
 @Component({
   selector: 'app-production-line-form',
@@ -20,34 +22,44 @@ export class ProductionLineFormComponent implements OnInit {
   form: FormGroup;
   addDisable = false;
   listTanks: LineTank[] = [];
+  dateToShow: string;
 
   public newTank: Subject<ProductionLine> = new Subject();
 
   get formLineName() { return this.form.get('formLineName'); }
   get formActiveLine() { return this.form.get('formActiveLine'); }
   get formTank() { return this.form.get('formTank'); }
+  get formStartDate() { return this.form.get('formStartDate'); }
 
   constructor(
     private _productionLineService: ProductionLineService,
     private _formBuilder: FormBuilder,
-    public bsModalRef: BsModalRef) { }
+    public bsModalRef: BsModalRef) {}
 
   ngOnInit(): void {
     if(this.editLine) {
+      this.dateToShow = new Date(this.editLine.startDate).toLocaleDateString();
       this.form = this._formBuilder.group({
         formLineName: new FormControl(this.editLine.name, [Validators.required, Validators.maxLength(30)]),
         formActiveLine: new FormControl(this.editLine.active, [Validators.required, Validators.max(100)]),
         formTank: new FormControl(null),
+        formStartDate: new FormControl(this.editLine.startDate.toString(), [Validators.required]),
       });
       this.listTanks = this.editLine.tanks;
     } else {
+      this.dateToShow = new Date().toLocaleDateString();
       this.form = this._formBuilder.group({
         formLineName: new FormControl('', [Validators.required, Validators.maxLength(30)]),
         formActiveLine: new FormControl(true, [Validators.required, Validators.max(100)]),
         formTank: new FormControl(null),
+        formStartDate: new FormControl(null, [Validators.required]),
       });
     }
     this.loading = false;
+  }
+
+  dateChange(date: Date | null) {
+    this.formStartDate?.setValue(date);
   }
 
   addTank() {
@@ -98,6 +110,7 @@ export class ProductionLineFormComponent implements OnInit {
       name: this.formLineName?.value,
       active: this.formActiveLine?.value,
       tanks: this.listTanks,
+      startDate: this.formStartDate?.value,
     } as ProductionLine;
 
     if(this.editLine) {

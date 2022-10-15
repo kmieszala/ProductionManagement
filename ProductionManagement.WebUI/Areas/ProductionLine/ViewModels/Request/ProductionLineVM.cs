@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ProductionManagement.WebUI.Areas.ProductionLine.ViewModels.Request
 {
@@ -9,6 +10,8 @@ namespace ProductionManagement.WebUI.Areas.ProductionLine.ViewModels.Request
         public string Name { get; set; }
 
         public bool Active { get; set; }
+
+        public DateTime StartDate { get; set; }
 
         public List<LineTankVM> Tanks { get; set; }
     }

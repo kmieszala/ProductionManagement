@@ -45,6 +45,8 @@
 
         public virtual DbSet<Orders> Orders { get; set; }
 
+        public virtual DbSet<ProductionDays> ProductionDays { get; set; }
+
         public override int SaveChanges()
         {
             FillTrackableData();
@@ -70,7 +72,7 @@
             SeedDictionary<UserStatusEnum, UserStatusDict>(modelBuilder);
             SeedDictionary<RolesEnum, Role>(modelBuilder);
 
-            PredefineUser(modelBuilder);
+           // PredefineUser(modelBuilder);
         }
 
         private void PredefineUser(ModelBuilder modelBuilder)

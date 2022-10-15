@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using ProductionManagement.Services.Services.Orders.Models;
-using ProductionManagement.Model;
+﻿using System.Data;
+using AutoMapper;
 using ClosedXML.Excel;
-using System.Data;
+using Microsoft.EntityFrameworkCore;
+using ProductionManagement.Model;
+using ProductionManagement.Services.Services.Orders.Models;
 
 namespace ProductionManagement.Services.Services.Orders
 {
@@ -16,6 +16,12 @@ namespace ProductionManagement.Services.Services.Orders
         Task<bool> EditOrderAsync(OrderModel model);
 
         Task<IXLWorkbook> PrepareStorekeeperDocumentAsync(List<int>? ordersIds, List<PartsStorekeeperModel>? parts);
+
+        Task<bool> UpdateSequenceOrdersAsync(List<SequenceModel> sequenceList);
+
+        Task<bool> GenerateCalendarAsync(List<OrderModel> orderModels);
+
+        //Task<List<PlannedOrdersModel>> GetPlannedOrdersAsync(FilterPlannedOrdersModel filterPlannedOrdersModel);
     }
 
     public class OrdersService : IOrdersService
@@ -31,7 +37,10 @@ namespace ProductionManagement.Services.Services.Orders
 
         public async Task<int> AddOrderAsync(OrderModel model)
         {
+            var maxSequence = _context.Orders
+                         .Max(x => x.Sequence as int?) ?? 0;
             var dbModel = _mapper.Map<Model.DbSets.Orders>(model);
+            dbModel.Sequence = ++maxSequence;
             await _context.Orders.AddAsync(dbModel);
             await _context.SaveChangesAsync();
 
@@ -41,7 +50,7 @@ namespace ProductionManagement.Services.Services.Orders
         public async Task<bool> EditOrderAsync(OrderModel model)
         {
             var dbModel = await _context.Orders.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-            if(dbModel == null)
+            if (dbModel == null)
             {
                 return false;
             }
@@ -59,6 +68,7 @@ namespace ProductionManagement.Services.Services.Orders
         public async Task<List<OrderModel>> GetOrdersAsync()
         {
             var result = await _context.Orders
+                .OrderBy(x => x.Sequence)
                 .Select(x => new OrderModel()
                 {
                     Id = x.Id,
@@ -68,10 +78,39 @@ namespace ProductionManagement.Services.Services.Orders
                     ProductionDays = (int) x.Tank.ProductionDays,
                     TankId = x.TankId,
                     TankName = x.Tank.Name,
+                    Sequence = x.Sequence,
+                    StartDate = x.StartDate,
+                    StopDate = x.StopDate,
                     ProductionLinesNames = String.Join(", ", x.Tank.LineTank.Select(y => y.ProductionLine.Name))
                 }).ToListAsync();
 
             return result;
+        }
+
+        public async Task<bool> UpdateSequenceOrdersAsync(List<SequenceModel> sequenceList)
+        {
+            var ordersIds = sequenceList.Select(x => x.Id).ToList();
+
+            var orders = await _context.Orders
+                .Where(x => ordersIds.Contains(x.Id))
+                .Where(x => !x.StartDate.HasValue)
+                .ToListAsync();
+
+            if (orders.Count != sequenceList.Count)
+            {
+                return false;
+            }
+
+            var maxSequence = await _context.Orders.Where(x => x.StartDate.HasValue).MaxAsync(x => x.Sequence as int?) ?? 0;
+            foreach (var x in orders)
+            {
+                var tmp = sequenceList.First(y => y.Id == x.Id);
+                x.Sequence = tmp.Sequence + maxSequence;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<IXLWorkbook> PrepareStorekeeperDocumentAsync(List<int>? ordersIds, List<PartsStorekeeperModel>? parts)
@@ -93,6 +132,199 @@ namespace ProductionManagement.Services.Services.Orders
             return workBook;
         }
 
+        //public async Task<List<PlannedOrdersModel>> GetPlannedOrdersAsync(FilterPlannedOrdersModel filterPlannedOrdersModel)
+        //{
+        //    var result = await _context.ProductionLine
+        //        .Where(x => x.Active)
+        //        .Select(x => new PlannedOrdersModel()
+        //        {
+        //            Id = x.Id,
+        //            Name = x.Name,
+        //            StartDate = x.StartDate,
+        //            ProductionDays = x.ProductionDays
+        //                .Select(y => new ProductionDaysModel()
+        //                {
+        //                    Id = y.Id,
+        //                    Date = y.Date,
+        //                    DayOff = y.DayOff,
+        //                    //OrdersId = y.OrdersId,
+        //                    //OrderName = y.Orders.OrderName,
+        //                    //Color = y.Orders.Color,
+        //                })
+        //                .OrderBy(y => y.Date)
+        //                .ToList(),
+        //        }).ToListAsync();
+
+        //    result = result.OrderBy(x => x.Id).ToList();
+
+        //    return result;
+        //}
+
+        public async Task<bool> GenerateCalendarAsync(List<OrderModel> orderModels)
+        {
+            orderModels = orderModels.OrderBy(x => x.Sequence).ToList();
+            var ordersIds = orderModels.Select(x => x.Id);
+            var maxSequence = await _context.Orders.Where(x => x.StartDate.HasValue).MaxAsync(x => x.Sequence as int?) ?? 0;
+            maxSequence += 1;
+
+            var ordersDb = await _context.Orders
+                .Include(x => x.Tank)
+                    .ThenInclude(x => x.LineTank)
+                        .ThenInclude(x => x.ProductionLine)
+                .Where(x => !x.StartDate.HasValue)
+                .OrderBy(x => x.Sequence)
+                .ToListAsync();
+
+            var productionLines = await _context.ProductionLine
+                .Where(x => x.Active)
+                .Select(x => new
+                {
+                    ProductionLineId = x.Id,
+                    Date = x.StartDate,
+                }).ToListAsync();
+
+            var productionLinesIds = productionLines.Select(y => y.ProductionLineId);
+            var maxDateNoFreeDayForProductionLine = await _context.ProductionDays
+                .Where(x => productionLinesIds.Contains(x.ProductionLineId))
+                .GroupBy(x => x.ProductionLineId)
+                .Select(x => new
+                {
+                    ProductionLineId = x.Key,
+                    Date = x.Where(y => !y.DayOff).Max(y => y.Date),
+                })
+                .ToListAsync();
+
+            var freeDaysForProductionLines = (from x in maxDateNoFreeDayForProductionLine
+                                              join y in _context.ProductionDays
+                                                 on x.ProductionLineId equals y.ProductionLineId
+                                              where x.Date < y.Date
+                                              select
+                                                 new { y.ProductionLineId, y.Date }).ToList();
+
+            var maxDateDict = new Dictionary<int, DateTime>();
+            if (maxDateNoFreeDayForProductionLine.Count == 0)
+            {
+                maxDateDict = productionLines.ToDictionary(x => x.ProductionLineId, x => x.Date);
+            }
+            else
+            {
+                foreach (var productionLine in productionLines)
+                {
+                    var tmp = maxDateNoFreeDayForProductionLine.FirstOrDefault(x => x.ProductionLineId == productionLine.ProductionLineId);
+                    if (tmp != null)
+                    {
+                        maxDateDict.Add(tmp.ProductionLineId, tmp.Date);
+                    }
+                    else
+                    {
+                        maxDateDict.Add(productionLine.ProductionLineId, productionLine.Date);
+                    }
+                }
+            }
+
+            foreach (var order in ordersDb)
+            {
+                if (!ordersIds.Any(x => x == order.Id))
+                {
+                    continue;
+                }
+
+                var linesIds = new List<int>();
+                if (order.Tank.LineTank.Count > 0)
+                {
+                    linesIds = order.Tank.LineTank.Select(x => x.ProductionLineId).ToList();
+                    linesIds = linesIds.Where(x => productionLines.Select(y => y.ProductionLineId).Contains(x)).ToList();
+                }
+                else
+                {
+                    linesIds = productionLines.Select(y => y.ProductionLineId).ToList();
+                }
+
+                var maxDateNoFreeDayForProductionLineTMP = maxDateDict.Where(x => linesIds.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+
+                var productionLineId = 0;
+                while (productionLineId == 0)
+                {
+                    var workDate = maxDateNoFreeDayForProductionLineTMP.OrderBy(x => x.Value).First();
+                    if ((workDate.Value.DayOfWeek == DayOfWeek.Saturday) || (workDate.Value.DayOfWeek == DayOfWeek.Sunday))
+                    {
+                        maxDateNoFreeDayForProductionLineTMP[workDate.Key] = workDate.Value.AddDays(1);
+                    }
+                    else if (freeDaysForProductionLines.Count > 0
+                      && freeDaysForProductionLines.FirstOrDefault(x => x.ProductionLineId == workDate.Key && x.Date.Date == workDate.Value.Date) != null)
+                    {
+                        maxDateNoFreeDayForProductionLineTMP[workDate.Key] = workDate.Value.AddDays(1);
+                    }
+                    else
+                    {
+                        productionLineId = workDate.Key;
+                    }
+                }
+
+                for (int i = 0; i < order.Tank.ProductionDays; i++)
+                {
+                    if ((maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Saturday) || (maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Sunday))
+                    {
+                        //_context.ProductionDays.Add(new ProductionDays()
+                        //{
+                        //    Date = maxDateDict[productionLineId].Date,
+                        //    ProductionLineId = productionLineId,
+                        //    DayOff = true,
+                        //});
+                        maxDateDict[productionLineId] = maxDateDict[productionLineId].Date.AddDays(1);
+                        i--;
+                    }
+                    else if (freeDaysForProductionLines.Count > 0
+                      && freeDaysForProductionLines.FirstOrDefault(x => x.ProductionLineId == productionLineId && x.Date.Date == maxDateDict[productionLineId].Date) != null)
+                    {
+                        //_context.ProductionDays.Add(new ProductionDays()
+                        //{
+                        //    Date = maxDateDict[productionLineId].Date,
+                        //    ProductionLineId = productionLineId,
+                        //    DayOff = true,
+                        //});
+                        maxDateDict[productionLineId] = maxDateDict[productionLineId].Date.AddDays(1);
+                        i--;
+                    }
+                    else
+                    {
+                        if (i == 0)
+                        {
+                            order.StartDate = maxDateDict[productionLineId].Date;
+                            order.StopDate = maxDateDict[productionLineId].Date;
+                            order.Sequence = maxSequence++;
+                            order.ProductionLineId = productionLineId;
+                        }
+                        else
+                        {
+                            order.StopDate = maxDateDict[productionLineId].Date;
+                        }
+
+                        //_context.ProductionDays.Add(new ProductionDays()
+                        //{
+                        //    Date = maxDateDict[productionLineId].Date,
+                        //    //OrdersId = order.Id,
+                        //    ProductionLineId = productionLineId,
+                        //});
+
+                        maxDateDict[productionLineId] = maxDateDict[productionLineId].Date.AddDays(1);
+                    }
+                }
+            }
+
+            foreach (var order in ordersDb)
+            {
+                if (!order.StartDate.HasValue)
+                {
+                    order.Sequence = maxSequence++;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         private async Task<List<PartsStorekeeperModel>> GetPartsForOrdersAsync(List<int>? ordersIds)
         {
             var result = await _context.Orders
@@ -109,7 +341,7 @@ namespace ProductionManagement.Services.Services.Orders
             return result;
         }
 
-        public async Task<XLWorkbook> CreateSStorekeeperSheet(XLWorkbook workBook, IEnumerable<PartsStorekeeperModel> reportModel)
+        private async Task<XLWorkbook> CreateSStorekeeperSheet(XLWorkbook workBook, IEnumerable<PartsStorekeeperModel> reportModel)
         {
             string worksheetName = $"Lista części";
 
@@ -171,5 +403,4 @@ namespace ProductionManagement.Services.Services.Orders
             return result;
         }
     }
-
 }

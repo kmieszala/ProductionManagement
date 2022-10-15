@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { ProductionLineTank } from '../../../products/models/production-line-tank';
 import { TankModel } from '../../../products/models/tank-model';
@@ -27,6 +28,7 @@ export class OrderFormComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
+    private _toastr: ToastrService,
     private _ordersService: OrdersService,
     public bsModalRef: BsModalRef) { }
 
@@ -34,16 +36,16 @@ export class OrderFormComponent implements OnInit {
     if(this.editedOrder) {
       this.form = this._formBuilder.group({
         formOrderName: new FormControl(this.editedOrder.orderName, [Validators.required, Validators.maxLength(30)]),
-        formTank: new FormControl(this.editedOrder.tankId),//{name: this.editedOrder.tankName, id: this.editedOrder.tankId }),
+        formTank: new FormControl(this.editedOrder.tankId),
         formDescription: new FormControl(this.editedOrder.description, [Validators.maxLength(500)]),
-        formColor: this.editedOrder.color,
+        formColor: new FormControl(this.editedOrder.color),
       });
     } else {
       this.form = this._formBuilder.group({
         formOrderName: new FormControl('', [Validators.required, Validators.maxLength(30)]),
         formTank: new FormControl(null),
-        formDescription: new FormControl(null, [Validators.maxLength(500)]),
-        formColor: '#ff0000',
+        formDescription: new FormControl('', [Validators.maxLength(500)]),
+        formColor: new FormControl('#ff0000'),
       });
     }
 
@@ -77,9 +79,13 @@ export class OrderFormComponent implements OnInit {
       });
     } else {
       this._ordersService.addOrder(model).subscribe(result => {
-        model.id = result;
-        this.newOrder.next(model);
-        this.bsModalRef.hide();
+        if(result) {
+          model.id = result;
+          this.newOrder.next(model);
+          this.bsModalRef.hide();
+        } else {
+          this._toastr.error("Coś poszło nie tak, proszę spróbować za później")
+        }
       });
     }
   }

@@ -58,5 +58,26 @@ namespace ProductionManagement.WebUI.Areas.Orders
 
             return File(bytes, "application/octet-stream");
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UpdateSequenceOrders(List<SequenceVM> model)
+        {
+            var result = await _ordersService.UpdateSequenceOrdersAsync(_mapper.Map<List<SequenceModel>>(model));
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> GenerateCalendar(List<OrderVM> model)
+        {
+            var result = await _ordersService.GenerateCalendarAsync(_mapper.Map<List<OrderModel>>(model));
+            return Ok(result);
+        }
+
+        //[HttpPost("[action]")]
+        //public async Task<IActionResult> GetPlannedOrders(FilterPlannedOrdersVM model)
+        //{
+        //    var result = await _ordersService.GetPlannedOrdersAsync(_mapper.Map<FilterPlannedOrdersModel>(model));
+        //    return Ok(result);
+        //}
     }
 }

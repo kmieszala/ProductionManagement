@@ -1,0 +1,39 @@
+<div class="row container-default">
+  <div class="col-md-12">
+    <div class="card card-simple animate__animated animate__fadeIn shadow-default">
+      <div class="card-header">
+        <span>Kalendarz zleceń</span>
+      </div>
+      <div class="card-body">
+        <div class="rov">
+          <div class="col-12">
+
+          </div>
+        </div>
+        <table class="table table-default table-hover table-sm">
+          <thead>
+            <tr>
+              <th *ngFor="let item of headers">{{ item }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of productionDays; ; let i = index">
+              <tr>
+                <td class="w-100px pointer">{{ item.calendarDay | date: 'dd.MM.yyyy'}}</td>
+                <ng-container *ngFor="let pd of item.productionDay">
+                  <td *ngIf="!pd.dayOff" [style.backgroundColor]="pd.color" class="pointer" (click)="changeWorkDay(pd)">{{ pd.orderName }}</td>
+                  <td *ngIf="pd.dayOff" class="bg-secondary pointer text-light" (click)="changeFreeDay(pd)">WOLNE</td>
+                </ng-container>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <!-- <div class="row mt-3">
+          <div class="col-md-12">
+            paginacja
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>

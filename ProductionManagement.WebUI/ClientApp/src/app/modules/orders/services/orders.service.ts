@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { TankParts } from '../../products/models/tank-parts';
 import { HttpClientService } from '../../shared/services/http-client.service';
 import { OrderModel } from '../models/order-model';
+import { Sequence } from '../models/sequence';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +28,13 @@ export class OrdersService {
 
   downloadFile(ordersIds: number[], parts: TankParts[]): Observable<Blob> {
     return this._http.postFile(`api/orders/prepareStorekeeperDocument/`, { ordersIds: ordersIds, parts: parts });
+  }
+
+  updateSequenceOrders(model: Sequence[]) : Observable<boolean> {
+    return this._http.post<boolean>('api/orders/updateSequenceOrders', model);
+  }
+
+  generateCalendar(model: OrderModel[]) : Observable<boolean> {
+    return this._http.post<boolean>('api/orders/generateCalendar', model);
   }
 }

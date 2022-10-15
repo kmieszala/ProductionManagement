@@ -9,10 +9,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DatePickerComponent } from './components/date-picker/date-picker.component';
+import {MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS} from '@angular/material/radio';
 
 
 @NgModule({
-  declarations: [FormErrorComponent, StatusDirective, ConfirmationDialogComponent],
+  declarations: [FormErrorComponent, StatusDirective, ConfirmationDialogComponent, DatePickerComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,7 +24,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     ToastrModule.forRoot(),
     NgSelectModule,
     BrowserAnimationsModule,
-    DragDropModule
+    DragDropModule,
+    BsDatepickerModule,
+    MatRadioModule
   ],
   exports: [
     ModalModule,
@@ -33,11 +38,18 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     ConfirmationDialogComponent,
     BrowserAnimationsModule,
     DragDropModule,
+    BsDatepickerModule,
+    DatePickerComponent,
+    MatRadioModule,
 
     StatusDirective
   ],
   entryComponents: [
     ConfirmationDialogComponent,
-  ]
+  ],
+  providers: [{
+    provide: MAT_RADIO_DEFAULT_OPTIONS,
+    useValue: { color: 'warn' },
+  }]
 })
 export class SharedModule { }

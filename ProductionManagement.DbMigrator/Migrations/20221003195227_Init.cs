@@ -37,6 +37,20 @@ namespace ProductionManagement.DbMigrator.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductionLine",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductionLine", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Role",
                 columns: table => new
                 {
@@ -158,6 +172,57 @@ namespace ProductionManagement.DbMigrator.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LineTank",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TankId = table.Column<int>(type: "int", nullable: false),
+                    ProductionLineId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LineTank", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LineTank_ProductionLine_ProductionLineId",
+                        column: x => x.ProductionLineId,
+                        principalTable: "ProductionLine",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LineTank_Tanks_TankId",
+                        column: x => x.TankId,
+                        principalTable: "Tanks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Sequence = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StopDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TankId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Tanks_TankId",
+                        column: x => x.TankId,
+                        principalTable: "Tanks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TankParts",
                 columns: table => new
                 {
@@ -218,20 +283,31 @@ namespace ProductionManagement.DbMigrator.Migrations
                     { 4, true, "Deleted" }
                 });
 
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "ActivationDate", "Email", "FirstName", "LastName", "Password", "RegisteredDate", "Status" },
-                values: new object[] { 1, new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7149), "", "Admin", "Admin", "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9", new DateTime(2022, 9, 15, 22, 21, 52, 225, DateTimeKind.Local).AddTicks(7208), 2 });
+            migrationBuilder.CreateIndex(
+                name: "IX_LineTank_ProductionLineId",
+                table: "LineTank",
+                column: "ProductionLineId");
 
-            migrationBuilder.InsertData(
-                table: "UserRoles",
-                columns: new[] { "Id", "RoleId", "UserId" },
-                values: new object[] { 1, 1, 1 });
+            migrationBuilder.CreateIndex(
+                name: "IX_LineTank_TankId",
+                table: "LineTank",
+                column: "TankId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Log_LogCode",
                 table: "Log",
                 column: "LogCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_Sequence",
+                table: "Orders",
+                column: "Sequence",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_TankId",
+                table: "Orders",
+                column: "TankId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TankParts_PartsId",
@@ -273,13 +349,22 @@ namespace ProductionManagement.DbMigrator.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "LineTank");
+
+            migrationBuilder.DropTable(
                 name: "Log");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "TankParts");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "ProductionLine");
 
             migrationBuilder.DropTable(
                 name: "LogCodeDict");
