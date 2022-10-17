@@ -12,6 +12,7 @@ import { PartModel } from '../../../products/models/part-model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Sequence } from '../../models/sequence';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders-list',
@@ -24,17 +25,20 @@ export class OrdersListComponent implements OnInit {
   subscriptions: Subscription[] = [];
   bsModalRef?: BsModalRef;
   orders: OrderModel[];
+  ordersToMove: OrderModel[];
   tanks: TankModel[];
   parts: PartModel[];
   checkedButton = false;
   updateSequenceButton = false;
   generateButton = false;
+  generating = false;
 
   constructor(
     private _modalService: BsModalService,
     private _ordersService: OrdersService,
     private _partsService: PartsService,
     private _toastr: ToastrService,
+    private _router: Router,
     private _tanksService: TanksService,
     ) { }
 
@@ -46,13 +50,16 @@ export class OrdersListComponent implements OnInit {
       })
       .subscribe(result => {
         this.tanks = result.tanks;
-        this.orders = result.orders;
+        this.orders = result.orders.filter(x => x.startDate != null);
+        this.ordersToMove = result.orders.filter(x => x.startDate == null);
+        console.log(this.orders)
       });
   }
 
   checkAll() {
     this.checkedButton = !this.checkedButton;
     this.orders.forEach(x => x.checked = this.checkedButton);
+    this.ordersToMove.forEach(x => x.checked = this.checkedButton);
     if(!this.checkedButton) {
       this.generateButton = false;
     }
@@ -60,7 +67,7 @@ export class OrdersListComponent implements OnInit {
 
   checkItem() {
     setTimeout(() => {
-      this.generateButton = this.orders.find(x => x.checked) != null;
+      this.generateButton = this.ordersToMove.find(x => x.checked) != null;
       if(!this.generateButton) {
         this.checkedButton = false;
       }
@@ -68,9 +75,9 @@ export class OrdersListComponent implements OnInit {
   }
 
   generateCalendar() {
-    let orders = this.orders.filter(x => x.checked);
+    let orders = this.ordersToMove.filter(x => x.checked);
     this._ordersService.generateCalendar(orders).subscribe(result => {
-// przekierowanie na widok kalendarza
+      this._router.navigate(['production-days']);
     });
   }
 
@@ -85,7 +92,9 @@ export class OrdersListComponent implements OnInit {
 
     this.bsModalRef = this._modalService.show(OrderFormComponent, initialState);
     this.subscriptions.push(this.bsModalRef.content.newOrder.subscribe((res: OrderModel) => {
-      let tmp = this.orders.filter(x => x.id == res.id)[0];
+      let tmp = res.startDate == null
+        ? this.ordersToMove.filter(x => x.id == res.id)[0]
+        : this.orders.filter(x => x.id == res.id)[0];
       tmp.color = res.color;
       tmp.description = res.description;
       tmp.orderName = res.orderName;
@@ -104,18 +113,19 @@ export class OrdersListComponent implements OnInit {
     };
     this.bsModalRef = this._modalService.show(OrderFormComponent, initialState);
     this.subscriptions.push(this.bsModalRef.content.newOrder.subscribe((res: OrderModel) => {
-      this.orders.push(res); // add new order to orders list
+      this.ordersToMove.push(res); // add new order to orders list
     }));
   }
 
   updateSequence() {
-    var model = this.orders.filter(x => x.startDate == null).map(x => {
+    var model = this.ordersToMove.filter(x => x.startDate == null).map(x => {
       return { id: x.id, sequence: x.sequence } as Sequence;
     });
 
     this._ordersService.updateSequenceOrders(model).subscribe(result => {
       if(result) {
         this.updateSequenceButton = false;
+        this._toastr.success("Kolejność zaktualizowana");
       } else {
         this._toastr.error("Coś poszło nie tak, proszę spróbować za później")
       }
@@ -134,8 +144,10 @@ export class OrdersListComponent implements OnInit {
   }
 
   openStorekeeperDocumentComponent() {
-    let checkedOrders = this.orders.filter(x => x.checked);
+    let tmp1 = this.orders.filter(x => x.checked);
+    let tmp2 = this.ordersToMove.filter(x => x.checked);
 
+    let checkedOrders = [ ...tmp1, ...tmp2];
     const initialState: ModalOptions = {
       initialState: {
         checkedOrders: checkedOrders,
@@ -148,8 +160,9 @@ export class OrdersListComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.orders, event.previousIndex, event.currentIndex);
-    this.orders.forEach((group, idx) => {
+    moveItemInArray(this.ordersToMove, event.previousIndex, event.currentIndex);
+
+    this.ordersToMove.forEach((group, idx) => {
       group.sequence = idx + 1;
     });
     this.updateSequenceButton = true;

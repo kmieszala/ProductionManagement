@@ -39,45 +39,47 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                     await ChangeProductionDayOrRemoveAsync(productionDay, true);
                     break;
 
+                case ChangeWorkDayOptionEnum.RemoveOrder:
+                    await RemoveOrderFromCalendarAsync(productionDay, false);
+                    break;
+
+                case ChangeWorkDayOptionEnum.RemoveOrderAndNext:
+                    await RemoveOrderFromCalendarAsync(productionDay, true);
+                    break;
+
                 case ChangeWorkDayOptionEnum.SetDayFreeWitchMove:
-                    var orders = await _context.Orders
-                        .Where(x => x.ProductionLineId.HasValue && x.ProductionLineId.Value == productionDay.ProductionLineId)
-                        .Where(x => x.Id == productionDay.OrdersId
-                            || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date))
-                        .OrderBy(x => x.StartDate)
-                        .ToListAsync();
-
-                    var freeDays = await _context.ProductionDays
-                        .Where(x => x.ProductionLineId == productionDay.ProductionLineId)
-                        .Where(x => x.Date.Date > productionDay.Date.Date)
-                        .Where(x => x.DayOff)
-                        .AsNoTracking()
-                        .ToListAsync();
-
-                    int i = 1;
-                    foreach (var item in orders)
-                    {
-                        if (i != 1)
-                        {
-                            item.StartDate = GetNextWorkDayDate(item.StartDate.Value, freeDays);
-                        }
-
-                        item.StopDate = GetNextWorkDayDate(item.StopDate.Value, freeDays);
-                        i++;
-                    }
-
-                    _context.ProductionDays.Add(new ProductionDays()
-                    {
-                        Date = productionDay.Date,
-                        DayOff = true,
-                        ProductionLineId = productionDay.ProductionLineId,
-                    });
-
-                    await _context.SaveChangesAsync();
+                    await SetDayFreeWitchMoveAsync(productionDay);
                     break;
             }
 
             return true;
+        }
+
+        private async Task RemoveOrderFromCalendarAsync(ProductionDaysBasicModel productionDay, bool removeNextOrders)
+        {
+            var maxSequence = await _context.Orders.MaxAsync(x => x.Sequence as int?) ?? 0;
+
+            var orderQuery = _context.Orders
+                                    .Where(x => x.ProductionLineId.HasValue && x.ProductionLineId.Value == productionDay.ProductionLineId)
+                                    .Where(x => x.Id == productionDay.OrdersId
+                                        || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date))
+                                    .AsQueryable();
+
+            orderQuery = removeNextOrders == false
+                ? orderQuery.Where(x => x.Id == productionDay.OrdersId)
+                : orderQuery.Where(x => x.Id == productionDay.OrdersId || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date));
+
+            var orders = await orderQuery.ToListAsync();
+
+            foreach (var order in orders)
+            {
+                order.StartDate = null;
+                order.StopDate = null;
+                order.ProductionLineId = null;
+                order.Sequence = ++maxSequence;
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<string>> GetCalendarHeadersAsync()
@@ -130,7 +132,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                         .Where(x => x.Date.Date == dateTMP.Date)
                         .Where(x => x.ProductionLineId == prodLId)
                         .FirstOrDefault();
-                    if (freeDay != null)
+                    if (freeDay != null && freeDay.DayOff)
                     {
                         list.Add(new ProductionDaysBasicModel()
                         {
@@ -148,7 +150,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                             .Where(x => x.ProductionLineId == prodLId)
                             .FirstOrDefault();
 
-                        if (tmp != null && (dateTMP.Date.DayOfWeek != DayOfWeek.Saturday && dateTMP.Date.DayOfWeek != DayOfWeek.Sunday))
+                        if (tmp != null && ((freeDay != null && !freeDay.DayOff) || (dateTMP.Date.DayOfWeek != DayOfWeek.Saturday && dateTMP.Date.DayOfWeek != DayOfWeek.Sunday)))
                         {
                             list.Add(new ProductionDaysBasicModel()
                             {
@@ -164,7 +166,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                         {
                             list.Add(new ProductionDaysBasicModel()
                             {
-                                DayOff = dateTMP.Date.DayOfWeek == DayOfWeek.Saturday || dateTMP.Date.DayOfWeek == DayOfWeek.Sunday,
+                                DayOff = freeDay != null ? freeDay.DayOff : dateTMP.Date.DayOfWeek == DayOfWeek.Saturday || dateTMP.Date.DayOfWeek == DayOfWeek.Sunday,
                                 ProductionLineId = prodLId,
                                 Date = dateTMP,
                             });
@@ -202,6 +204,44 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                     ProductionLineId = productionDay.ProductionLineId,
                 });
             }
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SetDayFreeWitchMoveAsync(ProductionDaysBasicModel productionDay)
+        {
+            var orders = await _context.Orders
+                                    .Where(x => x.ProductionLineId.HasValue && x.ProductionLineId.Value == productionDay.ProductionLineId)
+                                    .Where(x => x.Id == productionDay.OrdersId
+                                        || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date))
+                                    .OrderBy(x => x.StartDate)
+                                    .ToListAsync();
+
+            var freeDays = await _context.ProductionDays
+                .Where(x => x.ProductionLineId == productionDay.ProductionLineId)
+                .Where(x => x.Date.Date > productionDay.Date.Date)
+                .Where(x => x.DayOff)
+                .AsNoTracking()
+                .ToListAsync();
+
+            int i = 1;
+            foreach (var item in orders)
+            {
+                if (i != 1)
+                {
+                    item.StartDate = GetNextWorkDayDate(item.StartDate.Value, freeDays);
+                }
+
+                item.StopDate = GetNextWorkDayDate(item.StopDate.Value, freeDays);
+                i++;
+            }
+
+            _context.ProductionDays.Add(new ProductionDays()
+            {
+                Date = productionDay.Date,
+                DayOff = true,
+                ProductionLineId = productionDay.ProductionLineId,
+            });
+
             await _context.SaveChangesAsync();
         }
 

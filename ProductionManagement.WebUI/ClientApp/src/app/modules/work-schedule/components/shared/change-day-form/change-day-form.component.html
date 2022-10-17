@@ -6,10 +6,13 @@
 <div class="modal-body">
   <div class="row" *ngIf="!productionDay.dayOff && productionDay.ordersId != null" >
     <div class="col-md-12">
+      Zlecenie <span class="fw-bold"> {{ productionDay.orderName }}</span>
       <div class="widget widget-simple">
         <mat-radio-group aria-label="Select an option" [(ngModel)]="option">
           <mat-radio-button value="1">Wstaw dzień wolny z przesunięciem zleceń</mat-radio-button>
           <mat-radio-button value="2">Wstaw dzień wolny bez przesunięcia zleceń</mat-radio-button>
+          <mat-radio-button value="4">Usuń w całości zlecenie z kalendarza</mat-radio-button>
+          <mat-radio-button value="5">Usuń to zlecenie w całości z kalendarza i kolejne</mat-radio-button>
         </mat-radio-group>
       </div>
     </div>

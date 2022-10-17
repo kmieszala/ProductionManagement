@@ -184,22 +184,23 @@ namespace ProductionManagement.Services.Services.Orders
                 }).ToListAsync();
 
             var productionLinesIds = productionLines.Select(y => y.ProductionLineId);
-            var maxDateNoFreeDayForProductionLine = await _context.ProductionDays
-                .Where(x => productionLinesIds.Contains(x.ProductionLineId))
+            var maxDateNoFreeDayForProductionLine = await _context.Orders
+                .Where(x => x.ProductionLineId.HasValue && productionLinesIds.Contains(x.ProductionLineId.Value))
                 .GroupBy(x => x.ProductionLineId)
                 .Select(x => new
                 {
                     ProductionLineId = x.Key,
-                    Date = x.Where(y => !y.DayOff).Max(y => y.Date),
+                    Date = x.Max(y => y.StopDate.Value),
                 })
                 .ToListAsync();
 
-            var freeDaysForProductionLines = (from x in maxDateNoFreeDayForProductionLine
+            //var minDate = maxDateNoFreeDayForProductionLine.Min(x => x.Date);
+
+            var freeDaysForProductionLines = (from x in productionLinesIds
                                               join y in _context.ProductionDays
-                                                 on x.ProductionLineId equals y.ProductionLineId
-                                              where x.Date < y.Date
+                                                 on x equals y.ProductionLineId
                                               select
-                                                 new { y.ProductionLineId, y.Date }).ToList();
+                                                 new { y.ProductionLineId, y.Date, y.DayOff }).ToList();
 
             var maxDateDict = new Dictionary<int, DateTime>();
             if (maxDateNoFreeDayForProductionLine.Count == 0)
@@ -213,7 +214,7 @@ namespace ProductionManagement.Services.Services.Orders
                     var tmp = maxDateNoFreeDayForProductionLine.FirstOrDefault(x => x.ProductionLineId == productionLine.ProductionLineId);
                     if (tmp != null)
                     {
-                        maxDateDict.Add(tmp.ProductionLineId, tmp.Date);
+                        maxDateDict.Add(tmp.ProductionLineId.Value, tmp.Date.Date.AddDays(1));
                     }
                     else
                     {
@@ -245,15 +246,20 @@ namespace ProductionManagement.Services.Services.Orders
                 var productionLineId = 0;
                 while (productionLineId == 0)
                 {
-                    var workDate = maxDateNoFreeDayForProductionLineTMP.OrderBy(x => x.Value).First();
-                    if ((workDate.Value.DayOfWeek == DayOfWeek.Saturday) || (workDate.Value.DayOfWeek == DayOfWeek.Sunday))
+                    var workDate = maxDateDict.Where(x => linesIds.Contains(x.Key)).OrderBy(x => x.Value).First();
+                    var addedFreeDay = freeDaysForProductionLines.Where(x =>
+                        x.ProductionLineId == workDate.Key
+                        && !x.DayOff
+                        && x.Date.Date == maxDateDict[workDate.Key].Date)
+                        .FirstOrDefault();
+                    if (addedFreeDay == null && (workDate.Value.DayOfWeek == DayOfWeek.Saturday || workDate.Value.DayOfWeek == DayOfWeek.Sunday))
                     {
-                        maxDateNoFreeDayForProductionLineTMP[workDate.Key] = workDate.Value.AddDays(1);
+                        maxDateDict[workDate.Key] = workDate.Value.AddDays(1);
                     }
                     else if (freeDaysForProductionLines.Count > 0
-                      && freeDaysForProductionLines.FirstOrDefault(x => x.ProductionLineId == workDate.Key && x.Date.Date == workDate.Value.Date) != null)
+                      && freeDaysForProductionLines.FirstOrDefault(x => x.ProductionLineId == workDate.Key && x.Date.Date == workDate.Value.Date && x.DayOff) != null)
                     {
-                        maxDateNoFreeDayForProductionLineTMP[workDate.Key] = workDate.Value.AddDays(1);
+                        maxDateDict[workDate.Key] = workDate.Value.AddDays(1);
                     }
                     else
                     {
@@ -263,7 +269,12 @@ namespace ProductionManagement.Services.Services.Orders
 
                 for (int i = 0; i < order.Tank.ProductionDays; i++)
                 {
-                    if ((maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Saturday) || (maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Sunday))
+                    var addedFreeDay = freeDaysForProductionLines.Where(x =>
+                        x.ProductionLineId == productionLineId
+                        && !x.DayOff
+                        && x.Date.Date == maxDateDict[productionLineId].Date)
+                        .FirstOrDefault();
+                    if (addedFreeDay == null && (maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Saturday || maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Sunday))
                     {
                         //_context.ProductionDays.Add(new ProductionDays()
                         //{
@@ -275,7 +286,7 @@ namespace ProductionManagement.Services.Services.Orders
                         i--;
                     }
                     else if (freeDaysForProductionLines.Count > 0
-                      && freeDaysForProductionLines.FirstOrDefault(x => x.ProductionLineId == productionLineId && x.Date.Date == maxDateDict[productionLineId].Date) != null)
+                      && freeDaysForProductionLines.FirstOrDefault(x => x.ProductionLineId == productionLineId && x.Date.Date == maxDateDict[productionLineId].Date && x.DayOff) != null)
                     {
                         //_context.ProductionDays.Add(new ProductionDays()
                         //{
