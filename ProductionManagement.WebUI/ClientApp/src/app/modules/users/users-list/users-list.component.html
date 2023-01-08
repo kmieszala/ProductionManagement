@@ -1,0 +1,68 @@
+<div class="row container-default">
+    <div class="col-md-12">
+      <div class="card card-simple animate__animated animate__fadeIn shadow-default">
+        <div class="card-header">
+          <span>Użytkownicy</span>
+          <div class="float-end">
+            <button [disabled]="loading" type="button" class="btn btn-primary btn-sm" (click)="addNewUser()"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+          </div>
+        </div>
+        <!-- <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="widget-body">
+                <ng-select id="selectStatus" [(ngModel)]="statusFilter" [multiple]="false" [clearable]="false" (change)="refresh($event)">
+                  <ng-option [value]="true">Aktywne</ng-option>
+                  <ng-option [value]="false">Nieaktywne</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="card-body">
+          <table class="table table-default table-hover table-sm">
+            <thead>
+              <tr>
+                <th class="th-priority">Imię</th>
+                <th>Nazwisko</th>
+                <th>Email/Login</th>
+                <th>Status</th>
+                <th>Data rejestracji</th>
+                <th>Data aktywacji</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of users">
+                <tr (click)="showDetails(item)" class="pointer">
+                  <td>{{ item.firstName }}</td>
+                  <td>{{ item.lastName }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.status | userStatus }}</td>
+                  <td>{{ item.registeredDate | date: "dd-MM-yyyy"}}</td>
+                  <td>{{ item.activationDate | date: "dd-MM-yyyy" }}</td>
+                  <!-- <td>
+                    <div class="float-end">
+                      <button *ngIf="!statusFilter" type="button" class="btn btn-success btn-sm me-2" (click)="$event.stopPropagation();activeTank(item)"><i class="fa-solid fa-arrows-rotate"></i> Aktywuj</button>
+                      <button *ngIf="statusFilter" type="button" class="btn btn-danger btn-sm me-2" (click)="$event.stopPropagation();deactiveTank(item)"><i class="fa fa-trash" aria-hidden="true"></i> Deaktywuj</button>
+                      <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editTank(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                    </div>
+                  </td> -->
+                </tr>
+                <tr *ngIf="item.showDetails">
+                  <td colspan="6" class="p-3">
+                    <span *ngFor="let role of item.roles" class="bg-info rounded-pill p-2">{{role.value}}</span>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <!-- <div class="row mt-3">
+            <div class="col-md-12">
+              paginacja
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>

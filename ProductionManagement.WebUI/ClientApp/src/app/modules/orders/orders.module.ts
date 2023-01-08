@@ -5,6 +5,7 @@ import { OrderFormComponent } from './components/order-form/order-form.component
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { StorekeeperDocumentComponent } from './components/storekeeper-document/storekeeper-document.component';
+import { AuthorizeGuard } from '../authorization/guards/authorize.guard';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,11 @@ import { StorekeeperDocumentComponent } from './components/storekeeper-document/
     CommonModule,
     SharedModule,
     RouterModule.forRoot([
-      { path: '', component: OrdersListComponent, pathMatch: 'full' },
+      { path: 'orders',
+        canActivate: [AuthorizeGuard],
+        component: OrdersListComponent,
+        pathMatch: 'full'
+      },
     ]),
   ],
   entryComponents: [OrderFormComponent, StorekeeperDocumentComponent],

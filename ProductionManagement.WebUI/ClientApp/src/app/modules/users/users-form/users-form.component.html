@@ -1,0 +1,101 @@
+<div class="modal-header pb-0">
+    <h4 *ngIf="!editUser" class="modal-title pull-left">
+      Dodaj zbiornik
+    </h4>
+    <h4 *ngIf="editUser" class="modal-title pull-left">
+      Edytuj zbiornik
+    </h4>
+  </div>
+  <form class="modal-body" [formGroup]="form" *ngIf="!loading" (ngSubmit)="saveUser()">
+    <div class="row mt-2">
+      <!-- LEFT -->
+      <div class="col-md-6 col-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="widget widget-simple">
+              <div class="widget-header">
+                Imię
+              </div>
+              <div class="widget-body">
+                <div class="input-group has-validation">
+                  <input type="text" id="formFirstName" class="form-control" formControlName="formFirstName" />
+                </div>
+                <form-error [targetControl]="formFirstName"></form-error>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="widget widget-simple">
+              <div class="widget-header">
+                Nazwisko
+              </div>
+              <div class="widget-body">
+                <div class="input-group has-validation">
+                  <input type="text" id="formLastName" class="form-control" formControlName="formLastName" />
+                </div>
+                <form-error [targetControl]="formLastName"></form-error>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="widget widget-simple">
+              <div class="widget-header">
+                Email/Login
+              </div>
+              <div class="widget-body">
+                <div class="input-group has-validation">
+                  <input type="text" id="formEmailLogin" class="form-control" formControlName="formEmailLogin" />
+                </div>
+                <form-error [targetControl]="formEmailLogin"></form-error>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="widget widget-simple">
+              <div class="widget-header">
+                Hasło
+              </div>
+              <div class="widget-body">
+                <div class="input-group has-validation">
+                  <input type="text" id="formPassword" class="form-control" formControlName="formPassword" />
+                </div>
+                <form-error [targetControl]="formPassword"></form-error>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="widget widget-simple">
+              <div class="widget-header">
+                Uprawnienia
+              </div>
+              <div class="row">
+                <div class="col-md-9">
+                  <div class="widget-body">
+                    <ng-select id="formRoles" formControlName="formRoles" notFoundText="Brak ról" [multiple]="true">
+                      <ng-option *ngFor="let item of roles" [value]="item">{{item.value}}</ng-option>
+                    </ng-select>
+                    <form-error [targetControl]="formRoles"></form-error>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-12 text-center">
+        <button [disabled]="loading" class="btn btn-light btn-sm me-2" type="button" (click)="bsModalRef.hide()"><i class="fas fa-undo"></i> Anuluj</button>
+        <button [disabled]="loading" class="btn btn-primary btn-sm" type="submit" ><i class="fas fa-save"></i> Zapisz</button>
+      </div>
+    </div>
+  </form>

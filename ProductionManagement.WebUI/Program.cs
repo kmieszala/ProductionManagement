@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Sinks.SystemConsole.Themes;
 
 namespace ProductionManagement.WebUI
 {
@@ -25,7 +24,8 @@ namespace ProductionManagement.WebUI
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                    .UseKestrel()
+                    //.UseKestrel()
+                    .UseIISIntegration()
                     .UseUrls();
                 }).UseSerilog();
     }
@@ -56,7 +56,6 @@ namespace ProductionManagement.WebUI
 //    options.ListenAnyIP(7001, configure => configure.UseHttps()); // to listen for incoming https connection on port 7001
 //});
 
-
 //var app = builder.Build();
 
 //// Configure the HTTP request pipeline.
@@ -69,7 +68,6 @@ namespace ProductionManagement.WebUI
 //app.UseHttpsRedirection();
 //app.UseStaticFiles();
 //app.UseRouting();
-
 
 //app.MapControllerRoute(
 //    name: "default",

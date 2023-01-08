@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { forkJoin, Subscription } from 'rxjs';
 import { ProductionLine } from '../../../production-line/models/production-line';
@@ -17,7 +17,7 @@ import { ConfirmationDialogOptions } from '../../../shared/models/confirmation-d
   templateUrl: './tanks-list.component.html',
   styleUrls: ['./tanks-list.component.scss']
 })
-export class TanksListComponent implements OnInit {
+export class TanksListComponent implements OnInit, OnDestroy {
 
   statusFilter: boolean = true;
   subscriptions: Subscription[] = [];

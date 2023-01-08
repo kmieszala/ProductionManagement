@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +15,7 @@ using ProductionManagement.Services.Services.Orders;
 using ProductionManagement.Services.Services.Parts;
 using ProductionManagement.Services.Services.ProductionLine;
 using ProductionManagement.Services.Services.Tanks;
+using ProductionManagement.Services.Services.Users;
 using ProductionManagement.Services.Services.WorkSchedule;
 using ProductionManagement.WebUI.Configuration;
 using Serilog;
@@ -38,11 +42,31 @@ namespace ProductionManagement.WebUI
                 options.EnableSensitiveDataLogging(true)
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection").ToString()));
 
+            services.AddAuthentication(o =>
+            {
+                o.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.ExpireTimeSpan = System.TimeSpan.FromMinutes(300);
+                options.AccessDeniedPath = new PathString(string.Empty);
+
+                options.LoginPath = string.Empty;
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
+            });
+
             services.AddHttpContextAccessor();
 
             services.AddControllersWithViews();
 
             services.AddTransient<IPartsService, PartsService>();
+            services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<ITanksService, TanksService>();
             services.AddTransient<IProductionLineService, ProductionLineService>();
             services.AddTransient<IOrdersService, OrdersService>();

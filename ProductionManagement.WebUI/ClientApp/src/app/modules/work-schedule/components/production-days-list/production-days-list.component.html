@@ -5,22 +5,32 @@
         <span>Kalendarz zleceń</span>
       </div>
       <div class="card-body">
-        <div class="rov">
+        <div class="rov" [formGroup]="form">
           <div class="col-12">
-            <!-- <div class="widget-body">
-              <div class="input-group">
-                <date-picker [isValid]="formStartDate?.valid" [ngTouched]="formStartDate?.touched" [dateValue]="dateStartToShow" (dateChange)="dateChange($event)" [formControlSize]="'sm'"></date-picker>
+            <div class="row row-cols-lg-auto">
+              <div class="col-12">
+                <date-selector [label]="''"
+                                      formControlName="formStartDate"
+                                      [name]="'formStartDate'"
+                                      [allowPast]="true"
+                                      [allowFuture]="true">
+                </date-selector>
+                <form-error [targetControl]="formStartDate"></form-error>
               </div>
-              <form-error [targetControl]="formStartDate"></form-error>
-            </div>
-            <div class="widget-body">
-              <div class="input-group">
-                <date-picker [isValid]="formStopDate?.valid" [ngTouched]="formStopDate?.touched" [dateValue]="dateStopToShow" (dateChange)="dateChange($event)" [formControlSize]="'sm'"></date-picker>
-              </div>
-              <form-error [targetControl]="formStopDate"></form-error>
-            </div>
-            <button class="btn btn-light btn-sm me-2" type="button" (click)="bsModalRef.hide()"><i class="fas fa-undo"></i> Anuluj</button> -->
+              <div class="col-12">
+                <date-selector [label]="''"
+                                      formControlName="formStopDate"
+                                      [name]="'formStopDate'"
+                                      [allowPast]="true"
+                                      [allowFuture]="true">
 
+                </date-selector>
+                <form-error [targetControl]="formStopDate"></form-error>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-light  me-2" type="button" (click)="filter()"><i class="fas fa-undo"></i> Filtruj</button>
+              </div>
+            </div>
           </div>
         </div>
         <table class="table table-default table-hover table-sm">

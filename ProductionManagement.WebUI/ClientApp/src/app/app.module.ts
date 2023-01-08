@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -12,6 +12,10 @@ import { ProductsModule } from './modules/products/products.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { ProductionLineModule } from './modules/production-line/production-line.module';
 import { WorkScheduleModule } from './modules/work-schedule/work-schedule.module';
+import { AuthorizationModule } from './modules/authorization/authorization.module';
+import { AuthorizeInterceptor } from './modules/authorization/interceptors/authorize.interceptor';
+import { HomeModule } from './modules/home/home.module';
+import { UsersModule } from './modules/users/users.module';
 
 @NgModule({
   declarations: [
@@ -23,15 +27,20 @@ import { WorkScheduleModule } from './modules/work-schedule/work-schedule.module
     HttpClientModule,
     FormsModule,
     OrdersModule,
+    HomeModule,
     ProductsModule,
     SharedModule,
+    UsersModule,
     ProductionLineModule,
     WorkScheduleModule,
+    AuthorizationModule,
     RouterModule.forRoot([
       { path: '', component: OrdersListComponent, pathMatch: 'full' },
     ])
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

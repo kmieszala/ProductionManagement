@@ -376,7 +376,7 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("ActivationDate")
+                    b.Property<DateTime?>("ActivationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -403,6 +403,9 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimeBlockCount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

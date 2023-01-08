@@ -26,15 +26,23 @@
         [ForeignKey("UserStatusDict")]
         public UserStatusEnum Status { get; set; }
 
+        public int TimeBlockCount { get; set; }
+
         [MaxLength(64)]
         public string Password { get; set; }
 
         [MaxLength(100)]
         public string Email { get; set; }
 
+        /// <summary>
+        /// User registration by the administrator.
+        /// </summary>
         public DateTime RegisteredDate { get; set; }
 
-        public DateTime ActivationDate { get; set; }
+        /// <summary>
+        /// First login and change password by user.
+        /// </summary>
+        public DateTime? ActivationDate { get; set; }
 
         public virtual ICollection<UserRoles> UserRoles { get; set; }
 

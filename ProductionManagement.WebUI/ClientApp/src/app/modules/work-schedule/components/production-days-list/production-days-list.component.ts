@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { forkJoin, Subscription } from 'rxjs';
 import { ProductionDays } from '../../models/production-days';
@@ -18,14 +19,29 @@ export class ProductionDaysListComponent implements OnInit, OnDestroy {
   loading = true;
   subscriptions: Subscription[] = [];
   bsModalRef?: BsModalRef;
+  form: FormGroup;
+  get formStartDate() { return this.form.get('formStartDate'); }
+  get formStopDate() { return this.form.get('formStopDate'); }
 
   constructor(
+    private _formBuilder: FormBuilder,
     private _workScheduleService: WorkScheduleService,
     private _modalService: BsModalService,) { }
 
   ngOnInit(): void {
-    let dateFrom =  new Date(2022, 7, 30, 12);
-    let dateTo =  new Date(2022, 11, 1, 12);
+    let dateFrom =  new Date();
+    let dateTo =  new Date();
+    dateFrom.setDate( dateFrom.getDate() - 7 );
+    dateTo.setDate( dateTo.getDate() + 20 );
+    // dopracować daty
+    // walidacja dat
+
+    console.log(dateFrom)
+    console.log(dateFrom.toLocaleDateString())
+    this.form = this._formBuilder.group({
+      formStartDate: new FormControl(dateFrom.toLocaleDateString(), [Validators.required]),
+      formStopDate: new FormControl(dateTo.toLocaleDateString(), [Validators.required]),
+    });
 
     forkJoin(
       {
@@ -36,13 +52,18 @@ export class ProductionDaysListComponent implements OnInit, OnDestroy {
         this.productionDays = result.prodDays;
         this.headers = result.headers;
         this.loading = false;
+        this.formStartDate?.setValue(dateFrom);
+        this.formStopDate?.setValue(dateTo);
       });
   }
 
   filter() {
-    let dateFrom =  new Date(2022, 7, 30, 12);
-    let dateTo =  new Date(2022, 11, 1, 12);
+    console.log(this.formStartDate?.value)
+    let dateFrom =  new Date(this.formStartDate?.value);
+    console.log(dateFrom)
+    let dateTo =  new Date(this.formStopDate?.value);
     this.loading = true;
+
     this._workScheduleService.getProductionDays(dateFrom, dateTo).subscribe(result => {
       this.productionDays = result;
       this.loading = false;

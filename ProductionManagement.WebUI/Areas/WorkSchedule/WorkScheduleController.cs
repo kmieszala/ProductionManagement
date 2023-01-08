@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductionManagement.Common.Enums;
 using ProductionManagement.Services.Services.WorkSchedule;
@@ -10,6 +11,7 @@ namespace ProductionManagement.WebUI.Areas.WorkSchedule
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class WorkScheduleController : ControllerBase
     {
         private readonly IWorkScheduleService _workScheduleService;

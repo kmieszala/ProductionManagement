@@ -30,7 +30,7 @@
           </thead>
           <tbody cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
             <ng-container *ngFor="let item of orders">
-              <tr *ngIf="item.startDate != null">
+              <tr>
                 <td [style.backgroundColor]="item.color">
                   <input (click)="checkItem()" class="form-check-input" type="checkbox" id="checkAll" [(ngModel)]="item.checked">
                 </td>
@@ -43,13 +43,13 @@
                 <td>{{ item.stopDate | date: "dd.MM.yyyy" }}</td>
                 <td>
                   <div class="float-end">
-                    <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editOrder(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                    <button [disabled]="item.startDate" type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editOrder(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
                   </div>
                 </td>
               </tr>
             </ng-container>
             <ng-container *ngFor="let item of ordersToMove">
-              <tr *ngIf="item.startDate == null" cdkDrag class="pointer">
+              <tr cdkDrag class="pointer">
                 <td colspan="9" *cdkDragPlaceholder [style.backgroundColor]="item.color" class=" h-20px">
                   <div class="drag-handle">
                     {{ item.orderName }}

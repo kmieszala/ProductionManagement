@@ -12,16 +12,30 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import {MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS} from '@angular/material/radio';
+import { DateSelectorComponent } from './components/date-selector/date-selector.component';
+import { UserStatusPipe } from './common/pipes/user-status.pipe';
 
 
 @NgModule({
-  declarations: [FormErrorComponent, StatusDirective, ConfirmationDialogComponent, DatePickerComponent],
+  declarations: [
+    FormErrorComponent,
+    ConfirmationDialogComponent,
+    DatePickerComponent,
+    DateSelectorComponent,
+
+    StatusDirective,
+
+    UserStatusPipe],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ModalModule.forRoot(),
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 4000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
     NgSelectModule,
     BrowserAnimationsModule,
     DragDropModule,
@@ -41,6 +55,9 @@ import {MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS} from '@angular/material/radio
     BsDatepickerModule,
     DatePickerComponent,
     MatRadioModule,
+    DateSelectorComponent,
+
+    UserStatusPipe,
 
     StatusDirective
   ],

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductionManagement.Services.Services.Parts;
 using ProductionManagement.Services.Services.Parts.Models;
@@ -9,6 +10,7 @@ namespace ProductionManagement.WebUI.Areas.Parts
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PartsController : ControllerBase
     {
         private readonly IPartsService _partsService;

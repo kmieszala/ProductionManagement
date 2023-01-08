@@ -83,7 +83,6 @@ export class StorekeeperDocumentComponent implements OnInit {
     }
 
     this._ordersService.downloadFile(ordersIds ,this.addedParts).subscribe(result => {
-      console.log(result);
       this._httpClient.saveXlsmFile(result, "DokumentDlaMagazyniera.xls");
     });
 

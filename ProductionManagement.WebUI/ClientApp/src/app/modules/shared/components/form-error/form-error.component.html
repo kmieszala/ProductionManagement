@@ -8,4 +8,20 @@
   <div *ngIf="targetControl.errors?.min && !targetControl.errors.required">
     Nieprawidłowa wartość
   </div>
+  <div *ngIf="targetControl.errors.minlength && !targetControl.errors.required">
+    Wamagana minimalna długość: {{targetControl.errors.minlength.requiredLength}}
+  </div>
+  <div *ngIf="targetControl.errors.maxlength && !targetControl.errors.required">
+    Maksymalna długość: {{targetControl.errors.maxlength.requiredLength}}
+  </div>
+  <!-- pattern for password -->
+  <div *ngIf="targetControl.errors?.pattern && !targetControl.errors.required">
+    Wymagana cyfra, mała litera, duża litera i znak specjalny (@$!%*#?&^_-)
+  </div>
+  <div *ngIf="targetControl.errors?.match_error && !targetControl.errors.required">
+    Hasła nie są identyczne
+  </div>
+  <div *ngIf="targetControl.errors?.uniqueLoginError && !targetControl.errors.required">
+    Podany login już istnieje
+  </div>
 </div>

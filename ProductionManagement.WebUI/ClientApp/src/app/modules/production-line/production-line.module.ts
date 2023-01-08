@@ -5,6 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { ProductionLineMainComponent } from './components/production-line-main/production-line-main.component';
 import { ProductionLineFormComponent } from './components/production-line-form/production-line-form.component';
+import { AuthorizeGuard } from '../authorization/guards/authorize.guard';
 
 
 
@@ -19,7 +20,10 @@ import { ProductionLineFormComponent } from './components/production-line-form/p
     SharedModule,
     RouterModule.forRoot([
       {
-        path: 'production-line', component: ProductionLineMainComponent, data: { breadcrumb: 'production' },
+        path: 'production-line',
+        canActivate: [AuthorizeGuard],
+        component: ProductionLineMainComponent,
+        data: { breadcrumb: 'production' },
         children: [
           { path: '', component: ProductionLineListComponent, pathMatch: 'full', data: { breadcrumb: 'list' } },
         ]

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductionManagement.Services.Services.ProductionLine;
 using ProductionManagement.Services.Services.ProductionLine.Models;
@@ -9,6 +10,7 @@ namespace ProductionManagement.WebUI.Areas.ProductionLine
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductionLineController : ControllerBase
     {
         private readonly IProductionLineService _productionLineService;

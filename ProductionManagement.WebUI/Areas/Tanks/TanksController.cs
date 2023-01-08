@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductionManagement.Services.Services.Tanks;
 using ProductionManagement.Services.Services.Tanks.Models;
@@ -9,6 +10,7 @@ namespace ProductionManagement.WebUI.Areas.Tanks
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TanksController : ControllerBase
     {
         private readonly ITanksService _tanksService;

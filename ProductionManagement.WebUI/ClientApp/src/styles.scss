@@ -1,12 +1,12 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-@for $width from 1 through 20 {
+@for $width from 1 through 30 {
   .w-#{$width*10}px {
     width: $width * 10px !important;
   }
 }
 
-@for $height from 1 through 20 {
+@for $height from 1 through 30 {
   .h-#{$height*10}px {
     height: $height * 10px !important;
   }
@@ -49,12 +49,49 @@ ng-select {
   }
 }
 
+.card {
+  box-shadow: 1px 1px 3px #888;
+  background-color: #fbfbfb;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
 .btn-light {
   border: 1px solid #dee2e6!important;
 }
 
 .pointer {
   cursor: pointer;
+}
+
+.link-active>a {
+  font-weight: bold;
+  color: #ea868f !important;
+}
+.link-active {
+  font-weight: bold;
+  color: #ea868f !important;
+}
+
+a.nav-link:hover {
+  font-weight: bold;
+}
+a.dropdown-item:hover {
+  font-weight: bold;
+}
+
+.navbar-nav .nav-link .link-active {
+  color: #ea868f !important;
+}
+
+.gblobal-menu {
+  background-color: #f8f9fa;
 }
 
 // .tp-radio-group {

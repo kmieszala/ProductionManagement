@@ -2,12 +2,16 @@
 using ProductionManagement.Services.Services.Orders.Models;
 using ProductionManagement.Services.Services.Parts.Models;
 using ProductionManagement.Services.Services.ProductionLine.Models;
+using ProductionManagement.Services.Services.Shared.Models;
 using ProductionManagement.Services.Services.Tanks.Models;
+using ProductionManagement.Services.Services.Users.Models;
 using ProductionManagement.Services.Services.WorkSchedule.Models;
 using ProductionManagement.WebUI.Areas.Orders.ViewModels.Request;
 using ProductionManagement.WebUI.Areas.Parts.ViewModels.Request;
 using ProductionManagement.WebUI.Areas.ProductionLine.ViewModels.Request;
+using ProductionManagement.WebUI.Areas.Shared.Models;
 using ProductionManagement.WebUI.Areas.Tanks.ViewModels.Request;
+using ProductionManagement.WebUI.Areas.Users.ViewModels;
 using ProductionManagement.WebUI.Areas.WorkSchedule.ViewModels;
 
 namespace ProductionManagement.WebUI.Configuration
@@ -51,6 +55,12 @@ namespace ProductionManagement.WebUI.Configuration
 
             CreateMap<ProductionDaysBasicVM, ProductionDaysBasicModel>();
             CreateMap<ProductionDaysBasicModel, ProductionDaysBasicVM>();
+
+            CreateMap<UsersModel, UsersVM>();
+            CreateMap<UsersVM, UsersModel>();
+
+            CreateMap<DictModel, DictVM>();
+            CreateMap<DictVM, DictModel>();
         }
     }
 }

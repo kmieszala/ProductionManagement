@@ -52,7 +52,6 @@ export class OrdersListComponent implements OnInit {
         this.tanks = result.tanks;
         this.orders = result.orders.filter(x => x.startDate != null);
         this.ordersToMove = result.orders.filter(x => x.startDate == null);
-        console.log(this.orders)
       });
   }
 

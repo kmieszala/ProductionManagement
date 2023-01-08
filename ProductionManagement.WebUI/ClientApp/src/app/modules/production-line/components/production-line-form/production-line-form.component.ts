@@ -8,6 +8,7 @@ import { ProductionLine } from '../../models/production-line';
 import { ProductionLineService } from '../../services/production-line.service';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { defineLocale, plLocale } from 'ngx-bootstrap/chronos';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-production-line-form',
@@ -22,7 +23,6 @@ export class ProductionLineFormComponent implements OnInit {
   form: FormGroup;
   addDisable = false;
   listTanks: LineTank[] = [];
-  dateToShow: string;
 
   public newTank: Subject<ProductionLine> = new Subject();
 
@@ -38,28 +38,23 @@ export class ProductionLineFormComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.editLine) {
-      this.dateToShow = new Date(this.editLine.startDate).toLocaleDateString();
+      let date = moment(this.editLine.startDate).toDate();
       this.form = this._formBuilder.group({
         formLineName: new FormControl(this.editLine.name, [Validators.required, Validators.maxLength(30)]),
         formActiveLine: new FormControl(this.editLine.active, [Validators.required, Validators.max(100)]),
         formTank: new FormControl(null),
-        formStartDate: new FormControl(this.editLine.startDate.toString(), [Validators.required]),
+        formStartDate: new FormControl(date, [Validators.required]),
       });
       this.listTanks = this.editLine.tanks;
     } else {
-      this.dateToShow = new Date().toLocaleDateString();
       this.form = this._formBuilder.group({
         formLineName: new FormControl('', [Validators.required, Validators.maxLength(30)]),
         formActiveLine: new FormControl(true, [Validators.required, Validators.max(100)]),
         formTank: new FormControl(null),
-        formStartDate: new FormControl(null, [Validators.required]),
+        formStartDate: new FormControl(new Date(), [Validators.required]),
       });
     }
     this.loading = false;
-  }
-
-  dateChange(date: Date | null) {
-    this.formStartDate?.setValue(date);
   }
 
   addTank() {

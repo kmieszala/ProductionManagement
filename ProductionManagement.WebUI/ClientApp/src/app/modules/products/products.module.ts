@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { TanksListComponent } from './components/tanks-list/tanks-list.component';
 import { TanksFormComponent } from './components/tanks-form/tanks-form.component';
 import { TanksMainComponent } from './components/tanks-main/tanks-main.component';
+import { AuthorizeGuard } from '../authorization/guards/authorize.guard';
 
 @NgModule({
   declarations: [
@@ -23,14 +24,20 @@ import { TanksMainComponent } from './components/tanks-main/tanks-main.component
     SharedModule,
     RouterModule.forRoot([
       {
-        path: 'parts', component: PartsMainComponent, data: { breadcrumb: 'parts' },
+        path: 'parts',
+        component: PartsMainComponent,
+        canActivate: [AuthorizeGuard],
+        data: { breadcrumb: 'parts' },
         children: [
           { path: '', component: PartsListComponent, pathMatch: 'full', data: { breadcrumb: 'list' } },
           { path: 'list', component: PartsListComponent, data: { breadcrumb: 'list' } },
         ]
       },
       {
-        path: 'tanks', component: TanksMainComponent, data: { breadcrumb: 'tanks' },
+        path: 'tanks',
+        component: TanksMainComponent,
+        canActivate: [AuthorizeGuard],
+        data: { breadcrumb: 'tanks' },
         children: [
           { path: '', component: TanksListComponent, pathMatch: 'full', data: { breadcrumb: 'list' } },
           { path: 'list', component: TanksListComponent, data: { breadcrumb: 'list' } },

@@ -45,11 +45,16 @@ export class OrderFormComponent implements OnInit {
         formOrderName: new FormControl('', [Validators.required, Validators.maxLength(30)]),
         formTank: new FormControl(null),
         formDescription: new FormControl('', [Validators.maxLength(500)]),
-        formColor: new FormControl('#ff0000'),
+        formColor: new FormControl(this.getRandomColor()),
       });
     }
 
     this.loading = false;
+  }
+
+  getRandomColor() {
+    var color = Math.floor(0x1000000 * Math.random()).toString(16);
+    return '#' + ('000000' + color).slice(-6);
   }
 
   saveOrder() {

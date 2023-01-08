@@ -101,7 +101,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
 
             var orders = await _context.Orders
                 .Where(x => x.ProductionLine.Active)
-                .Where(x => x.StartDate >= parameters.DateFrom || x.StopDate <= parameters.DateTo)
+                .Where(x => x.StartDate >= parameters.DateFrom.Date || x.StopDate <= parameters.DateTo.Date)
                 .OrderBy(x => x.ProductionLineId)
                 .AsNoTracking()
                 .ToListAsync();
@@ -115,15 +115,15 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                 .ToListAsync();
 
             var productionDays = await _context.ProductionDays
-                .Where(x => x.Date >= parameters.DateFrom || x.Date <= parameters.DateTo)
+                .Where(x => x.Date.Date >= parameters.DateFrom.Date || x.Date.Date <= parameters.DateTo.Date)
                 .Where(x => productionLinesIds.Contains(x.ProductionLineId))
-                .OrderBy(x => x.ProductionLineId)
+                .OrderByDescending(x => x.ProductionLineId)
                 .AsNoTracking()
                 .ToListAsync();
             //}
 
             var dateTMP = parameters.DateFrom;
-            while (dateTMP <= parameters.DateTo)
+            while (dateTMP <= parameters.DateTo.Date)
             {
                 List<ProductionDaysBasicModel> list = new List<ProductionDaysBasicModel>();
                 foreach (var prodLId in productionLinesIds)
@@ -139,7 +139,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                             DayOff = freeDay.DayOff,
                             ProductionLineId = prodLId,
                             Id = freeDay.Id,
-                            Date = dateTMP,
+                            Date = dateTMP.Date,
                         });
                     }
                     else
@@ -159,7 +159,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                                 Color = tmp.Color,
                                 OrderName = tmp.OrderName,
                                 OrdersId = tmp.Id,
-                                Date = dateTMP,
+                                Date = dateTMP.Date,
                             });
                         }
                         else
@@ -168,7 +168,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                             {
                                 DayOff = freeDay != null ? freeDay.DayOff : dateTMP.Date.DayOfWeek == DayOfWeek.Saturday || dateTMP.Date.DayOfWeek == DayOfWeek.Sunday,
                                 ProductionLineId = prodLId,
-                                Date = dateTMP,
+                                Date = dateTMP.Date,
                             });
                         }
                     }

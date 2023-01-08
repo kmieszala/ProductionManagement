@@ -1,0 +1,16 @@
+<div class="md-form md-outline form-sm input-group custom-date-picker mt-0 mb-2">
+  <input id="{{name}}"
+    class="form-control"
+    type="text"
+    mdbInput
+    mdbValidate
+    bsDatepicker
+    [bsConfig]="calendarConfig"
+    [formControl]="dateInput"
+    #datepicker="bsDatepicker"
+    #datepickerControl
+    autocomplete="off">
+    <div class="input-group-text" (click)="focusControl()">
+      <i class="far fa-calendar-alt"></i>
+    </div>
+</div>

@@ -1,10 +1,10 @@
-<header>
+<header *ngIf="isLogged">
   <nav
-    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
+    class="gblobal-menu navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3"
   >
     <div class="container">
-      <a class="navbar-brand" [routerLink]="['/']"></a>
-      <button
+      <!-- <a class="navbar-brand" [routerLink]="['/']"></a> -->
+      <!-- <button
         class="navbar-toggler"
         type="button"
         data-toggle="collapse"
@@ -14,33 +14,60 @@
         (click)="toggle()"
       >
         <span class="navbar-toggler-icon"></span>
-      </button>
+      </button> -->
       <div
-        class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
+        class="navbar-collapse collapse d-sm-inline-flex justify-content-between"
         [ngClass]="{ show: isExpanded }"
       >
         <ul class="navbar-nav flex-grow">
           <li
-            class="nav-item"
+            class="nav-item w-70px"
             [routerLinkActive]="['link-active']"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <a class="nav-link text-dark" [routerLink]="['/']">Zlecenia</a>
+            <a class="nav-link" [routerLink]="['/']">Home</a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/parts']">Części</a>
+          <li
+            class="nav-item w-70px"
+            [routerLinkActive]="['link-active']"
+          >
+            <a class="nav-link" [routerLink]="['/orders']">Zlecenia</a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/production-days']">Kalendarz</a>
+          <li class="nav-item w-80px" [routerLinkActive]="['link-active']">
+            <a class="nav-link" [routerLink]="['/production-days']">Kalendarz</a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/tanks']">Zbiorniki</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Ustawienia
+            </a>
+            <ul class="dropdown-menu gblobal-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" [routerLinkActive]="['link-active']" [routerLink]="['/parts']">Części</a></li>
+              <li><a class="dropdown-item" [routerLinkActive]="['link-active']" [routerLink]="['/tanks']">Zbiorniki</a></li>
+              <li><a class="dropdown-item" [routerLinkActive]="['link-active']" [routerLink]="['/production-line']">Linie produkcyjne</a></li>
+            </ul>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/production-line']">Linie produkcyjne</a>
+          <li
+            class="nav-item w-70px"
+            [routerLinkActive]="['link-active']"
+          >
+            <a class="nav-link" [routerLink]="['/users']">Użytkownicy</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav flex-grow">
+          <li class="me-2">Witaj {{userName}}</li>
+          <li class="nav-item w-80px text-end"  (click)="logout()">
+            <a class="nav-link" [routerLink]="['/']">Wyloguj</a>
           </li>
         </ul>
       </div>
+      <!-- <div
+        class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
+        [ngClass]="{ show: isExpanded }"
+      >
+        <ul class="navbar-nav flex-grow">
+
+        </ul>
+      </div> -->
     </div>
   </nav>
 </header>

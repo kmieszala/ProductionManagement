@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductionManagement.Services.Services.Orders;
 using ProductionManagement.Services.Services.Orders.Models;
@@ -11,6 +12,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersService _ordersService;
