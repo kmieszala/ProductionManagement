@@ -266,7 +266,7 @@ namespace ProductionManagement.Services.Services.Users
             var result = model switch
             {
                 var d when (!user.Password.Equals(d.OldPassword.ComputeSha256Hash())) => ChangePasswordStatusEnum.WrongOldPassword,
-                var d when (d.Password.Equals(d.OldPassword.ComputeSha256Hash())) => ChangePasswordStatusEnum.PasswordEqualOldPass,
+                var d when (d.Password.Equals(d.OldPassword)) => ChangePasswordStatusEnum.PasswordEqualOldPass,
                 var d when (!d.Password.Equals(d.RepeatPassword) || d.Password.Length < 12) => ChangePasswordStatusEnum.PasswordNotEqualRepetPass,
                 _ => ChangePasswordStatusEnum.Ok,
             };
