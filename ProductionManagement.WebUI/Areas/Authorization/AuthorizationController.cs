@@ -66,34 +66,39 @@ namespace ProductionManagement.WebUI.Areas.Authorization
 
                 var roles = user.UserRoles.Select(x => x.GetDisplayName()).ToList();
 
-                Log.Information("OK 1");
                 var claims = new List<Claim>
                     {
+                        new Claim(CustomClaimTypesConsts.UserId, user.Id.ToString()),
                         new Claim(CustomClaimTypesConsts.Login, model.UserName),
                         new Claim(CustomClaimTypesConsts.FirstName, user.FirstName),
                         new Claim(CustomClaimTypesConsts.LastName, user.LastName),
                         new Claim(CustomClaimTypesConsts.Roles, string.Join(";", roles)),
                     };
 
-                Log.Information("OK 2");
                 var claimsIdentity = new ClaimsIdentity(
                     claims,
                     CookieAuthenticationDefaults.AuthenticationScheme);
 
                 #endregion Production profile
 
-                Log.Information("OK 3");
                 var authProperties = new AuthenticationProperties
                 {
                     IsPersistent = true,
                 };
 
-                Log.Information("OK 4");
                 if (user.Status == Common.Enums.UserStatusEnum.Active)
                 {
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
                 }
-                return Ok(new { FirstName = user.FirstName, LastName = user.LastName, Roles = roles.Select(x => (string)x), Status = user.Status, TimeBlockCount = user.TimeBlockCount });
+                return Ok(new LoginOutVM()
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Roles = roles.Select(x => (string)x),
+                    Status = user.Status,
+                    TimeBlockCount = user.TimeBlockCount
+                });
             }
             catch (Exception)
             {

@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subscription } from 'rxjs';
+import { ChangePasswordComponent } from '../modules/shared/components/change-password/change-password.component';
 import { AuthorizationService } from '../modules/shared/services/authorization.service';
 
 @Component({
@@ -6,14 +9,23 @@ import { AuthorizationService } from '../modules/shared/services/authorization.s
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
-export class NavMenuComponent {
+export class NavMenuComponent implements  OnInit, OnDestroy {
   isExpanded = false;
   isLogged: boolean;
   userName = '';
+  userId: number;
+  bsModalRef?: BsModalRef;
+  subscriptions: Subscription[] = [];
 
   constructor(
-    private _authService: AuthorizationService) {
+    private _authService: AuthorizationService,
+    private _modalService: BsModalService) {
     this.isLogged = false;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(x => x.unsubscribe());
+    this.subscriptions = [];
   }
 
   ngOnInit() {
@@ -22,6 +34,7 @@ export class NavMenuComponent {
     this._authService.currentUser.subscribe(user => {
       if (user != null) {
         this.userName = `${user.firstName} ${user.lastName}`;
+        this.userId = user.id;
         this.isLogged = true;
       } else {
         this.isLogged = false;
@@ -39,5 +52,17 @@ export class NavMenuComponent {
 
   logout() {
     this._authService.logout();
+  }
+
+  changePass( ) {
+    if(this.userId > 0) {
+      const initialState: ModalOptions = {
+        initialState: {
+          userId: this.userId,
+        }
+      };
+
+      this.bsModalRef = this._modalService.show(ChangePasswordComponent, initialState);
+    }
   }
 }

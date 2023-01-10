@@ -61,6 +61,9 @@ namespace ProductionManagement.WebUI.Configuration
 
             CreateMap<DictModel, DictVM>();
             CreateMap<DictVM, DictModel>();
+
+            CreateMap<ChangePasswordModel, ChangePasswordVM>();
+            CreateMap<ChangePasswordVM, ChangePasswordModel>();
         }
     }
 }

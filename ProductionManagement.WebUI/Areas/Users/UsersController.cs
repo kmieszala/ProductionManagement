@@ -82,5 +82,12 @@ namespace ProductionManagement.WebUI.Areas.Users
             var result = await _usersService.UnlockUserAsync(model.Id, model.Value);
             return Ok(result);
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM model)
+        {
+            var result = await _usersService.ChangePasswordAsync(_mapper.Map<ChangePasswordModel>(model));
+            return Ok(result);
+        }
     }
 }

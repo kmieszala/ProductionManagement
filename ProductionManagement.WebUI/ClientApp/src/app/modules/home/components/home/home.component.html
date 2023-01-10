@@ -19,12 +19,45 @@
     <div class="card-body">
         <h5 class="card-title">W planach</h5>
         <ul>
-            <li>Dodanie zakładki umożliwiającej dodawanie nowych użytkowników wraz z uprawnieniami (dzięki uprawnieniom użytkownicy będą widzieć tylko te zakładki i opcje do których będą mieli dostęp).</li>
+            <li>Dodanie uprawnień</li>
             <li>Multijęzyczność i dodanie języka angielskiego.</li>
         </ul>
     </div>
 </div>
 <hr class="m-4">
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Użytkownicy</h5>
+        <p class="card-text">
+            Po wejściu w tą zakładkę mamy listę użytkowników, gdzie widzimy w jakim statusie jest dany użytkownik. Możemy dodać nowego uzytkownika przyciskiem <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+            Na formatce która nam wyskoczy trzeba uzupełnić takie dane jak Imię, Nazwisko, Email/Login, Hasło (musi się skaładać przynajmniej z 12 znaków, posiadać wielką i małą literę, cyfrę oraz znak specjalny) oraz
+            Uprawnienia jakie ma posiadać dany użytkownik. Wprowadzone hasło posłuży tylko do pierwszego zalogowania po czym aplikacja wymusi zmianę hasła.
+        </p>
+        <p class="card-text">
+            Po kliknięciu w dany rekord tabeli wyświetlają się uprawnienia jakie posiada kliknięty użytkownik.
+        </p>
+        <p class="card-text">
+            Podczas dodawania i edycji jest sprawdzana unikalność Loginu, żeby nie wprowadzić dwóch użytkowników o tym samym loginie.
+        </p>
+        <p class="card-text">
+            Aktywnego użytkonika możemy zablokować, spowoduje to jego wylogowanie jeśli jest akurat zalogowany.
+        </p>
+        <p class="card-text">
+            Zablokowane konto możemy odblokować, w tym celu aplikacja poprosi nas o nowe hasło dla danego konta.
+        </p>
+        <h6 class="card-subtitle mb-2 text-muted">Uprawnienia</h6>
+        <ul>
+            <li>Administrator - dostęp do wszystkich opcji i widoków</li>
+            <li>Kalendarz - podgląd i dostępne wszystkie opcje kalendarza </li>\
+            <li>KalendarzPodglad - podgląd kalendarza bez możliwości zmian</li>
+            <li>Zlecenia - dostęp do listy zleceń i wszystkich opcji oraz podglądu kalendarza</li>
+            <li>ZleceniaPodglad - tylko podgląd listy zleceń</li>
+            <li>LinieProd - dostęp do zakładki linie produkcyjne i wszystkich opcji</li>
+            <li>Ustawienia - dostęp do zakładki Części i Zbiorniki oraz ich opcji</li>
+            <li>UstawieniaPodglad - tylko podgląd zakładek dostępnych w Ustawienia</li>
+        </ul>
+    </div>
+</div>
 <div class="card mb-3">
     <div class="card-body">
         <h5 class="card-title">Ustawienia</h5>

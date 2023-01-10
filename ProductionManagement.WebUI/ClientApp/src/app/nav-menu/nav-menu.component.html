@@ -54,7 +54,8 @@
           </li>
         </ul>
         <ul class="navbar-nav flex-grow">
-          <li class="me-2">Witaj {{userName}}</li>
+          <li class="p-2"><i class="fa-solid fa-gear pointer" (click)="changePass()"></i></li>
+          <li class="p-2">Witaj {{userName}}</li>
           <li class="nav-item w-80px text-end"  (click)="logout()">
             <a class="nav-link" [routerLink]="['/']">Wyloguj</a>
           </li>

@@ -26,6 +26,13 @@ namespace ProductionManagement.Services.Services.Users
         Task<bool> UnlockUserAsync(int userId, string newPassword);
 
         Task<bool> DeactiveUserAsync(int userId);
+
+        /// <summary>
+        /// User change own password.
+        /// </summary>
+        /// <param name="changePasswordModel">Old and new passwords.</param>
+        /// <returns>False if old password is incorrect.</returns>
+        Task<ChangePasswordStatusEnum> ChangePasswordAsync(ChangePasswordModel changePasswordModel);
     }
 
     public class UsersService : IUsersService
@@ -110,7 +117,7 @@ namespace ProductionManagement.Services.Services.Users
             }
             else if (!password.Equals(repeatPassword) || password.Length < 12)
             {
-                Log.Warning($"ChangePasswordAsync - User: {userName}, Pass: {password}, RepeaPass: {repeatPassword}");
+                Log.Warning($"ChangePasswordAsync - User: {userName}, Pass: {password}, RepeatPassword: {repeatPassword}");
                 return null;
             }
 
@@ -242,6 +249,37 @@ namespace ProductionManagement.Services.Services.Users
 
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<ChangePasswordStatusEnum> ChangePasswordAsync(ChangePasswordModel model)
+        {
+            var user = await _context.Users
+                .Where(x => x.Id == model.UserId)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                Log.Error($"ChangePasswordAsync only for existing users. UserId: {model.UserId}");
+                throw new ProductionManagementException($"ChangePasswordAsync: No user for id {model.UserId}");
+            }
+
+            var result = model switch
+            {
+                var d when (!user.Password.Equals(d.OldPassword.ComputeSha256Hash())) => ChangePasswordStatusEnum.WrongOldPassword,
+                var d when (d.Password.Equals(d.OldPassword.ComputeSha256Hash())) => ChangePasswordStatusEnum.PasswordEqualOldPass,
+                var d when (!d.Password.Equals(d.RepeatPassword) || d.Password.Length < 12) => ChangePasswordStatusEnum.PasswordNotEqualRepetPass,
+                _ => ChangePasswordStatusEnum.Ok,
+            };
+
+            if (result == ChangePasswordStatusEnum.Ok)
+            {
+                user.Password = model.Password.ComputeSha256Hash();
+                user.TimeBlockCount = 0;
+
+                await _context.SaveChangesAsync();
+            }
+
+            return result;
         }
     }
 }

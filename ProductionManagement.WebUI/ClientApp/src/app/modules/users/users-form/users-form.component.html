@@ -1,9 +1,9 @@
 <div class="modal-header pb-0">
     <h4 *ngIf="!editUser" class="modal-title pull-left">
-      Dodaj zbiornik
+      Dodaj użytkownika
     </h4>
     <h4 *ngIf="editUser" class="modal-title pull-left">
-      Edytuj zbiornik
+      Edytuj użytkownika
     </h4>
   </div>
   <form class="modal-body" [formGroup]="form" *ngIf="!loading" (ngSubmit)="saveUser()">
@@ -70,31 +70,31 @@
             </div>
           </div>
         </div>
-        <div class="row" *ngIf="this.edit != false">
-          <div class="col-md-12">
-            <div class="widget widget-simple">
-              <div class="widget-header">
-                Uprawnienia
-              </div>
-              <div class="row">
-                <div class="col-md-9">
-                  <div class="widget-body">
+      </div>
+    </div>
+    <div class="row" *ngIf="this.edit != false">
+      <div class="col-md-12">
+        <div class="widget widget-simple">
+          <div class="widget-header">
+            Uprawnienia
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="widget-body">
 
-                    <ng-select [items]="roles"
-                              [multiple]="true"
-                              [searchable]="false"
-                              labelForId="company"
-                              bindLabel="value"
-                              bindValue="id"
-                              formControlName="formRoles"
-                              [placeholder]="''">
-                    </ng-select>
-                    <!-- <ng-select id="formRoles" formControlName="formRoles" notFoundText="Brak ról" [multiple]="true">
-                      <ng-option *ngFor="let item of roles" [value]="item">{{item.value}}</ng-option>
-                    </ng-select> -->
-                    <form-error [targetControl]="formRoles"></form-error>
-                  </div>
-                </div>
+                <ng-select [items]="roles"
+                          [multiple]="true"
+                          [searchable]="false"
+                          labelForId="company"
+                          bindLabel="value"
+                          bindValue="id"
+                          formControlName="formRoles"
+                          [placeholder]="''">
+                </ng-select>
+                <!-- <ng-select id="formRoles" formControlName="formRoles" notFoundText="Brak ról" [multiple]="true">
+                  <ng-option *ngFor="let item of roles" [value]="item">{{item.value}}</ng-option>
+                </ng-select> -->
+                <form-error [targetControl]="formRoles"></form-error>
               </div>
             </div>
           </div>

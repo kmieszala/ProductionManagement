@@ -15,6 +15,7 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
 import { MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS} from '@angular/material/radio';
 import { DateSelectorComponent } from './components/date-selector/date-selector.component';
 import { UserStatusPipe } from './common/pipes/user-status.pipe';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 
 @NgModule({
@@ -23,11 +24,13 @@ import { UserStatusPipe } from './common/pipes/user-status.pipe';
     ConfirmationDialogComponent,
     DatePickerComponent,
     DateSelectorComponent,
+    ChangePasswordComponent,
 
     StatusDirective,
     UserStatusDirective,
 
-    UserStatusPipe],
+    UserStatusPipe
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -58,6 +61,7 @@ import { UserStatusPipe } from './common/pipes/user-status.pipe';
     DatePickerComponent,
     MatRadioModule,
     DateSelectorComponent,
+    ChangePasswordComponent,
 
     UserStatusPipe,
 
@@ -65,7 +69,7 @@ import { UserStatusPipe } from './common/pipes/user-status.pipe';
     StatusDirective
   ],
   entryComponents: [
-    ConfirmationDialogComponent,
+    ConfirmationDialogComponent, ChangePasswordComponent
   ],
   providers: [{
     provide: MAT_RADIO_DEFAULT_OPTIONS,

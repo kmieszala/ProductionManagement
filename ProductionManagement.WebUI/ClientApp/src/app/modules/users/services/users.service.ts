@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ChangePasswordStatusEnum } from '../../shared/enums/change-password-status.enum';
+import { ChangePasswordModel } from '../../shared/models/change-password-model';
 import { DictModel } from '../../shared/models/dict-model';
 import { HttpClientService } from '../../shared/services/http-client.service';
 import { UserModel } from '../models/user-model';
@@ -39,5 +41,9 @@ export class UsersService {
 
   unlockUser(id: number, newPass: string) : Observable<boolean>{
     return this._http.post<boolean>('api/users/unlockUser', {id: id, value: newPass});
+  }
+
+  changePassword(model: ChangePasswordModel) : Observable<ChangePasswordStatusEnum>{
+    return this._http.post<ChangePasswordStatusEnum>('api/users/changePassword', model);
   }
 }

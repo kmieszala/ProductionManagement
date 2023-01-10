@@ -44,8 +44,10 @@ export class UsersFormComponent implements OnInit {
         formPassword: new FormControl(null, this.edit ? null : [Validators.required, Validators.maxLength(50), Validators.pattern(PatternRegexConst.password)]),
         formRoles: new FormControl("", !this.edit ? null :[Validators.required]),
       });
-      let tmp = this.editUser.roles.map(x => x.id);
-      this.formRoles?.setValue(tmp);
+      if(this.edit) {
+        let tmp = this.editUser.roles.map(x => x.id);
+        this.formRoles?.setValue(tmp);
+      }
     } else {
       this.form = this._formBuilder.group({
         formFirstName: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
