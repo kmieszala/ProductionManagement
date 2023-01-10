@@ -38,20 +38,20 @@
                   <td>{{ item.firstName }}</td>
                   <td>{{ item.lastName }}</td>
                   <td>{{ item.email }}</td>
-                  <td>{{ item.status | userStatus }}</td>
+                  <td><span  userStatus="{{item.status}}"></span></td>
                   <td>{{ item.registeredDate | date: "dd-MM-yyyy"}}</td>
                   <td>{{ item.activationDate | date: "dd-MM-yyyy" }}</td>
-                  <!-- <td>
+                  <td>
                     <div class="float-end">
-                      <button *ngIf="!statusFilter" type="button" class="btn btn-success btn-sm me-2" (click)="$event.stopPropagation();activeTank(item)"><i class="fa-solid fa-arrows-rotate"></i> Aktywuj</button>
-                      <button *ngIf="statusFilter" type="button" class="btn btn-danger btn-sm me-2" (click)="$event.stopPropagation();deactiveTank(item)"><i class="fa fa-trash" aria-hidden="true"></i> Deaktywuj</button>
-                      <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editTank(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                      <button *ngIf="item.status == 3" type="button" class="btn btn-success btn-sm me-2" (click)="$event.stopPropagation();activeUser(item)"><i class="fa-solid fa-arrows-rotate"></i> Odblokuj</button>
+                      <button *ngIf="item.status < 3" type="button" class="btn btn-warning btn-sm me-2" (click)="$event.stopPropagation();deactiveUser(item)"><i class="fa-solid fa-triangle-exclamation"></i> Zablokuj</button>
+                      <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editUser(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
                     </div>
-                  </td> -->
+                  </td>
                 </tr>
                 <tr *ngIf="item.showDetails">
-                  <td colspan="6" class="p-3">
-                    <span *ngFor="let role of item.roles" class="bg-info rounded-pill p-2">{{role.value}}</span>
+                  <td colspan="7" class="p-3">
+                    <span *ngFor="let role of item.roles" class="bg-info rounded-pill p-2 me-1">{{role.value}}</span>
                   </td>
                 </tr>
               </ng-container>

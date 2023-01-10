@@ -25,7 +25,19 @@ export class UsersService {
     return this._http.post<UserModel>('api/users/addUser', model);
   }
 
+  editUser(model: UserModel) : Observable<UserModel>{
+    return this._http.post<UserModel>('api/users/editUser', model);
+  }
+
   checkUniqueLogin(login: string) : Observable<boolean>{
     return this._http.get<boolean>(`api/users/checkUniqueLogin/${login}`);
+  }
+
+  deactiveUser(id: number) : Observable<boolean>{
+    return this._http.post<boolean>('api/users/deactiveUser', {id: id, value: ''});
+  }
+
+  unlockUser(id: number, newPass: string) : Observable<boolean>{
+    return this._http.post<boolean>('api/users/unlockUser', {id: id, value: newPass});
   }
 }

@@ -20,9 +20,6 @@
       <div class="form-group mb-1" *ngIf="chngePassword">
         <input  type="password" formControlName="repeatPassword" class="form-control" placeholder="Powtórz hasło" />
         <form-error [targetControl]="f.repeatPassword"></form-error>
-        <!-- <div *ngIf="submitted && f.repeatPassword.errors" class="invalid-feedback">
-          <div *ngIf="f.repeatPassword.errors.required">Pole jest wymagane</div>
-        </div> -->
       </div>
       <button *ngIf="chngePassword" [disabled]="loading" type="button" (click)="cancelChangePass()" class="btn btn-light block w-100 m-b mb-2">
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>

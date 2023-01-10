@@ -19,11 +19,9 @@ export class AuthorizationService {
 
   private init() {
     this.isAuthenticated.subscribe(result => {
-      console.log(result);
       if (result == null) {
         this.checkIsAuthenticated();
       } else if (result) {
-        console.log(this.currentUser.value);
         if(this.currentUser.value == null){
           this.getUserInfoPromise(0);
         }
@@ -92,7 +90,6 @@ export class AuthorizationService {
   }
 
   private async getUserInfoPromise(nr: number): Promise<any> {
-    console.log('getUserInfoPromise');
     return await this._http.get<any>(`api/auth/getusername/${nr}`)
     .pipe(map(user => {
       if(user != null){
@@ -107,7 +104,6 @@ export class AuthorizationService {
   public login(username: string, password: string, repeatPassword: string) { //: Observable<boolean> {
     return this._http.post<UserInfo>(`api/auth/login`, { username, password, repeatPassword })
       .pipe(map(user => {
-        console.log(user);
         if(user != null && user.status == 2){
           this.currentUser.next(user);
           localStorage.setItem('user', JSON.stringify(user));

@@ -17,7 +17,15 @@ namespace ProductionManagement.Services.Services.Users
 
         Task<UsersModel> AddUserAsync(UsersModel usersModel);
 
+        Task<UsersModel> EditUserAsync(UsersModel usersModel);
+
         Task<LoginUserModel?> ChangePasswordAsync(string userName, string password, string repeatPassword);
+
+        Task<bool> CheckUniqueLoginAsync(string login);
+
+        Task<bool> UnlockUserAsync(int userId, string newPassword);
+
+        Task<bool> DeactiveUserAsync(int userId);
     }
 
     public class UsersService : IUsersService
@@ -38,7 +46,7 @@ namespace ProductionManagement.Services.Services.Users
                 Email = usersModel.Email,
                 FirstName = usersModel.FirstName,
                 LastName = usersModel.LastName,
-                Password = usersModel.Password.ComputeSha256Hash(),
+                Password = usersModel.Password!.ComputeSha256Hash(),
                 RegisteredDate = DateTime.UtcNow,
                 Status = Common.Enums.UserStatusEnum.New,
                 UserRoles = usersModel.Roles.Select(x => new Model.DbSets.UserRoles()
@@ -146,6 +154,94 @@ namespace ProductionManagement.Services.Services.Users
                 .ToListAsync();
 
             return result;
+        }
+
+        public async Task<bool> CheckUniqueLoginAsync(string login)
+        {
+            var result = await _context.Users
+                .AnyAsync(x => x.Email == login);
+
+            return result;
+        }
+
+        public async Task<UsersModel> EditUserAsync(UsersModel usersModel)
+        {
+            var user = await _context.Users
+                .Include(x => x.UserRoles)
+                .Where(x => x.Id == usersModel.Id)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                Log.Error($"UnlockUserAsync only for existing users. UserId: {usersModel.Id}");
+                throw new ProductionManagementException($"UnlockUserAsync: No user for id {usersModel.Id}");
+            }
+
+            user.Email = usersModel.Email;
+            user.FirstName = usersModel.FirstName;
+            user.LastName = usersModel.LastName;
+
+            var rolesToDelete = user.UserRoles.Where(x => !usersModel.Roles.Any(y => y.Id == (int)x.RoleId)).ToList();
+            _context.UserRoles.RemoveRange(rolesToDelete);
+            var rolesToAdd = usersModel.Roles.Where(x => !user.UserRoles.Any(y => (int)y.RoleId == x.Id)).ToList();
+            rolesToAdd.ForEach(x => user.UserRoles.Add(new Model.DbSets.UserRoles() { RoleId = (RolesEnum)x.Id }));
+
+            await _context.SaveChangesAsync();
+
+            return new UsersModel
+            {
+                Id = usersModel.Id,
+                Status = usersModel.Status,
+                FirstName = usersModel.FirstName,
+                LastName = usersModel.LastName,
+                Email = usersModel.Email,
+                ActivationDate = user.ActivationDate,
+                RegisteredDate = user.RegisteredDate,
+                Roles = user.UserRoles.Select(y => new Shared.Models.DictModel()
+                {
+                    Id = (int)y.RoleId,
+                    Value = y.RoleId.ToString(),
+                }).ToList(),
+            };
+        }
+
+        public async Task<bool> UnlockUserAsync(int userId, string newPassword)
+        {
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                Log.Error($"UnlockUserAsync only for existing users. UserId: {userId}");
+                throw new ProductionManagementException($"UnlockUserAsync: No user for id {userId}");
+            }
+
+            user.Status = UserStatusEnum.New;
+            user.Password = newPassword.ComputeSha256Hash();
+            user.TimeBlockCount = 0;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeactiveUserAsync(int userId)
+        {
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                Log.Error($"DeactiveUserAsync only for existing users. UserId: {userId}");
+                throw new ProductionManagementException($"DeactiveUserAsync: No user for id {userId}");
+            }
+
+            user.Status = UserStatusEnum.TimeBlocked;
+            user.TimeBlockCount = 0;
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

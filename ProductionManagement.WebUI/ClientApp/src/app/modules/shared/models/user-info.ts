@@ -3,4 +3,5 @@ export class UserInfo {
   lastName: string;
   roles: string[];
   status: number;
+  timeBlockCount: number;
 }

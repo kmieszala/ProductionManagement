@@ -17,7 +17,7 @@ namespace ProductionManagement.Services.Services.Users.Models
 
         public string FirstName { get; set; }
 
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         public UserStatusEnum Status { get; set; }
 

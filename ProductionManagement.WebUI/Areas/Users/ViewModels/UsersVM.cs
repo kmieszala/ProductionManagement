@@ -19,7 +19,7 @@ namespace ProductionManagement.WebUI.Areas.Users.ViewModels
 
         public string FirstName { get; set; }
 
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         public UserStatusEnum Status { get; set; }
 

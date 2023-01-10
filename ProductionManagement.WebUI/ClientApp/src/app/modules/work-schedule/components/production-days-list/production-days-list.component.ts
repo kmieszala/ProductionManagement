@@ -33,11 +33,7 @@ export class ProductionDaysListComponent implements OnInit, OnDestroy {
     let dateTo =  new Date();
     dateFrom.setDate( dateFrom.getDate() - 7 );
     dateTo.setDate( dateTo.getDate() + 20 );
-    // dopracować daty
-    // walidacja dat
 
-    console.log(dateFrom)
-    console.log(dateFrom.toLocaleDateString())
     this.form = this._formBuilder.group({
       formStartDate: new FormControl(dateFrom.toLocaleDateString(), [Validators.required]),
       formStopDate: new FormControl(dateTo.toLocaleDateString(), [Validators.required]),
@@ -58,9 +54,7 @@ export class ProductionDaysListComponent implements OnInit, OnDestroy {
   }
 
   filter() {
-    console.log(this.formStartDate?.value)
     let dateFrom =  new Date(this.formStartDate?.value);
-    console.log(dateFrom)
     let dateTo =  new Date(this.formStopDate?.value);
     this.loading = true;
 

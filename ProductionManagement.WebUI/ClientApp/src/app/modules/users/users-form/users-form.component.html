@@ -10,7 +10,7 @@
     <div class="row mt-2">
       <!-- LEFT -->
       <div class="col-md-6 col-12">
-        <div class="row">
+        <div class="row" *ngIf="this.edit != false">
           <div class="col-md-12">
             <div class="widget widget-simple">
               <div class="widget-header">
@@ -25,7 +25,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="this.edit != false">
           <div class="col-md-12">
             <div class="widget widget-simple">
               <div class="widget-header">
@@ -40,7 +40,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="this.edit != false">
           <div class="col-md-12">
             <div class="widget widget-simple">
               <div class="widget-header">
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="this.edit != true">
           <div class="col-md-12">
             <div class="widget widget-simple">
               <div class="widget-header">
@@ -70,7 +70,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="this.edit != false">
           <div class="col-md-12">
             <div class="widget widget-simple">
               <div class="widget-header">
@@ -79,9 +79,19 @@
               <div class="row">
                 <div class="col-md-9">
                   <div class="widget-body">
-                    <ng-select id="formRoles" formControlName="formRoles" notFoundText="Brak ról" [multiple]="true">
-                      <ng-option *ngFor="let item of roles" [value]="item">{{item.value}}</ng-option>
+
+                    <ng-select [items]="roles"
+                              [multiple]="true"
+                              [searchable]="false"
+                              labelForId="company"
+                              bindLabel="value"
+                              bindValue="id"
+                              formControlName="formRoles"
+                              [placeholder]="''">
                     </ng-select>
+                    <!-- <ng-select id="formRoles" formControlName="formRoles" notFoundText="Brak ról" [multiple]="true">
+                      <ng-option *ngFor="let item of roles" [value]="item">{{item.value}}</ng-option>
+                    </ng-select> -->
                     <form-error [targetControl]="formRoles"></form-error>
                   </div>
                 </div>

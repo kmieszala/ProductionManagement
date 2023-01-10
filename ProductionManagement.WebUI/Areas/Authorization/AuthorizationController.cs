@@ -93,7 +93,7 @@ namespace ProductionManagement.WebUI.Areas.Authorization
                 {
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
                 }
-                return Ok(new { FirstName = user.FirstName, LastName = user.LastName, Roles = roles.Select(x => (string)x), Status = user.Status });
+                return Ok(new { FirstName = user.FirstName, LastName = user.LastName, Roles = roles.Select(x => (string)x), Status = user.Status, TimeBlockCount = user.TimeBlockCount });
             }
             catch (Exception)
             {

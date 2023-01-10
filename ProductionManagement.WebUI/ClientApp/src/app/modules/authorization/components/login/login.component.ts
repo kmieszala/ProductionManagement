@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { first } from "rxjs/operators";
+import { PatternRegexConst } from "../../../shared/common/consts/pattern-regex.const";
 import { AuthorizationService } from "../../../shared/services/authorization.service";
 
 @Component({
@@ -17,7 +18,6 @@ export class LoginComponent implements OnInit {
   error = "";
   date: Date;
   chngePassword = false;
-  pwdPattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&^_-]).{12,}/;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -48,7 +48,6 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    console.log(this.f.repeatPassword.errors);
     // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
@@ -64,10 +63,10 @@ export class LoginComponent implements OnInit {
             this.error = "Nieudana próba logowania";
             this.loading = false;
             return;
-          } else if(data.status == 1) {
+          } else if(data.status == 1 && data.timeBlockCount == 0) {
             this.error = "Wymagana zmiana hasła";
             this.f.password.setValue("");
-            this.f.password.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(22), Validators.pattern(this.pwdPattern)]);
+            this.f.password.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(22), Validators.pattern(PatternRegexConst.password)]);
             this.f.repeatPassword.setValidators([Validators.required, Validators.maxLength(22), this.createCompareValidator(this.f.password, this.f.repeatPassword)]);
             this.f.password.reset();
             this.f.repeatPassword.reset();

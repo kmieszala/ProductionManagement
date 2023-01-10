@@ -35,11 +35,18 @@ namespace ProductionManagement.WebUI.Areas.Users
             return Ok(_mapper.Map<UsersVM>(result));
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> EditUser(UsersVM model)
+        {
+            var result = await _usersService.EditUserAsync(_mapper.Map<UsersModel>(model));
+            return Ok(_mapper.Map<UsersVM>(result));
+        }
+
         [HttpGet("[action]/{login}")]
         public async Task<IActionResult> CheckUniqueLogin(string login)
         {
-            sprawdzenie loginu czy jest unikalny
-            return Ok(false);
+            var result = await _usersService.CheckUniqueLoginAsync(login);
+            return Ok(result);
         }
 
         [HttpGet("[action]")]
@@ -59,6 +66,20 @@ namespace ProductionManagement.WebUI.Areas.Users
                 Value = x.ToString()
             }).ToList();
 
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> DeactiveUser(DictVM model)
+        {
+            var result = await _usersService.DeactiveUserAsync(model.Id);
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UnlockUser(DictVM model)
+        {
+            var result = await _usersService.UnlockUserAsync(model.Id, model.Value);
             return Ok(result);
         }
     }
