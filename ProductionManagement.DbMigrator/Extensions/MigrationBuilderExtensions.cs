@@ -10,7 +10,7 @@
             string sql = string.Empty;
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
-                using (var reader = new StreamReader(stream))
+                using (var reader = new StreamReader(stream!))
                 {
                     sql = reader.ReadToEnd();
                 }

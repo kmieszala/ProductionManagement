@@ -109,6 +109,7 @@ namespace ProductionManagement.Services.Services.Users
             var user = await _context.Users
                 .Include(x => x.UserRoles)
                 .Where(x => x.Email == userName)
+                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -177,6 +178,7 @@ namespace ProductionManagement.Services.Services.Users
             var user = await _context.Users
                 .Include(x => x.UserRoles)
                 .Where(x => x.Id == usersModel.Id)
+                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -237,6 +239,7 @@ namespace ProductionManagement.Services.Services.Users
         {
             var user = await _context.Users
                 .Where(x => x.Id == userId)
+                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -256,6 +259,7 @@ namespace ProductionManagement.Services.Services.Users
         {
             var user = await _context.Users
                 .Where(x => x.Id == model.UserId)
+                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -266,9 +270,9 @@ namespace ProductionManagement.Services.Services.Users
 
             var result = model switch
             {
-                var d when (!user.Password.Equals(d.OldPassword.ComputeSha256Hash())) => ChangePasswordStatusEnum.WrongOldPassword,
-                var d when (d.Password.Equals(d.OldPassword)) => ChangePasswordStatusEnum.PasswordEqualOldPass,
-                var d when (!d.Password.Equals(d.RepeatPassword) || d.Password.Length < 12) => ChangePasswordStatusEnum.PasswordNotEqualRepetPass,
+                var d when !user.Password.Equals(d.OldPassword.ComputeSha256Hash()) => ChangePasswordStatusEnum.WrongOldPassword,
+                var d when d.Password.Equals(d.OldPassword) => ChangePasswordStatusEnum.PasswordEqualOldPass,
+                var d when !d.Password.Equals(d.RepeatPassword) || d.Password.Length < 12 => ChangePasswordStatusEnum.PasswordNotEqualRepetPass,
                 _ => ChangePasswordStatusEnum.Ok,
             };
 

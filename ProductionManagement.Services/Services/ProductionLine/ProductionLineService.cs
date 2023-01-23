@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProductionManagement.Model;
 using ProductionManagement.Services.Services.ProductionLine.Models;
@@ -44,7 +43,7 @@ namespace ProductionManagement.Services.Services.ProductionLine
                 .Include(x => x.LineTank)
                 .FirstOrDefaultAsync();
 
-            if(dbModel == null)
+            if (dbModel == null)
             {
                 return false;
             }

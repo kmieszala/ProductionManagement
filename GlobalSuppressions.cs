@@ -24,4 +24,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1601: Partial elements must be documented", Justification = "Reviewed.")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011: Closing square bracket should be followed by a space.", Justification = "Reviewed.")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "IDE0052: Remove unread private member.", Justification = "Reviewed.")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1118: The parameter spans multiple lines.", Justification = "Reviewed.")] 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1118: The parameter spans multiple lines.", Justification = "Reviewed.")]

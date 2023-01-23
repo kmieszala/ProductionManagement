@@ -1,8 +1,6 @@
 ﻿namespace ProductionManagement.Model.DbSets
 {
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using ProductionManagement.Model.Core;
 
     public class Tanks //: ITrackable
     {
@@ -40,9 +38,7 @@
 
         //[ForeignKey("User")]
         //public int ModificationUserId { get; set; }
-
-        // public virtual Users User { get; set; }
-
+        //public virtual Users User { get; set; }
         public virtual ICollection<TankParts> TankParts { get; set; }
 
         public virtual ICollection<LineTank> LineTank { get; set; }

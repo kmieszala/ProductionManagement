@@ -42,7 +42,8 @@ namespace ProductionManagement.WebUI
 
             services.AddDbContext<ProductionManagementContext>(options =>
                 options.EnableSensitiveDataLogging(true)
-                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection").ToString()));
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection") ?? string.Empty
+                .ToString()));
 
             services.AddAuthentication(o =>
             {
@@ -84,71 +85,80 @@ namespace ProductionManagement.WebUI
             {
                 options.AddPolicy(CustomPolicy.Administrator, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.Calendar, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.Calendar.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Calendar.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.CalendarView, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.Orders.ToString(),
-                    RolesEnum.OrdersView.ToString(),
-                    RolesEnum.Calendar.ToString(),
-                    RolesEnum.CalendarView.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Orders.ToString(),
+                        RolesEnum.OrdersView.ToString(),
+                        RolesEnum.Calendar.ToString(),
+                        RolesEnum.CalendarView.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.ProductionLines, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.ProductionLines.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.ProductionLines.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.ProductionLinesView, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.ProductionLines.ToString(),
-                    RolesEnum.Settings.ToString(),
-                    RolesEnum.SettingsView.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.ProductionLines.ToString(),
+                        RolesEnum.Settings.ToString(),
+                        RolesEnum.SettingsView.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.Settings, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.Settings.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Settings.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.SettingsView, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.Settings.ToString(),
-                    RolesEnum.SettingsView.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Settings.ToString(),
+                        RolesEnum.SettingsView.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.Orders, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.Orders.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Orders.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
 
                 options.AddPolicy(CustomPolicy.OrdersView, policy =>
                 {
-                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
-                    RolesEnum.Orders.ToString(),
-                    RolesEnum.OrdersView.ToString(),
-                    RolesEnum.Administrator.ToString());
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Orders.ToString(),
+                        RolesEnum.OrdersView.ToString(),
+                        RolesEnum.Administrator.ToString());
                 });
             });
 

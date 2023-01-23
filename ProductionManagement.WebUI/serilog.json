@@ -1,0 +1,76 @@
+﻿{
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information",
+        "System.Net.Http.HttpClient": "Information",
+        "Microsoft.AspNetCore": "Warning",
+        "Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware": "Information"
+      }
+    },
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File", "Serilog.Expressions", "Serilog.Enrichers.Process", "Serilog.Enrichers.Context" ],
+    "Enrich": [ "FromLogContext", "WithMachineName" ],
+    "WriteTo": [
+      {
+        "Name": "File",
+        "Args": {
+          "path": "PM_WebUI_Full_.log",
+          "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}{NewLine}{Properties}",
+          "rollingInterval": "Day"
+        }
+      },
+      {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo": [
+              {
+                "Name": "Console",
+                "Args": {
+                  "theme": "Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme::Code, Serilog.Sinks.Console",
+                  "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
+                }
+              }
+            ],
+            "Filter": [
+              {
+                "Name": "ByExcluding",
+                "Args": {
+                  "expression": "StartsWith(SourceContext, 'Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware')"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo": [
+              {
+                "Name": "File",
+                "Args": {
+                  "path": "C:/log/PM_WebUI_OnlyReqRes.log",
+                  "rollingInterval": "Day",
+                  "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{NewLine}"
+                }
+              }
+            ],
+            "Filter": [
+              {
+                "Name": "ByIncludingOnly",
+                "Args": {
+                  "expression": "StartsWith(SourceContext, 'Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware')"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

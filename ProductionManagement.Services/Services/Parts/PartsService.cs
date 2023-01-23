@@ -39,7 +39,7 @@ namespace ProductionManagement.Services.Services.Parts
         public async Task<bool> EditPartAsync(PartModel model)
         {
             var dbModel = await _context.Parts.Where(x => x.Id == model.Id).FirstOrDefaultAsync();
-            if(dbModel == null)
+            if (dbModel == null)
             {
                 return false;
             }
@@ -54,7 +54,6 @@ namespace ProductionManagement.Services.Services.Parts
 
         public async Task<IEnumerable<PartModel>> GetPartsAsync()
         {
-
             var result = await _context.Parts.Select(x => new PartModel()
             {
                 Id = x.Id,
@@ -64,6 +63,5 @@ namespace ProductionManagement.Services.Services.Parts
 
             return result;
         }
-
     }
 }

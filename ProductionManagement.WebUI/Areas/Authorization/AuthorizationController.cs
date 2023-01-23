@@ -70,8 +70,10 @@ namespace ProductionManagement.WebUI.Areas.Authorization
                         new Claim(CustomClaimTypesConsts.Login, model.UserName),
                         new Claim(CustomClaimTypesConsts.FirstName, user.FirstName),
                         new Claim(CustomClaimTypesConsts.LastName, user.LastName),
-                        //new Claim(CustomClaimTypesConsts.Roles, roles[0], roles[1]),
+
+                        // new Claim(CustomClaimTypesConsts.Roles, roles[0], roles[1]),
                     };
+
                 user.UserRoles.ForEach(x => claims.Add(new Claim(CustomClaimTypesConsts.Roles, x.ToString())));
 
                 var claimsIdentity = new ClaimsIdentity(
@@ -89,6 +91,7 @@ namespace ProductionManagement.WebUI.Areas.Authorization
                 {
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
                 }
+
                 return Ok(new LoginOutVM()
                 {
                     Id = user.Id,

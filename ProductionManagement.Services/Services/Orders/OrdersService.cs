@@ -75,13 +75,13 @@ namespace ProductionManagement.Services.Services.Orders
                     Color = x.Color,
                     Description = x.Description,
                     OrderName = x.OrderName,
-                    ProductionDays = (int) x.Tank.ProductionDays,
+                    ProductionDays = (int)x.Tank.ProductionDays,
                     TankId = x.TankId,
                     TankName = x.Tank.Name,
                     Sequence = x.Sequence,
                     StartDate = x.StartDate,
                     StopDate = x.StopDate,
-                    ProductionLinesNames = String.Join(", ", x.Tank.LineTank.Select(y => y.ProductionLine.Name))
+                    ProductionLinesNames = string.Join(", ", x.Tank.LineTank.Select(y => y.ProductionLine.Name))
                 }).ToListAsync();
 
             return result;
@@ -127,38 +127,10 @@ namespace ProductionManagement.Services.Services.Orders
                 PartsNumber = x.Sum(y => y.PartsNumber)
             }).ToList();
 
-            workBook = CreateSStorekeeperSheet(workBook, allParts).Result;
+            workBook = CreateSStorekeeperSheet(workBook, allParts);
 
             return workBook;
         }
-
-        //public async Task<List<PlannedOrdersModel>> GetPlannedOrdersAsync(FilterPlannedOrdersModel filterPlannedOrdersModel)
-        //{
-        //    var result = await _context.ProductionLine
-        //        .Where(x => x.Active)
-        //        .Select(x => new PlannedOrdersModel()
-        //        {
-        //            Id = x.Id,
-        //            Name = x.Name,
-        //            StartDate = x.StartDate,
-        //            ProductionDays = x.ProductionDays
-        //                .Select(y => new ProductionDaysModel()
-        //                {
-        //                    Id = y.Id,
-        //                    Date = y.Date,
-        //                    DayOff = y.DayOff,
-        //                    //OrdersId = y.OrdersId,
-        //                    //OrderName = y.Orders.OrderName,
-        //                    //Color = y.Orders.Color,
-        //                })
-        //                .OrderBy(y => y.Date)
-        //                .ToList(),
-        //        }).ToListAsync();
-
-        //    result = result.OrderBy(x => x.Id).ToList();
-
-        //    return result;
-        //}
 
         public async Task<bool> GenerateCalendarAsync(List<OrderModel> orderModels)
         {
@@ -190,11 +162,9 @@ namespace ProductionManagement.Services.Services.Orders
                 .Select(x => new
                 {
                     ProductionLineId = x.Key,
-                    Date = x.Max(y => y.StopDate.Value),
+                    Date = x.Max(y => y.StopDate!.Value),
                 })
                 .ToListAsync();
-
-            //var minDate = maxDateNoFreeDayForProductionLine.Min(x => x.Date);
 
             var freeDaysForProductionLines = (from x in productionLinesIds
                                               join y in _context.ProductionDays
@@ -214,7 +184,7 @@ namespace ProductionManagement.Services.Services.Orders
                     var tmp = maxDateNoFreeDayForProductionLine.FirstOrDefault(x => x.ProductionLineId == productionLine.ProductionLineId);
                     if (tmp != null)
                     {
-                        maxDateDict.Add(tmp.ProductionLineId.Value, tmp.Date.Date.AddDays(1));
+                        maxDateDict.Add(tmp.ProductionLineId!.Value, tmp.Date.Date.AddDays(1));
                     }
                     else
                     {
@@ -276,24 +246,12 @@ namespace ProductionManagement.Services.Services.Orders
                         .FirstOrDefault();
                     if (addedFreeDay == null && (maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Saturday || maxDateDict[productionLineId].Date.DayOfWeek == DayOfWeek.Sunday))
                     {
-                        //_context.ProductionDays.Add(new ProductionDays()
-                        //{
-                        //    Date = maxDateDict[productionLineId].Date,
-                        //    ProductionLineId = productionLineId,
-                        //    DayOff = true,
-                        //});
                         maxDateDict[productionLineId] = maxDateDict[productionLineId].Date.AddDays(1);
                         i--;
                     }
                     else if (freeDaysForProductionLines.Count > 0
                       && freeDaysForProductionLines.FirstOrDefault(x => x.ProductionLineId == productionLineId && x.Date.Date == maxDateDict[productionLineId].Date && x.DayOff) != null)
                     {
-                        //_context.ProductionDays.Add(new ProductionDays()
-                        //{
-                        //    Date = maxDateDict[productionLineId].Date,
-                        //    ProductionLineId = productionLineId,
-                        //    DayOff = true,
-                        //});
                         maxDateDict[productionLineId] = maxDateDict[productionLineId].Date.AddDays(1);
                         i--;
                     }
@@ -310,13 +268,6 @@ namespace ProductionManagement.Services.Services.Orders
                         {
                             order.StopDate = maxDateDict[productionLineId].Date;
                         }
-
-                        //_context.ProductionDays.Add(new ProductionDays()
-                        //{
-                        //    Date = maxDateDict[productionLineId].Date,
-                        //    //OrdersId = order.Id,
-                        //    ProductionLineId = productionLineId,
-                        //});
 
                         maxDateDict[productionLineId] = maxDateDict[productionLineId].Date.AddDays(1);
                     }
@@ -338,6 +289,11 @@ namespace ProductionManagement.Services.Services.Orders
 
         private async Task<List<PartsStorekeeperModel>> GetPartsForOrdersAsync(List<int>? ordersIds)
         {
+            if (ordersIds == null)
+            {
+                return new List<PartsStorekeeperModel>();
+            }
+
             var result = await _context.Orders
                 .Where(x => ordersIds.Contains(x.Id))
                 .SelectMany(x => x.Tank.TankParts)
@@ -352,7 +308,7 @@ namespace ProductionManagement.Services.Services.Orders
             return result;
         }
 
-        private async Task<XLWorkbook> CreateSStorekeeperSheet(XLWorkbook workBook, IEnumerable<PartsStorekeeperModel> reportModel)
+        private XLWorkbook CreateSStorekeeperSheet(XLWorkbook workBook, IEnumerable<PartsStorekeeperModel> reportModel)
         {
             string worksheetName = $"Lista części";
 

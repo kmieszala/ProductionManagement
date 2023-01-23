@@ -72,7 +72,7 @@
             SeedDictionary<UserStatusEnum, UserStatusDict>(modelBuilder);
             SeedDictionary<RolesEnum, Role>(modelBuilder);
 
-           // PredefineUser(modelBuilder);
+            // PredefineUser(modelBuilder);
         }
 
         private void PredefineUser(ModelBuilder modelBuilder)
@@ -120,8 +120,8 @@
         {
             var enumType = value.GetType();
             var enumName = enumType.GetEnumName(value);
-            var fieldInfo = enumType.GetField(enumName);
-            return Attribute.IsDefined(fieldInfo, typeof(ObsoleteAttribute));
+            var fieldInfo = enumType.GetField(enumName!);
+            return Attribute.IsDefined(fieldInfo!, typeof(ObsoleteAttribute));
         }
 
         private void FillTrackableData()

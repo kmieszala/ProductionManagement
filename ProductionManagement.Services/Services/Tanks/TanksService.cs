@@ -76,7 +76,7 @@ namespace ProductionManagement.Services.Services.Tanks
                 .Include(x => x.LineTank)
                 .Where(x => x.Id == model.Id).FirstOrDefaultAsync();
 
-            if(dbModel == null)
+            if (dbModel == null)
             {
                 return false;
             }
@@ -137,7 +137,8 @@ namespace ProductionManagement.Services.Services.Tanks
         public async Task<bool> ChangeTankStatusAsync(int id, bool status)
         {
             var model = await _context.Tanks.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if(model == null)
+
+            if (model == null)
             {
                 return false;
             }

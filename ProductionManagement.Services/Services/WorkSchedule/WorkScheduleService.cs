@@ -55,33 +55,6 @@ namespace ProductionManagement.Services.Services.WorkSchedule
             return true;
         }
 
-        private async Task RemoveOrderFromCalendarAsync(ProductionDaysBasicModel productionDay, bool removeNextOrders)
-        {
-            var maxSequence = await _context.Orders.MaxAsync(x => x.Sequence as int?) ?? 0;
-
-            var orderQuery = _context.Orders
-                                    .Where(x => x.ProductionLineId.HasValue && x.ProductionLineId.Value == productionDay.ProductionLineId)
-                                    .Where(x => x.Id == productionDay.OrdersId
-                                        || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date))
-                                    .AsQueryable();
-
-            orderQuery = removeNextOrders == false
-                ? orderQuery.Where(x => x.Id == productionDay.OrdersId)
-                : orderQuery.Where(x => x.Id == productionDay.OrdersId || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date));
-
-            var orders = await orderQuery.ToListAsync();
-
-            foreach (var order in orders)
-            {
-                order.StartDate = null;
-                order.StopDate = null;
-                order.ProductionLineId = null;
-                order.Sequence = ++maxSequence;
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<List<string>> GetCalendarHeadersAsync()
         {
             var result = await _context.ProductionLine
@@ -100,14 +73,12 @@ namespace ProductionManagement.Services.Services.WorkSchedule
             List<ProductionDaysModel> result = new List<ProductionDaysModel>();
 
             var orders = await _context.Orders
-                .Where(x => x.ProductionLine.Active)
+                .Where(x => x.ProductionLine != null && x.ProductionLine.Active)
                 .Where(x => x.StartDate >= parameters.DateFrom.Date || x.StopDate <= parameters.DateTo.Date)
                 .OrderBy(x => x.ProductionLineId)
                 .AsNoTracking()
                 .ToListAsync();
 
-            //if (orders.Count > 0)
-            //{
             var productionLinesIds = await _context.ProductionLine
                 .Where(x => x.Active)
                 .OrderBy(x => x.Id)
@@ -120,7 +91,6 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                 .OrderByDescending(x => x.ProductionLineId)
                 .AsNoTracking()
                 .ToListAsync();
-            //}
 
             var dateTMP = parameters.DateFrom;
             while (dateTMP <= parameters.DateTo.Date)
@@ -186,6 +156,33 @@ namespace ProductionManagement.Services.Services.WorkSchedule
             return result;
         }
 
+        private async Task RemoveOrderFromCalendarAsync(ProductionDaysBasicModel productionDay, bool removeNextOrders)
+        {
+            var maxSequence = await _context.Orders.MaxAsync(x => x.Sequence as int?) ?? 0;
+
+            var orderQuery = _context.Orders
+                                    .Where(x => x.ProductionLineId.HasValue && x.ProductionLineId.Value == productionDay.ProductionLineId)
+                                    .Where(x => x.Id == productionDay.OrdersId
+                                        || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date))
+                                    .AsQueryable();
+
+            orderQuery = removeNextOrders == false
+                ? orderQuery.Where(x => x.Id == productionDay.OrdersId)
+                : orderQuery.Where(x => x.Id == productionDay.OrdersId || (x.StartDate.HasValue && x.StartDate.Value.Date > productionDay.Date.Date));
+
+            var orders = await orderQuery.ToListAsync();
+
+            foreach (var order in orders)
+            {
+                order.StartDate = null;
+                order.StopDate = null;
+                order.ProductionLineId = null;
+                order.Sequence = ++maxSequence;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         private async Task ChangeProductionDayOrRemoveAsync(ProductionDaysBasicModel productionDay, bool dayOff)
         {
             if (productionDay.Id != 0)
@@ -204,6 +201,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                     ProductionLineId = productionDay.ProductionLineId,
                 });
             }
+
             await _context.SaveChangesAsync();
         }
 
@@ -228,10 +226,10 @@ namespace ProductionManagement.Services.Services.WorkSchedule
             {
                 if (i != 1)
                 {
-                    item.StartDate = GetNextWorkDayDate(item.StartDate.Value, freeDays);
+                    item.StartDate = GetNextWorkDayDate(item.StartDate!.Value, freeDays);
                 }
 
-                item.StopDate = GetNextWorkDayDate(item.StopDate.Value, freeDays);
+                item.StopDate = GetNextWorkDayDate(item.StopDate!.Value, freeDays);
                 i++;
             }
 
