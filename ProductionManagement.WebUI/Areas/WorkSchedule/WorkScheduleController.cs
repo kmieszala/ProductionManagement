@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductionManagement.Common.Consts;
 using ProductionManagement.Common.Enums;
 using ProductionManagement.Services.Services.WorkSchedule;
 using ProductionManagement.Services.Services.WorkSchedule.Models;
@@ -25,6 +26,7 @@ namespace ProductionManagement.WebUI.Areas.WorkSchedule
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.CalendarView)]
         public async Task<IActionResult> GetProductionDays(GetProdDaysFilterVM model)
         {
             var result = await _workScheduleService.GetProductionDaysAsync(_mapper.Map<GetProdDaysFilterModel>(model));
@@ -32,6 +34,7 @@ namespace ProductionManagement.WebUI.Areas.WorkSchedule
         }
 
         [HttpGet("[action]")]
+        [Authorize(Policy = CustomPolicy.CalendarView)]
         public async Task<IActionResult> GetCalendarHeaders()
         {
             var result = await _workScheduleService.GetCalendarHeadersAsync();
@@ -39,9 +42,10 @@ namespace ProductionManagement.WebUI.Areas.WorkSchedule
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Calendar)]
         public async Task<IActionResult> ChangeWorkDay(ProductionDaysBasicVM model)
         {
-            var result = await _workScheduleService.ChangeWorkDayAsync((ChangeWorkDayOptionEnum) int.Parse(model.ProductionLineName), _mapper.Map<ProductionDaysBasicModel>(model));
+            var result = await _workScheduleService.ChangeWorkDayAsync((ChangeWorkDayOptionEnum)int.Parse(model.ProductionLineName), _mapper.Map<ProductionDaysBasicModel>(model));
             return Ok(result);
         }
     }

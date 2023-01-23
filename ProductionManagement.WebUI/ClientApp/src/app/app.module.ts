@@ -16,6 +16,7 @@ import { AuthorizationModule } from './modules/authorization/authorization.modul
 import { AuthorizeInterceptor } from './modules/authorization/interceptors/authorize.interceptor';
 import { HomeModule } from './modules/home/home.module';
 import { UsersModule } from './modules/users/users.module';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { UsersModule } from './modules/users/users.module';
     AuthorizationModule,
     RouterModule.forRoot([
       { path: '', component: OrdersListComponent, pathMatch: 'full' },
-    ])
+    ]),
+    NgxPermissionsModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },

@@ -5,7 +5,7 @@
 
     public class SHAxxxTests
     {
-        [TestCase("")]
+        [TestCase("adm1234")]
         [TestCase("test")]
         [TestCase("!@#$%")]
         [TestCase("123asd")]

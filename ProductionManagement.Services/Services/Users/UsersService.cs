@@ -73,6 +73,7 @@ namespace ProductionManagement.Services.Services.Users
         public async Task<LoginUserModel?> LoginAsync(string userName, string password)
         {
             var user = await _context.Users
+                .Include(x => x.UserRoles)
                 .Where(x => x.Email == userName)
                 .FirstOrDefaultAsync();
 

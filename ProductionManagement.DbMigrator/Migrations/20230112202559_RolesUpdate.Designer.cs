@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductionManagement.Model;
 
@@ -11,9 +12,10 @@ using ProductionManagement.Model;
 namespace ProductionManagement.DbMigrator.Migrations
 {
     [DbContext(typeof(ProductionManagementContext))]
-    partial class ProductionManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20230112202559_RolesUpdate")]
+    partial class RolesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

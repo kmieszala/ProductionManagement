@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductionManagement.Common.Consts;
 using ProductionManagement.Services.Services.Parts;
 using ProductionManagement.Services.Services.Parts.Models;
 using ProductionManagement.WebUI.Areas.Parts.ViewModels.Request;
@@ -24,6 +25,7 @@ namespace ProductionManagement.WebUI.Areas.Parts
         }
 
         [HttpGet("[action]")]
+        [Authorize(Policy = CustomPolicy.SettingsView)]
         public async Task<IActionResult> GetParts()
         {
             var result = await _partsService.GetPartsAsync();
@@ -31,6 +33,7 @@ namespace ProductionManagement.WebUI.Areas.Parts
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Settings)]
         public async Task<IActionResult> AddPart(PartRequestVM model)
         {
             var result = await _partsService.AddPartAsync(_mapper.Map<PartModel>(model));
@@ -38,6 +41,7 @@ namespace ProductionManagement.WebUI.Areas.Parts
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Settings)]
         public async Task<IActionResult> EditPart(PartRequestVM model)
         {
             var result = await _partsService.EditPartAsync(_mapper.Map<PartModel>(model));

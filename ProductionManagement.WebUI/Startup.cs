@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProductionManagement.Common.Consts;
+using ProductionManagement.Common.Enums;
 using ProductionManagement.Model;
 using ProductionManagement.Services.Configuration;
 using ProductionManagement.Services.Services.Orders;
@@ -76,6 +78,78 @@ namespace ProductionManagement.WebUI
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(CustomPolicy.Administrator, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.Calendar, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.Calendar.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.CalendarView, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.Orders.ToString(),
+                    RolesEnum.OrdersView.ToString(),
+                    RolesEnum.Calendar.ToString(),
+                    RolesEnum.CalendarView.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.ProductionLines, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.ProductionLines.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.ProductionLinesView, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.ProductionLines.ToString(),
+                    RolesEnum.Settings.ToString(),
+                    RolesEnum.SettingsView.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.Settings, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.Settings.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.SettingsView, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.Settings.ToString(),
+                    RolesEnum.SettingsView.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.Orders, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.Orders.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.OrdersView, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypesConsts.Roles,
+                    RolesEnum.Orders.ToString(),
+                    RolesEnum.OrdersView.ToString(),
+                    RolesEnum.Administrator.ToString());
+                });
             });
 
             services.AddHealthChecks();

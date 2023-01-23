@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { UserInfo } from "../models/user-info";
 import { HttpClientService } from "./http-client.service";
+import { NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthorizationService {
@@ -13,6 +14,7 @@ export class AuthorizationService {
 
   constructor(
     private router: Router,
+    private permissions: NgxPermissionsService,
     private _http: HttpClientService) {
     this.init();
   }
@@ -105,6 +107,9 @@ export class AuthorizationService {
     return this._http.post<UserInfo>(`api/auth/login`, { username, password, repeatPassword })
       .pipe(map(user => {
         if(user != null && user.status == 2){
+          if (user.roles) {
+            this.permissions.loadPermissions(user.roles);
+          }
           this.currentUser.next(user);
           localStorage.setItem('user', JSON.stringify(user));
           this.isAuthenticated.next(true);

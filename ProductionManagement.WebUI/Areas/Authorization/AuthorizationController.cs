@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using ProductionManagement.Common.Consts;
-using ProductionManagement.Common.Extensions;
 using ProductionManagement.Services.Services.Users;
 using ProductionManagement.Services.Services.Users.Models;
 using ProductionManagement.WebUI.Areas.Authorization.ViewModels;
@@ -64,16 +63,16 @@ namespace ProductionManagement.WebUI.Areas.Authorization
 
                 #region Production profile
 
-                var roles = user.UserRoles.Select(x => x.GetDisplayName()).ToList();
-
+                //var roles = user.UserRoles.Select(x => x.GetDisplayName()).ToList();
                 var claims = new List<Claim>
                     {
                         new Claim(CustomClaimTypesConsts.UserId, user.Id.ToString()),
                         new Claim(CustomClaimTypesConsts.Login, model.UserName),
                         new Claim(CustomClaimTypesConsts.FirstName, user.FirstName),
                         new Claim(CustomClaimTypesConsts.LastName, user.LastName),
-                        new Claim(CustomClaimTypesConsts.Roles, string.Join(";", roles)),
+                        //new Claim(CustomClaimTypesConsts.Roles, roles[0], roles[1]),
                     };
+                user.UserRoles.ForEach(x => claims.Add(new Claim(CustomClaimTypesConsts.Roles, x.ToString())));
 
                 var claimsIdentity = new ClaimsIdentity(
                     claims,
@@ -95,7 +94,7 @@ namespace ProductionManagement.WebUI.Areas.Authorization
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Roles = roles.Select(x => (string)x),
+                    Roles = user.UserRoles.Select(x => x.ToString()),
                     Status = user.Status,
                     TimeBlockCount = user.TimeBlockCount
                 });

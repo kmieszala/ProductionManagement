@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
           } else if(data.status == 2) {
             this._router.navigate([this.returnUrl]);
           } else if(data.status == 3) {
-            this.error = "Konta zablokowane, zgłoś się do aministratora.";
+            this.error = "Konto zablokowane, zgłoś się do aministratora.";
           } else {
             this.error = "Nieudana próba logowania, zgłoś się do aministratora.";
           }

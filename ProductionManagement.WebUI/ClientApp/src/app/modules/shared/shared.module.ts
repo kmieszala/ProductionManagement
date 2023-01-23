@@ -16,6 +16,7 @@ import { MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS} from '@angular/material/radi
 import { DateSelectorComponent } from './components/date-selector/date-selector.component';
 import { UserStatusPipe } from './common/pipes/user-status.pipe';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
     MatRadioModule,
     DateSelectorComponent,
     ChangePasswordComponent,
+    NgxPermissionsModule,
 
     UserStatusPipe,
 

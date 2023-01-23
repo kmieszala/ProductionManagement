@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductionManagement.Common.Consts;
 using ProductionManagement.Services.Services.Orders;
 using ProductionManagement.Services.Services.Orders.Models;
 using ProductionManagement.WebUI.Areas.Orders.ViewModels.Request;
@@ -26,6 +27,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
         }
 
         [HttpGet("[action]")]
+        [Authorize(Policy = CustomPolicy.OrdersView)]
         public async Task<IActionResult> GetOrders()
         {
             var result = await _ordersService.GetOrdersAsync();
@@ -33,6 +35,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Orders)]
         public async Task<IActionResult> AddOrder(OrderVM model)
         {
             var result = await _ordersService.AddOrderAsync(_mapper.Map<OrderModel>(model));
@@ -40,6 +43,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Orders)]
         public async Task<IActionResult> EditOrder(OrderVM model)
         {
             var result = await _ordersService.EditOrderAsync(_mapper.Map<OrderModel>(model));
@@ -47,6 +51,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Orders)]
         public async Task<IActionResult> PrepareStorekeeperDocument(StorekeeperDocumentParametersVM model)
         {
             var result = await _ordersService.PrepareStorekeeperDocumentAsync(model.OrdersIds, _mapper.Map<List<PartsStorekeeperModel>>(model.Parts));
@@ -62,6 +67,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Orders)]
         public async Task<IActionResult> UpdateSequenceOrders(List<SequenceVM> model)
         {
             var result = await _ordersService.UpdateSequenceOrdersAsync(_mapper.Map<List<SequenceModel>>(model));
@@ -69,6 +75,7 @@ namespace ProductionManagement.WebUI.Areas.Orders
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Orders)]
         public async Task<IActionResult> GenerateCalendar(List<OrderVM> model)
         {
             var result = await _ordersService.GenerateCalendarAsync(_mapper.Map<List<OrderModel>>(model));

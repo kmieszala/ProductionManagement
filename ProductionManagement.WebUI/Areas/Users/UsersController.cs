@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductionManagement.Common.Consts;
 using ProductionManagement.Common.Enums;
 using ProductionManagement.Services.Services.Users;
 using ProductionManagement.Services.Services.Users.Models;
@@ -29,6 +30,7 @@ namespace ProductionManagement.WebUI.Areas.Users
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Administrator)]
         public async Task<IActionResult> AddUser(UsersVM model)
         {
             var result = await _usersService.AddUserAsync(_mapper.Map<UsersModel>(model));
@@ -36,6 +38,7 @@ namespace ProductionManagement.WebUI.Areas.Users
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Administrator)]
         public async Task<IActionResult> EditUser(UsersVM model)
         {
             var result = await _usersService.EditUserAsync(_mapper.Map<UsersModel>(model));
@@ -43,6 +46,7 @@ namespace ProductionManagement.WebUI.Areas.Users
         }
 
         [HttpGet("[action]/{login}")]
+        [Authorize(Policy = CustomPolicy.Administrator)]
         public async Task<IActionResult> CheckUniqueLogin(string login)
         {
             var result = await _usersService.CheckUniqueLoginAsync(login);
@@ -50,6 +54,7 @@ namespace ProductionManagement.WebUI.Areas.Users
         }
 
         [HttpGet("[action]")]
+        [Authorize(Policy = CustomPolicy.Administrator)]
         public async Task<IActionResult> GetUsers()
         {
             var result = await _usersService.GetUsersAsync();
@@ -58,6 +63,7 @@ namespace ProductionManagement.WebUI.Areas.Users
 
         [HttpGet]
         [Route("[action]")]
+        [Authorize(Policy = CustomPolicy.Administrator)]
         public IActionResult GetRoles()
         {
             var result = Enum.GetValues(typeof(RolesEnum)).Cast<RolesEnum>().Select(x => new DictVM
@@ -70,6 +76,7 @@ namespace ProductionManagement.WebUI.Areas.Users
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Administrator)]
         public async Task<IActionResult> DeactiveUser(DictVM model)
         {
             var result = await _usersService.DeactiveUserAsync(model.Id);
@@ -77,6 +84,7 @@ namespace ProductionManagement.WebUI.Areas.Users
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = CustomPolicy.Administrator)]
         public async Task<IActionResult> UnlockUser(DictVM model)
         {
             var result = await _usersService.UnlockUserAsync(model.Id, model.Value);
