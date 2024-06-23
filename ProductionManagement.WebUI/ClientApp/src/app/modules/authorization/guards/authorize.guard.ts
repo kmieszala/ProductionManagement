@@ -19,7 +19,8 @@ export class AuthorizeGuard implements CanActivate {
     if (isAuthenticated != null && isAuthenticated) {
       return true;
     } else {
-      this.router.navigate(['authentication/login'], { queryParams: { returnUrl: state.url } });
+      this.router.navigate(['tasks']);
+      // this.router.navigate(['authentication/login'], { queryParams: { returnUrl: state.url } });
       return false;
     }
   }

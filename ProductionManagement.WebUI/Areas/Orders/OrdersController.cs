@@ -8,12 +8,12 @@ using ProductionManagement.Common.Consts;
 using ProductionManagement.Services.Services.Orders;
 using ProductionManagement.Services.Services.Orders.Models;
 using ProductionManagement.WebUI.Areas.Orders.ViewModels.Request;
+using ProductionManagement.WebUI.Areas.Shared.Models;
 
 namespace ProductionManagement.WebUI.Areas.Orders
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IOrdersService _ordersService;
@@ -39,6 +39,20 @@ namespace ProductionManagement.WebUI.Areas.Orders
         public async Task<IActionResult> AddOrder(OrderVM model)
         {
             var result = await _ordersService.AddOrderAsync(_mapper.Map<OrderModel>(model));
+            return Ok(result);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> MarkOrderAsDone(DictVM model)
+        {
+            var result = await _ordersService.MarkOrderAsDoneAsync(model.Id, model.Value);
+            return Ok(result);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetCurrentOrders()
+        {
+            var result = await _ordersService.GetCurrentOrdersAsync();
             return Ok(result);
         }
 

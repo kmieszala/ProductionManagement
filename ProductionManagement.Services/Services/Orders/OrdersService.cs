@@ -2,8 +2,11 @@
 using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
+using ProductionManagement.Common.Enums;
 using ProductionManagement.Model;
 using ProductionManagement.Services.Services.Orders.Models;
+using ProductionManagement.Services.Services.Shared.Log;
+using ProductionManagement.Services.Services.Shared.Models;
 
 namespace ProductionManagement.Services.Services.Orders
 {
@@ -21,6 +24,20 @@ namespace ProductionManagement.Services.Services.Orders
 
         Task<bool> GenerateCalendarAsync(List<OrderModel> orderModels);
 
+        /// <summary>
+        /// Zwraca listę aktualnych zamówień.
+        /// </summary>
+        /// <returns>Lista aktualnych zamówień</returns>
+        Task<List<TaskModel>> GetCurrentOrdersAsync();
+
+        /// <summary>
+        /// Oznaczenie zlecenia jako wykonane.
+        /// </summary>
+        /// <param name="orderId">Id zlecenia</param>
+        /// <param name="userCode">Kod użytkownika</param>
+        /// <returns>True</returns>
+        Task<bool> MarkOrderAsDoneAsync(int orderId, string userCode);
+
         //Task<List<PlannedOrdersModel>> GetPlannedOrdersAsync(FilterPlannedOrdersModel filterPlannedOrdersModel);
     }
 
@@ -28,11 +45,13 @@ namespace ProductionManagement.Services.Services.Orders
     {
         private readonly ProductionManagementContext _context;
         private readonly IMapper _mapper;
+        private readonly ILogService _logService;
 
-        public OrdersService(ProductionManagementContext context, IMapper mapper)
+        public OrdersService(ProductionManagementContext context, IMapper mapper, ILogService logService)
         {
             _context = context;
             _mapper = mapper;
+            _logService = logService;
         }
 
         public async Task<int> AddOrderAsync(OrderModel model)
@@ -41,6 +60,7 @@ namespace ProductionManagement.Services.Services.Orders
                          .Max(x => x.Sequence as int?) ?? 0;
             var dbModel = _mapper.Map<Model.DbSets.Orders>(model);
             dbModel.Sequence = ++maxSequence;
+            dbModel.Status = OrderStatusEnum.Add;
             await _context.Orders.AddAsync(dbModel);
             await _context.SaveChangesAsync();
 
@@ -85,6 +105,78 @@ namespace ProductionManagement.Services.Services.Orders
                 }).ToListAsync();
 
             return result;
+        }
+
+        public async Task<List<TaskModel>> GetCurrentOrdersAsync()
+        {
+            var orders = await _context.Orders
+                .Where(x => x.ProductionLine != null && x.ProductionLine.Active)
+                .Where(x => x.Status == OrderStatusEnum.Planned || x.Status == OrderStatusEnum.InProgress)
+                .OrderBy(x => x.StartDate)
+                .Take(20)
+                .ToListAsync(); // Pobranie danych do pamięci
+
+            var groupedOrders = orders
+                .OrderBy(x => x.ProductionLineId)
+                .GroupBy(x => x.ProductionLineId)
+                .Select(x => new TaskModel()
+                {
+                    ProductionLineId = x.Key!.Value,
+                    TasksList = x.Select(y => new DictModel
+                    {
+                        Id = y.Id,
+                        Value = y.OrderName
+                    }).ToList()
+                })
+                .ToList(); // Grupowanie i przekształcanie w pamięci
+
+            return groupedOrders;
+        }
+
+        public async Task<bool> MarkOrderAsDoneAsync(int orderId, string userCode)
+        {
+            var user = await _context.Users.Where(x => x.Code == userCode).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                await _logService.AddLogAsync(LogCodeEnum.MarkOrderAsDone_BadCode, $"Zły PIN {userCode}", null);
+                return false;
+            }
+
+            var order = await _context.Orders
+                .Where(x => x.Id == orderId)
+                .FirstOrDefaultAsync();
+
+            if (order == null)
+            {
+                await _logService.AddLogAsync(LogCodeEnum.MarkOrderAsDone_BadCode, $"Brak zamówienia o id {orderId}", user.Id);
+                return false;
+            }
+
+            order.Status = OrderStatusEnum.Completed;
+            order.StopDate = DateTime.Now;
+
+            var nextOrder = await _context.Orders
+                .Where(x => x.ProductionLineId == order.ProductionLineId)
+                .Where(x => x.StartDate > order.StartDate)
+                .OrderBy(x => x.StartDate)
+                .FirstOrDefaultAsync();
+
+            if (nextOrder != null)
+            {
+                nextOrder.Status = OrderStatusEnum.InProgress;
+            }
+
+            await _context.SaveChangesAsync();
+
+            await _logService.AddLogAsync(LogCodeEnum.MarkOrderAsDone_OrderCompleted, $"Zlecenie {orderId} wykonane", user.Id);
+
+            if (nextOrder != null)
+            {
+                await _logService.AddLogAsync(LogCodeEnum.MarkOrderAsDone_BadCode, $"Następne zlecenie w realizacji {nextOrder.Id}", user.Id);
+            }
+
+            return true;
         }
 
         public async Task<bool> UpdateSequenceOrdersAsync(List<SequenceModel> sequenceList)
@@ -263,6 +355,7 @@ namespace ProductionManagement.Services.Services.Orders
                             order.StopDate = maxDateDict[productionLineId].Date;
                             order.Sequence = maxSequence++;
                             order.ProductionLineId = productionLineId;
+                            order.Status = OrderStatusEnum.Planned;
                         }
                         else
                         {
@@ -321,7 +414,7 @@ namespace ProductionManagement.Services.Services.Orders
 
             workSheet.Range(1, 1, 1, 3).Merge().AddToNamed("Title");
 
-            DataTable headers = new DataTable();
+            System.Data.DataTable headers = new System.Data.DataTable();
             DataColumn ordinalNumberHeader = headers.Columns.Add("Liczba pojedyncza", typeof(string));
             DataColumn dateHeader = headers.Columns.Add("Nazwa części", typeof(string));
             DataColumn accountNumberHeader = headers.Columns.Add("Ilość", typeof(string));
@@ -329,7 +422,7 @@ namespace ProductionManagement.Services.Services.Orders
             headers.Rows.Add("Lp.", "Nazwa części", "Ilość");
             workSheet.Cell(4, 1).Value = headers.AsEnumerable();
 
-            DataTable values = new DataTable();
+            System.Data.DataTable values = new System.Data.DataTable();
             DataColumn ordinalNumberColumn = values.Columns.Add("Lp.", typeof(int));
             DataColumn dateColumn = values.Columns.Add("Nazwa części", typeof(string));
             DataColumn accountNumberColumn = values.Columns.Add("Ilość:", typeof(int));
@@ -344,7 +437,7 @@ namespace ProductionManagement.Services.Services.Orders
 
             workSheet.Cell(5, 1).Value = values.AsEnumerable();
 
-            DataTable summary = new DataTable();
+            System.Data.DataTable summary = new System.Data.DataTable();
             DataColumn paymentsCountHeader = summary.Columns.Add("Łączna ilośc", typeof(string));
             DataColumn paymentsCountValue = summary.Columns.Add("Łączna ilość", typeof(int));
 

@@ -12,4 +12,5 @@ export class UserModel {
     password: string;
 
     showDetails: boolean;
+    code: string = "****";
 }

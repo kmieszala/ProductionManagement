@@ -6,6 +6,7 @@ import { ProductionDays } from '../../models/production-days';
 import { ProductionDaysBasic } from '../../models/production-days-basic';
 import { WorkScheduleService } from '../../services/work-schedule.service';
 import { ChangeDayFormComponent } from '../shared/change-day-form/change-day-form.component';
+import { ProductionLineService } from 'src/app/modules/production-line/services/production-line.service';
 
 @Component({
   selector: 'app-production-days-list',
@@ -26,6 +27,7 @@ export class ProductionDaysListComponent implements OnInit, OnDestroy {
   constructor(
     private _formBuilder: FormBuilder,
     private _workScheduleService: WorkScheduleService,
+    private _productionLineService: ProductionLineService,
     private _modalService: BsModalService,) { }
 
   ngOnInit(): void {
@@ -42,11 +44,11 @@ export class ProductionDaysListComponent implements OnInit, OnDestroy {
     forkJoin(
       {
         prodDays: this._workScheduleService.getProductionDays(dateFrom, dateTo),
-        headers: this._workScheduleService.getCalendarHeaders()
+        headers: this._productionLineService.getProductionLines()
       })
       .subscribe(result => {
         this.productionDays = result.prodDays;
-        this.headers = result.headers;
+        this.headers = result.headers.map(x => x.value);
         this.loading = false;
         this.formStartDate?.setValue(dateFrom);
         this.formStopDate?.setValue(dateTo);

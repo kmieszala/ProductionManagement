@@ -68,11 +68,16 @@
                 .HasIndex(e => e.Email)
                 .IncludeProperties(e => new { e.Password });
 
+            modelBuilder
+                .Entity<Users>()
+                .HasIndex(e => e.Code)
+                .IsUnique();
+
             SeedDictionary<LogCodeEnum, LogCodeDict>(modelBuilder);
             SeedDictionary<UserStatusEnum, UserStatusDict>(modelBuilder);
             SeedDictionary<RolesEnum, Role>(modelBuilder);
 
-            // PredefineUser(modelBuilder);
+            PredefineUser(modelBuilder);
         }
 
         private void PredefineUser(ModelBuilder modelBuilder)
@@ -87,6 +92,8 @@
                 Password = "admin123".ComputeSha256Hash(),
                 ActivationDate = DateTime.Now,
                 RegisteredDate = DateTime.Now,
+                TimeBlockCount = 0,
+                Code = "0807"
             });
 
             modelBuilder.Entity<UserRoles>().HasData(new

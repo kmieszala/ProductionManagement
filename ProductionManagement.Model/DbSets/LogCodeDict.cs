@@ -13,7 +13,7 @@
         [Key]
         public LogCodeEnum Id { get; set; }
 
-        [MaxLength(20)]
+        [MaxLength(50)]
         public string Name { get; set; }
 
         public bool Active { get; set; }

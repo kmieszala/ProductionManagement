@@ -11,7 +11,6 @@ namespace ProductionManagement.WebUI.Areas.ProductionLine
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ProductionLineController : ControllerBase
     {
         private readonly IProductionLineService _productionLineService;
@@ -29,6 +28,13 @@ namespace ProductionManagement.WebUI.Areas.ProductionLine
         public async Task<IActionResult> GetLines()
         {
             var result = await _productionLineService.GetLinesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetProductionLines()
+        {
+            var result = await _productionLineService.GetProductionLinesAsync();
             return Ok(result);
         }
 

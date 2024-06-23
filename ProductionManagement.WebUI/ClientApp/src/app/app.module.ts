@@ -17,6 +17,7 @@ import { AuthorizeInterceptor } from './modules/authorization/interceptors/autho
 import { HomeModule } from './modules/home/home.module';
 import { UsersModule } from './modules/users/users.module';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { TaskAcceptorModule } from './modules/task-acceptor/task-acceptor.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     HttpClientModule,
     FormsModule,
     OrdersModule,
+    TaskAcceptorModule,
     HomeModule,
     ProductsModule,
     SharedModule,

@@ -18,7 +18,12 @@
         [MaxLength(200)]
         public string Description { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime CreationDate { get; set; }
+
+        [ForeignKey("User")]
+        public int? UserId { get; set; }
+
+        public virtual Users? User { get; set; }
 
         public virtual LogCodeDict LogCodeDict { get; set; }
     }

@@ -1,147 +1,138 @@
-<h3 class="mb-3">ProductionManager</h3>
+<h3 class="mb-3">Koordynator produkcji</h3>
 
 <div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Informacje ogólne</h5>
-        <ul>
-            <li>Układ strony może być zmieniony (kolory, menu, itp.)</li>
-            <li>Każda zakładka może być dowolnie zmieniona</li>
-            <li>Można dodać dodatkowe filtry w zakładkach, tam gdzie jest taka potrzeba, które ułatwią pracę</li>
-            <li>Można dorobić wczytywanie danych z pliku</li>
-            <li>Aplikacja może łączyć się z innymi systemami jeżeli udostępniają one taką możliwość (np. KRS, CEIDG, hurtownie danych, itp.)</li>
-            <li>Aplikacja może wysyłać emaile, SMSy</li>
-            <li>Aplikacja może wykonywać jakieś przeliczenia, generować dokumenty, robić przeliczenia w nocy zgodnie z harmonogramem</li>
-        </ul>
-    </div>
-</div>
-
-<div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">W planach</h5>
-        <ul>
-            <li>Dodanie uprawnień</li>
-            <li>Multijęzyczność i dodanie języka angielskiego.</li>
-        </ul>
-    </div>
+  <div class="card-body">
+    <h5 class="card-title">Informacje ogólne</h5>
+    <ul>
+      <li>Układ strony może być zmieniony (kolory, menu, itp.)</li>
+      <li>Każda zakładka może być dowolnie zmieniona</li>
+      <li>Można dodać dodatkowe filtry w zakładkach, tam gdzie jest taka potrzeba, które ułatwią pracę</li>
+      <li>Można dorobić wczytywanie danych z pliku</li>
+      <li>Aplikacja może łączyć się z innymi systemami jeżeli udostępniają one taką możliwość (np. KRS, CEIDG, hurtownie danych, itp.)</li>
+      <li>Aplikacja może wysyłać emaile, SMSy</li>
+      <li>Aplikacja może wykonywać jakieś przeliczenia, generować dokumenty, robić przeliczenia w nocy zgodnie z harmonogramem</li>
+      <li>Można dodać wybór języka</li>
+    </ul>
+  </div>
 </div>
 <hr class="m-4">
 <div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Użytkownicy</h5>
-        <p class="card-text">
-            Po wejściu w tą zakładkę mamy listę użytkowników, gdzie widzimy w jakim statusie jest dany użytkownik. Możemy dodać nowego uzytkownika przyciskiem <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
-            Na formatce która nam wyskoczy trzeba uzupełnić takie dane jak Imię, Nazwisko, Email/Login, Hasło (musi się skaładać przynajmniej z 12 znaków, posiadać wielką i małą literę, cyfrę oraz znak specjalny) oraz
-            Uprawnienia jakie ma posiadać dany użytkownik. Wprowadzone hasło posłuży tylko do pierwszego zalogowania po czym aplikacja wymusi zmianę hasła.
-        </p>
-        <p class="card-text">
-            Po kliknięciu w dany rekord tabeli wyświetlają się uprawnienia jakie posiada kliknięty użytkownik.
-        </p>
-        <p class="card-text">
-            Podczas dodawania i edycji jest sprawdzana unikalność Loginu, żeby nie wprowadzić dwóch użytkowników o tym samym loginie.
-        </p>
-        <p class="card-text">
-            Aktywnego użytkonika możemy zablokować, spowoduje to jego wylogowanie jeśli jest akurat zalogowany.
-        </p>
-        <p class="card-text">
-            Zablokowane konto możemy odblokować, w tym celu aplikacja poprosi nas o nowe hasło dla danego konta.
-        </p>
-        <h6 class="card-subtitle mb-2 text-muted">Uprawnienia</h6>
-        <ul>
-            <li>Administrator - dostęp do wszystkich opcji i widoków</li>
-            <li>Kalendarz - podgląd i dostępne wszystkie opcje kalendarza </li>
-            <li>KalendarzPodglad - podgląd kalendarza bez możliwości zmian</li>
-            <li>Zlecenia - dostęp do listy zleceń i wszystkich opcji oraz podglądu kalendarza</li>
-            <li>ZleceniaPodglad - tylko podgląd listy zleceń</li>
-            <li>LinieProd - dostęp do zakładki linie produkcyjne i wszystkich opcji</li>
-            <li>Ustawienia - dostęp do zakładki Części i Zbiorniki oraz ich opcji</li>
-            <li>UstawieniaPodglad - tylko podgląd zakładek dostępnych w Ustawienia</li>
-        </ul>
-    </div>
+  <div class="card-body">
+    <h5 class="card-title">Użytkownicy</h5>
+    <p class="card-text">
+      Po wejściu w tą zakładkę mamy listę użytkowników, gdzie widzimy w jakim statusie jest dany użytkownik. Możemy dodać nowego uzytkownika przyciskiem <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>
+      Na formatce która nam wyskoczy trzeba uzupełnić takie dane jak Imię, Nazwisko, Email/Login, Hasło (musi się skaładać przynajmniej z 12 znaków, posiadać wielką i małą literę, cyfrę oraz znak specjalny) oraz
+      Uprawnienia jakie ma posiadać dany użytkownik. Wprowadzone hasło posłuży tylko do pierwszego zalogowania po czym aplikacja wymusi zmianę hasła.
+    </p>
+    <p class="card-text">
+      Po kliknięciu w dany rekord tabeli wyświetlają się uprawnienia jakie posiada kliknięty użytkownik.
+    </p>
+    <p class="card-text">
+      Podczas dodawania i edycji jest sprawdzana unikalność Loginu, żeby nie wprowadzić dwóch użytkowników o tym samym loginie.
+    </p>
+    <p class="card-text">
+      Aktywnego użytkonika możemy zablokować, spowoduje to jego wylogowanie jeśli jest akurat zalogowany.
+    </p>
+    <p class="card-text">
+      Zablokowane konto możemy odblokować, w tym celu aplikacja poprosi nas o nowe hasło dla danego konta.
+    </p>
+    <h6 class="card-subtitle mb-2 text-muted">Uprawnienia</h6>
+    <ul>
+      <li>Administrator - dostęp do wszystkich opcji i widoków</li>
+      <li>Kalendarz - podgląd i dostępne wszystkie opcje kalendarza </li>
+      <li>KalendarzPodglad - podgląd kalendarza bez możliwości zmian</li>
+      <li>Zlecenia - dostęp do listy zleceń i wszystkich opcji oraz podglądu kalendarza</li>
+      <li>ZleceniaPodglad - tylko podgląd listy zleceń</li>
+      <li>LinieProd - dostęp do zakładki linie produkcyjne i wszystkich opcji</li>
+      <li>Ustawienia - dostęp do zakładki Części i Zbiorniki oraz ich opcji</li>
+      <li>UstawieniaPodglad - tylko podgląd zakładek dostępnych w Ustawienia</li>
+      <li>ProdukcjaPodglad - tylko podgląd zakładki produkcja</li>
+    </ul>
+  </div>
 </div>
 <div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Ustawienia</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Części</h6>
-        <p class="card-text">
-            Zakładka służy do przeglądania, dodawania i edytowania części, z których mogą składać się zbiorniki. W celu dodania nowej części należy kliknąć przycisk
-            <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>. W okienku jakie nam się pokarze należy wprowadzić unikalną nazwę
-            oraz opis. Oba pola są wymagane, bez ich wprowadzenia aplikacja nie pozwoli nam dodać nowej części do systemu.
-        </p>
-        <h6 class="card-subtitle mb-2 text-muted">Zbiorniki</h6>
-        <p class="card-text">
-            Zakładka służy do przeglądania, dodawania i edytowania zbiorników. Możemy również dezaktywować dany zbiornik, dzięki czemu nie będzie on się wyświetlał na liście zbiorników podczas dodawania nowych zleceń.
-            Dezaktywowany zbiornik można również aktywować. W celu ułatwienia przeglądania aktywnych/niekatywnych zbiorników został dodany filtr.
-        </p>
-        <p class="card-text">
-            Dodając nowy zbiornik należy podać jego nazwę, liczbę dni potrzebnych do jego wykonania, oraz przynajmniej jedną część z jakiej składa się dany zbiornik. Są to pola wymagane. Dodatkowo można
-            wprowadzić linie produkcyjne specjalizujące się w produkcji danego zbiornika, jeśli to zrobimy zlecenia dotyczące produkcji tego zbiornika zawsze będą przypisywane do wybranych linii produkcyjnych.
-        </p>
-        <p class="card-text">
-            Po kliknieciu w dany zbiornik/rekord, pod spodem wyświetli nam się informacja z jakich części składa się dany zbiornik oraz jaka linia specjalizuje się w jego produkcji jeżeli jest ustawiona.
-        </p>
-        <h6 class="card-subtitle mb-2 text-muted">Linie produkcyjne</h6>
-        <p class="card-text">
-            Na tej zakładce możemy przeglądać, dodawać i edytować linie produkcyjne. Dodając nową linię produkcyjną, należy podać jej nazwę oraz datę uruchomienia (od tego dnia zaczną dodawać się zlecenia dla danej linii).
-            Dodatkowo możemy dodać zbiorniki w jakich specjalizuje się dana linia produkcyjna.
-        </p>
-        <p class="card-text">
-            Po kliknięciu w daną linię produkcyjną wyświetlą się zbiorniki w których specjalizuje się dana linia.
-        </p>
-    </div>
+  <div class="card-body">
+    <h5 class="card-title">Ustawienia</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Części</h6>
+    <p class="card-text">
+      Zakładka służy do przeglądania, dodawania i edytowania części, z których mogą składać się zbiorniki. W celu dodania nowej części należy kliknąć przycisk
+      <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button>. W okienku jakie nam się pokarze należy wprowadzić unikalną nazwę
+      oraz opis. Oba pola są wymagane, bez ich wprowadzenia aplikacja nie pozwoli nam dodać nowej części do systemu.
+    </p>
+    <h6 class="card-subtitle mb-2 text-muted">Zbiorniki</h6>
+    <p class="card-text">
+      Zakładka służy do przeglądania, dodawania i edytowania zbiorników. Możemy również dezaktywować dany zbiornik, dzięki czemu nie będzie on się wyświetlał na liście zbiorników podczas dodawania nowych zleceń.
+      Dezaktywowany zbiornik można również aktywować. W celu ułatwienia przeglądania aktywnych/niekatywnych zbiorników został dodany filtr.
+    </p>
+    <p class="card-text">
+      Dodając nowy zbiornik należy podać jego nazwę, liczbę dni potrzebnych do jego wykonania, oraz przynajmniej jedną część z jakiej składa się dany zbiornik. Są to pola wymagane. Dodatkowo można
+      wprowadzić linie produkcyjne specjalizujące się w produkcji danego zbiornika, jeśli to zrobimy zlecenia dotyczące produkcji tego zbiornika zawsze będą przypisywane do wybranych linii produkcyjnych.
+    </p>
+    <p class="card-text">
+      Po kliknieciu w dany zbiornik/rekord, pod spodem wyświetli nam się informacja z jakich części składa się dany zbiornik oraz jaka linia specjalizuje się w jego produkcji jeżeli jest ustawiona.
+    </p>
+    <h6 class="card-subtitle mb-2 text-muted">Linie produkcyjne</h6>
+    <p class="card-text">
+      Na tej zakładce możemy przeglądać, dodawać i edytować linie produkcyjne. Dodając nową linię produkcyjną, należy podać jej nazwę oraz datę uruchomienia (od tego dnia zaczną dodawać się zlecenia dla danej linii).
+      Dodatkowo możemy dodać zbiorniki w jakich specjalizuje się dana linia produkcyjna.
+    </p>
+    <p class="card-text">
+      Po kliknięciu w daną linię produkcyjną wyświetlą się zbiorniki w których specjalizuje się dana linia.
+    </p>
+  </div>
 </div>
 <div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Zlecenia</h5>
-        <p class="card-text">
-            Umożliwia przegląd i wprowadzanie nowych zleceń oraz edycję istniejących zleceń.
-        </p>
-        <p class="card-text">
-            Niezaplanowane zlecenia (zlecenia nie posiadające planowanej daty rozpoczęcia ani zakończenia), można ustawić w kolejności wprowadzania do kalendarza. W tym celu należy kliknąć i przytrzymać
-            na rekordzie zlecenia i przesunąć go do góry lub dołu. Zlecenia na górze listy będą dodawane do kalendarza jako pierwsze. Po ustawieniu kolejności należy kliknąć
-            <button type="button" class="btn btn-danger btn-sm me-2"><i class="fas fa-save" aria-hidden="true"></i> Aktualizuj kolejność</button> w celu zapisania zmian.
-        </p>
-        <p class="card-text">
-            Aby wprowadzić zlecenia do kalendarza, należy zaznaczyć zlecenia (kwadracik z lewej strony) które nas interesują i kliknąć
-            <button type="button" class="btn btn-success btn-sm me-2"><i class="fa-solid fa-table-columns"></i> Generuj kalendarz</button>. Aplikacja powinna przejść na zakładkę Kalendarz, gdzie zaznaczone
-            zlecenia powinny dodać się w najbliższym możliwym terminie.
-        </p>
-        <p class="card-text">
-            W celu wygenerowania dokumentu z częściami potrzebnymi do wykonania zlecenia, należy zaznaczyć interesujące nas zlecenia i kliknąć
-            <button type="button" class="btn btn-primary btn-sm me-2"><i class="fa-regular fa-file-lines"></i> Dla magazyniera</button>. W okienku które nam się pokaże możemy dodatkowo dobrać
-            części jeśli jest taka potrzeba.
-        </p>
-        <p class="card-text">
-            Przycisk <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button> otwiera okno dodawania nowych zleceń, gdzie nadajemy nazwę zlecenia,
-            wybieramy z listy zbiornik którego dotyczy zlecenie, możemy wprowadzić dodatkowy opis zlecenia. Kolor losuje się automatycznie, żeby ułatwić wprowadzanie zleceń. Kolor jest wyświetlany na liście zleceń
-            oraz w kalendarzu. Bez wprowadzenia wymaganych pól aplikacja nie pozwoli nam dodać niekompletnego zlecenia.
-        </p>
-        <p class="card-text">
-            Niezaplanowane zlecenia można edytować.
-        </p>
-    </div>
+  <div class="card-body">
+    <h5 class="card-title">Zlecenia</h5>
+    <p class="card-text">
+      Umożliwia przegląd i wprowadzanie nowych zleceń oraz edycję istniejących zleceń.
+    </p>
+    <p class="card-text">
+      Niezaplanowane zlecenia (zlecenia nie posiadające planowanej daty rozpoczęcia ani zakończenia), można ustawić w kolejności wprowadzania do kalendarza. W tym celu należy kliknąć i przytrzymać
+      na rekordzie zlecenia i przesunąć go do góry lub dołu. Zlecenia na górze listy będą dodawane do kalendarza jako pierwsze. Po ustawieniu kolejności należy kliknąć
+      <button type="button" class="btn btn-danger btn-sm me-2"><i class="fas fa-save" aria-hidden="true"></i> Aktualizuj kolejność</button> w celu zapisania zmian.
+    </p>
+    <p class="card-text">
+      Aby wprowadzić zlecenia do kalendarza, należy zaznaczyć zlecenia (kwadracik z lewej strony) które nas interesują i kliknąć
+      <button type="button" class="btn btn-success btn-sm me-2"><i class="fa-solid fa-table-columns"></i> Generuj kalendarz</button>. Aplikacja powinna przejść na zakładkę Kalendarz, gdzie zaznaczone
+      zlecenia powinny dodać się w najbliższym możliwym terminie.
+    </p>
+    <p class="card-text">
+      W celu wygenerowania dokumentu z częściami potrzebnymi do wykonania zlecenia, należy zaznaczyć interesujące nas zlecenia i kliknąć
+      <button type="button" class="btn btn-primary btn-sm me-2"><i class="fa-regular fa-file-lines"></i> Dla magazyniera</button>. W okienku które nam się pokaże możemy dodatkowo dobrać
+      części jeśli jest taka potrzeba.
+    </p>
+    <p class="card-text">
+      Przycisk <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Dodaj</button> otwiera okno dodawania nowych zleceń, gdzie nadajemy nazwę zlecenia,
+      wybieramy z listy zbiornik którego dotyczy zlecenie, możemy wprowadzić dodatkowy opis zlecenia. Kolor losuje się automatycznie, żeby ułatwić wprowadzanie zleceń. Kolor jest wyświetlany na liście zleceń
+      oraz w kalendarzu. Bez wprowadzenia wymaganych pól aplikacja nie pozwoli nam dodać niekompletnego zlecenia.
+    </p>
+    <p class="card-text">
+      Niezaplanowane zlecenia można edytować.
+    </p>
+  </div>
 </div>
 <div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">Kalendarz</h5>
-        <p class="card-text">
-            W kalendarzu możemy przeglądać zaplanowane zlecenia dla linii produkcyjnych. Domyślnie po wejściu w zakładkę widzimy zlecenia 7 dni wstecz od daty bieżącej oraz 20 dni wprzód. Możemy wyświetlić
-            zlecenia dla innego zakresu dat, w tym celu należy zmienić daty nad kalendarzem i kliknąć przycisk <button class="btn btn-light  me-2" type="button"><i class="fas fa-undo"></i> Filtruj</button>.
-        </p>
-        <p class="card-text">
-            W dni WOLNE nie są wprowadzane zlecenia, te dni są pomijane. Domyślnie sobota i niedziela są WOLNE. Po kliknięciu w dzień wolny możemy go usunąć.
-        </p>
-        <p class="card-text">
-            Klikając w puste pole kalendarza wyświetla nam się opcja dodania dnia wolnego. Po wprowadzeniu takiego dnia, w to pole nie zostanie zaplanowane żadne zlecenie.
-        </p>
-        <p class="card-text mb-0">
-            Klikając w dzień gdzie jest zaplanowane zlecenie mamy możliwość
-        </p>
-        <ul>
-            <li>dodania dnia wolnego z przesunięciem zleceń</li>
-            <li>dodania dnia wolnego bez przesunięcia zleceń</li>
-            <li>usunąć zlecenie z kalendarza</li>
-            <li>usunąć zlecenie z kalendarza oraz wszystkie następne zlecenia dla danej linii produkcyjnej</li>
-        </ul>
-
-    </div>
+  <div class="card-body">
+    <h5 class="card-title">Kalendarz</h5>
+    <p class="card-text">
+      W kalendarzu możemy przeglądać zaplanowane zlecenia dla linii produkcyjnych. Domyślnie po wejściu w zakładkę widzimy zlecenia 7 dni wstecz od daty bieżącej oraz 20 dni wprzód. Możemy wyświetlić
+      zlecenia dla innego zakresu dat, w tym celu należy zmienić daty nad kalendarzem i kliknąć przycisk <button class="btn btn-light  me-2" type="button"><i class="fas fa-undo"></i> Filtruj</button>.
+    </p>
+    <p class="card-text">
+      W dni WOLNE nie są wprowadzane zlecenia, te dni są pomijane. Domyślnie sobota i niedziela są WOLNE. Po kliknięciu w dzień wolny możemy go usunąć.
+    </p>
+    <p class="card-text">
+      Klikając w puste pole kalendarza wyświetla nam się opcja dodania dnia wolnego. Po wprowadzeniu takiego dnia, w to pole nie zostanie zaplanowane żadne zlecenie.
+    </p>
+    <p class="card-text mb-0">
+      Klikając w dzień gdzie jest zaplanowane zlecenie mamy możliwość
+    </p>
+    <ul>
+      <li>dodania dnia wolnego z przesunięciem zleceń</li>
+      <li>dodania dnia wolnego bez przesunięcia zleceń</li>
+      <li>usunąć zlecenie z kalendarza</li>
+      <li>usunąć zlecenie z kalendarza oraz wszystkie następne zlecenia dla danej linii produkcyjnej</li>
+    </ul>
+  </div>
 </div>

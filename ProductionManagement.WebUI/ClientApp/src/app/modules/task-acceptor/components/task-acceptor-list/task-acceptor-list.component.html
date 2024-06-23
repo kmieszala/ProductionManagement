@@ -1,0 +1,24 @@
+<div class="row container-default">
+    <div class="col-md-12">
+      <div class="card card-simple animate__animated animate__fadeIn shadow-default">
+        <div class="card-header">
+          <span>Zadania</span>
+        </div>
+        <div class="card-body" *ngIf="!loading">
+            <div class="row">
+                <ng-container *ngFor="let items of tasks">
+                    <div class="col-{{colSize}} text-center">
+                        <div class="w-100">
+                            <div *ngFor="let item of items.tasksList; ; let i = index" class="fw-bold mb-2 ">
+                                <div *ngIf="i == 0" (click)="endTask(item)" class="border border-3 border-success rounded-pill h-70px d-flex align-items-center justify-content-center">{{item.value}}</div>
+                                <div *ngIf="i != 0" class="w-75 border border-3 rounded-pill m-auto h-60px align-bottom d-flex align-items-center justify-content-center">{{item.value}}</div>
+                            </div> 
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

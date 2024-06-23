@@ -178,6 +178,7 @@ namespace ProductionManagement.Services.Services.WorkSchedule
                 order.StopDate = null;
                 order.ProductionLineId = null;
                 order.Sequence = ++maxSequence;
+                order.Status = OrderStatusEnum.Add;
             }
 
             await _context.SaveChangesAsync();

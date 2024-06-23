@@ -29,6 +29,7 @@
                 <th>Status</th>
                 <th>Data rejestracji</th>
                 <th>Data aktywacji</th>
+                <th>Kod</th>
                 <th></th>
               </tr>
             </thead>
@@ -41,16 +42,19 @@
                   <td><span  userStatus="{{item.status}}"></span></td>
                   <td>{{ item.registeredDate | date: "dd-MM-yyyy"}}</td>
                   <td>{{ item.activationDate | date: "dd-MM-yyyy" }}</td>
+                  <td> 
+                    <button type="button" class="btn btn-light btn-sm me-1" (click)="$event.stopPropagation();showUserSecretCode(item)">{{ item.code }}</button>
+                    <i (click)="$event.stopPropagation(); regenerateCode(item)" class="fa-solid fa-arrows-rotate" *ngIf="useridChangeSecretCode == item.id"></i></td>
                   <td>
-                    <div class="float-end">
-                      <button *ngIf="item.status == 3" type="button" class="btn btn-success btn-sm me-2" (click)="$event.stopPropagation();activeUser(item)"><i class="fa-solid fa-arrows-rotate"></i> Odblokuj</button>
-                      <button *ngIf="item.status < 3" type="button" class="btn btn-warning btn-sm me-2" (click)="$event.stopPropagation();deactiveUser(item)"><i class="fa-solid fa-triangle-exclamation"></i> Zablokuj</button>
-                      <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editUser(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
-                    </div>
+                  <div class="float-end">
+                    <button *ngIf="item.status == 3" type="button" class="btn btn-success btn-sm me-2" (click)="$event.stopPropagation();activeUser(item)"><i class="fa-solid fa-arrows-rotate"></i> Odblokuj</button>
+                    <button *ngIf="item.status < 3" type="button" class="btn btn-warning btn-sm me-2" (click)="$event.stopPropagation();deactiveUser(item)"><i class="fa-solid fa-triangle-exclamation"></i> Zablokuj</button>
+                    <button type="button" class="btn btn-light btn-sm" (click)="$event.stopPropagation();editUser(item)"><i class="fa fa-edit" aria-hidden="true"></i> Edytuj</button>
+                  </div>
                   </td>
                 </tr>
                 <tr *ngIf="item.showDetails">
-                  <td colspan="7" class="p-3">
+                  <td colspan="9" class="p-3">
                     <span *ngFor="let role of item.roles" class="bg-info rounded-pill p-2 me-1">{{role.value}}</span>
                   </td>
                 </tr>

@@ -35,6 +35,13 @@
         public string Email { get; set; }
 
         /// <summary>
+        /// Secret code to change order status
+        /// </summary>
+        [MaxLength(4)]
+        [Required]
+        public string? Code { get; set; }
+
+        /// <summary>
         /// User registration by the administrator.
         /// </summary>
         public DateTime RegisteredDate { get; set; }

@@ -16,10 +16,12 @@ using ProductionManagement.Services.Configuration;
 using ProductionManagement.Services.Services.Orders;
 using ProductionManagement.Services.Services.Parts;
 using ProductionManagement.Services.Services.ProductionLine;
+using ProductionManagement.Services.Services.Shared.Log;
 using ProductionManagement.Services.Services.Tanks;
 using ProductionManagement.Services.Services.Users;
 using ProductionManagement.Services.Services.WorkSchedule;
 using ProductionManagement.WebUI.Configuration;
+using ProductionManagement.WebUI.Middlewares;
 using Serilog;
 
 namespace ProductionManagement.WebUI
@@ -68,12 +70,18 @@ namespace ProductionManagement.WebUI
 
             services.AddControllersWithViews();
 
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<HttpResponseExceptionFilter>(int.MaxValue);
+            });
+
             services.AddTransient<IPartsService, PartsService>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<ITanksService, TanksService>();
             services.AddTransient<IProductionLineService, ProductionLineService>();
             services.AddTransient<IOrdersService, OrdersService>();
             services.AddTransient<IWorkScheduleService, WorkScheduleService>();
+            services.AddTransient<ILogService, LogService>();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -158,6 +166,14 @@ namespace ProductionManagement.WebUI
                         CustomClaimTypesConsts.Roles,
                         RolesEnum.Orders.ToString(),
                         RolesEnum.OrdersView.ToString(),
+                        RolesEnum.Administrator.ToString());
+                });
+
+                options.AddPolicy(CustomPolicy.ProductionView, policy =>
+                {
+                    policy.RequireClaim(
+                        CustomClaimTypesConsts.Roles,
+                        RolesEnum.Production.ToString(),
                         RolesEnum.Administrator.ToString());
                 });
             });

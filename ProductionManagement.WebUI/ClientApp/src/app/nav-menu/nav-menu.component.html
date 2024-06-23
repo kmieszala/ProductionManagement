@@ -1,4 +1,4 @@
-<header *ngIf="isLogged">
+<header>
   <nav
     class="gblobal-menu navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3"
   >
@@ -18,19 +18,23 @@
       <div
         class="navbar-collapse collapse d-sm-inline-flex justify-content-between"
         [ngClass]="{ show: isExpanded }"
+        *ngIf="isLogged"
       >
         <ul class="navbar-nav flex-grow">
           <li
             class="nav-item w-70px"
             [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
+            [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link" [routerLink]="['/']">Home</a>
           </li>
           <li
             class="nav-item w-70px"
-            [routerLinkActive]="['link-active']"
-          >
+            [routerLinkActive]="['link-active']">
+            <a class="nav-link" [routerLink]="['/tasks']">Zadania</a>
+          </li>
+          <li
+            class="nav-item w-70px"
+            [routerLinkActive]="['link-active']">
             <a class="nav-link" [routerLink]="['/orders']">Zlecenia</a>
           </li>
           <li class="nav-item w-80px" [routerLinkActive]="['link-active']">
@@ -48,8 +52,7 @@
           </li>
           <li
             class="nav-item w-70px"
-            [routerLinkActive]="['link-active']"
-          >
+            [routerLinkActive]="['link-active']">
             <a class="nav-link" [routerLink]="['/users']">Użytkownicy</a>
           </li>
         </ul>
@@ -57,18 +60,28 @@
           <li class="p-2"><i class="fa-solid fa-gear pointer" (click)="changePass()"></i></li>
           <li class="p-2">Witaj {{userName}}</li>
           <li class="nav-item w-80px text-end"  (click)="logout()">
-            <a class="nav-link" [routerLink]="['/']">Wyloguj</a>
+            <a class="nav-link" [routerLink]="['/tasks']">Wyloguj</a>
           </li>
         </ul>
       </div>
-      <!-- <div
-        class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
+      <div
+        class="navbar-collapse collapse d-sm-inline-flex justify-content-between"
         [ngClass]="{ show: isExpanded }"
+        *ngIf="!isLogged"
       >
-        <ul class="navbar-nav flex-grow">
-
+      <ul class="navbar-nav flex-grow">
+          <li
+            class="nav-item w-70px"
+            [routerLinkActive]="['link-active']">
+            <a class="nav-link" [routerLink]="['/tasks']">Zadania</a>
+          </li>
         </ul>
-      </div> -->
+        <ul class="navbar-nav flex-grow">
+          <li class="nav-item w-80px text-end"  (click)="logout()">
+            <a class="nav-link" [routerLink]="['/authentication/login']">Zaloguj</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
 </header>

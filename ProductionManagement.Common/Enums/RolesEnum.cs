@@ -27,5 +27,8 @@
 
         [Display(Name = "UstawieniaPodglad")]
         SettingsView = 8,
+
+        [Display(Name = "PodgldZlecen")]
+        Production = 9,
     }
 }

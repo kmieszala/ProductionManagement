@@ -39,6 +39,14 @@ export class UsersService {
     return this._http.post<boolean>('api/users/deactiveUser', {id: id, value: ''});
   }
 
+  changeUserSecretCode(id: number) : Observable<string>{
+    return this._http.post<string>('api/users/changeUserSecretCode', {id: id, value: ''});
+  }
+
+  getUserSecretCode(userId: number) : Observable<string>{
+    return this._http.get<string>(`api/users/getUserSecretCode/${userId}`);
+  }
+
   unlockUser(id: number, newPass: string) : Observable<boolean>{
     return this._http.post<boolean>('api/users/unlockUser', {id: id, value: newPass});
   }

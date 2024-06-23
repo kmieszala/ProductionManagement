@@ -4,6 +4,7 @@ import { TankParts } from '../../products/models/tank-parts';
 import { HttpClientService } from '../../shared/services/http-client.service';
 import { OrderModel } from '../models/order-model';
 import { Sequence } from '../models/sequence';
+import { DictModel } from '../../shared/models/dict-model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,10 @@ export class OrdersService {
 
   getOrders(): Observable<OrderModel[]> {
     return this._http.get<OrderModel[]>('api/orders/getOrders');
+  }
+
+  getCurrentOrders(): Observable<DictModel[]> {
+    return this._http.get<DictModel[]>('api/orders/getCurrentOrders');
   }
 
   addOrder(model: OrderModel) : Observable<number> {
@@ -36,5 +41,9 @@ export class OrdersService {
 
   generateCalendar(model: OrderModel[]) : Observable<boolean> {
     return this._http.post<boolean>('api/orders/generateCalendar', model);
+  }
+
+  markOrderAsDone(model: DictModel) : Observable<boolean> {
+    return this._http.post<boolean>('api/orders/markOrderAsDone', model);
   }
 }

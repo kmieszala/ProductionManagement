@@ -19,8 +19,10 @@ export class UsersListComponent implements OnInit, OnDestroy {
   users: UserModel[];
   roles: DictModel[];
   loading = true;
+  useridChangeSecretCode: number; // user ID - show button change secret code
   subscriptions: Subscription[] = [];
   bsModalRef?: BsModalRef;
+  stars = '****';
 
   constructor(
     private _modalService: BsModalService,
@@ -34,14 +36,45 @@ export class UsersListComponent implements OnInit, OnDestroy {
         roles: this._usersService.getRoles()
       })
       .subscribe(result => {
-        this.users = result.users;
+        this.hideUsersCodes(result.users);
         this.roles = result.roles;
         this.loading = false;
       });
   }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(x => x.unsubscribe());
     this.subscriptions = [];
+  }
+
+  regenerateCode(user: UserModel) {
+    this.loading = true;
+    this.users.forEach(x => x.code = this.stars);
+    this.useridChangeSecretCode = user.id;
+    this._usersService.changeUserSecretCode(user.id).subscribe(result => {
+      if(result) {
+        user.code = result;
+      } else {
+        this._toastrService.error("Coś poszło nie tak");
+      }
+      this.loading = false;
+    });     
+  }
+
+  showUserSecretCode(user: UserModel) {
+    if (this.useridChangeSecretCode != user.id) {
+      this.users.forEach(x => x.code = this.stars);
+      this.loading = true;
+      this.useridChangeSecretCode = user.id;
+      this._usersService.getUserSecretCode(user.id).subscribe(result => {
+        if(result) {
+          user.code = result;
+        } else {
+          this._toastrService.error("Coś poszło nie tak");
+        }
+        this.loading = false;
+      });
+    }
   }
 
   addNewUser() {
@@ -57,6 +90,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
       this.loading = true;
       this._usersService.addUser(res).subscribe(result => {
         if(result) {
+          result.code = this.stars;
           this.users.push(result);
           this.loading = false;
         } else {
@@ -138,4 +172,12 @@ export class UsersListComponent implements OnInit, OnDestroy {
     model.showDetails = !model.showDetails;
   }
 
+  private hideUsersCodes(users: UserModel[]) {
+    this.users = users.map(user => {
+      return {
+          ...user, // kopiujemy wszystkie właściwości użytkownika
+          code: this.stars // nadpisujemy właściwość Code
+      };
+    });
+  }
 }

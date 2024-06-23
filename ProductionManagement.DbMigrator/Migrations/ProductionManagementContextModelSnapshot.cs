@@ -53,7 +53,7 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -64,9 +64,14 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.Property<int>("LogCode")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LogCode");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Log");
                 });
@@ -81,8 +86,8 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -124,6 +129,30 @@ namespace ProductionManagement.DbMigrator.Migrations
                             Id = 6,
                             Active = true,
                             Name = "EditTank"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Active = true,
+                            Name = "MarkOrderAsDone_BadCode"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Active = true,
+                            Name = "MarkOrderAsDone_NoOrder"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Active = true,
+                            Name = "MarkOrderAsDone_OrderCompleted"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Active = true,
+                            Name = "MarkOrderAsDone_NextOrderInProgress"
                         });
                 });
 
@@ -157,6 +186,9 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("StopDate")
                         .HasColumnType("datetime2");
@@ -309,6 +341,12 @@ namespace ProductionManagement.DbMigrator.Migrations
                             Id = 8,
                             Active = true,
                             Name = "UstawieniaPodglad"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Active = true,
+                            Name = "PodgldZlecen"
                         });
                 });
 
@@ -396,6 +434,14 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RoleId = 1,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Users", b =>
@@ -408,6 +454,11 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     b.Property<DateTime?>("ActivationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -440,6 +491,9 @@ namespace ProductionManagement.DbMigrator.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.HasIndex("Email");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Email"), new[] { "Password" });
@@ -447,6 +501,21 @@ namespace ProductionManagement.DbMigrator.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActivationDate = new DateTime(2024, 6, 23, 21, 28, 14, 236, DateTimeKind.Local).AddTicks(2039),
+                            Code = "0807",
+                            Email = "",
+                            FirstName = "Admin",
+                            LastName = "Admin",
+                            Password = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+                            RegisteredDate = new DateTime(2024, 6, 23, 21, 28, 14, 236, DateTimeKind.Local).AddTicks(2070),
+                            Status = 2,
+                            TimeBlockCount = 0
+                        });
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.UserStatusDict", b =>
@@ -520,7 +589,13 @@ namespace ProductionManagement.DbMigrator.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProductionManagement.Model.DbSets.Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("LogCodeDict");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProductionManagement.Model.DbSets.Orders", b =>

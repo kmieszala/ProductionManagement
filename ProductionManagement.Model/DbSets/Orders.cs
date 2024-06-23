@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ProductionManagement.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductionManagement.Model.DbSets
@@ -28,6 +29,8 @@ namespace ProductionManagement.Model.DbSets
         public DateTime? StartDate { get; set; }
 
         public DateTime? StopDate { get; set; }
+
+        public OrderStatusEnum Status { get; set; }
 
         [ForeignKey("Tank")]
         public int TankId { get; set; }

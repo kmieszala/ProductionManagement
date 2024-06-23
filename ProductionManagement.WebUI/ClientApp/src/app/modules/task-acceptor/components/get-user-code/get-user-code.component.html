@@ -1,0 +1,17 @@
+<div class="modal-header pb-0">
+    <h4 class="modal-title pull-left">
+      Wprowadź PIN
+    </h4>
+</div>
+<div class="modal-body">
+    <div class="row mt-2">
+        <input type="string" [(ngModel)]="code" class="form-control w-75 m-auto" maxlength="4" #inputElement>
+    </div>
+  
+    <div class="row mt-3">
+      <div class="col-md-12 text-center">
+        <button class="btn btn-light btn-sm me-2" type="button" (click)="close(false)"><i class="fas fa-undo"></i> Anuluj</button>
+        <button class="btn btn-primary btn-sm" type="button" (click)="close(true)"><i class="fa-solid fa-check"></i> Ok</button>
+      </div>
+    </div>
+</div>

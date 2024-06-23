@@ -11,5 +11,6 @@
         public const string ProductionLinesView = "ProductionLinesView";
         public const string Settings = "Settings";
         public const string SettingsView = "SettingsView";
+        public const string ProductionView = "ProductionView";
     }
 }

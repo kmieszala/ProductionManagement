@@ -33,6 +33,20 @@ namespace ProductionManagement.Services.Services.Users
         /// <param name="changePasswordModel">Old and new passwords.</param>
         /// <returns>False if old password is incorrect.</returns>
         Task<ChangePasswordStatusEnum> ChangePasswordAsync(ChangePasswordModel changePasswordModel);
+
+        /// <summary>
+        /// Get user secret code.
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <returns>Secret code</returns>
+        Task<string> GetUserSecretCodeAsync(int userId);
+
+        /// <summary>
+        /// Change user secret code.
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <returns>Secret code</returns>
+        Task<string> ChangeUserSecretCodeAsync(int userId);
     }
 
     public class UsersService : IUsersService
@@ -60,6 +74,7 @@ namespace ProductionManagement.Services.Services.Users
                 {
                     RoleId = (RolesEnum)x.Id,
                 }).ToList(),
+                Code = await GetNewUserCodeAsync()
             };
 
             _context.Users.Add(dbModel);
@@ -84,6 +99,7 @@ namespace ProductionManagement.Services.Services.Users
             else if (user.Password.Equals(password.ComputeSha256Hash()))
             {
                 user.TimeBlockCount = 0;
+                user.Status = UserStatusEnum.Active;
             }
             else
             {
@@ -109,7 +125,6 @@ namespace ProductionManagement.Services.Services.Users
             var user = await _context.Users
                 .Include(x => x.UserRoles)
                 .Where(x => x.Email == userName)
-                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -178,7 +193,6 @@ namespace ProductionManagement.Services.Services.Users
             var user = await _context.Users
                 .Include(x => x.UserRoles)
                 .Where(x => x.Id == usersModel.Id)
-                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -239,7 +253,6 @@ namespace ProductionManagement.Services.Services.Users
         {
             var user = await _context.Users
                 .Where(x => x.Id == userId)
-                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -259,7 +272,6 @@ namespace ProductionManagement.Services.Services.Users
         {
             var user = await _context.Users
                 .Where(x => x.Id == model.UserId)
-                .Where(x => x.Id != 8) // user test@gmail.com
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -285,6 +297,63 @@ namespace ProductionManagement.Services.Services.Users
             }
 
             return result;
+        }
+
+        public async Task<string> GetUserSecretCodeAsync(int userId)
+        {
+            var userCode = await _context.Users
+                .Where(x => x.Id == userId)
+                .Select(x => x.Code)
+                .FirstOrDefaultAsync();
+
+            if (userCode == null)
+            {
+                Log.Error($"GetUserCodeAsync only for existing users. UserId: {userId}");
+                throw new ProductionManagementException($"GetUserCodeAsync: No user for id {userId}");
+            }
+
+            return userCode;
+        }
+
+        public async Task<string> ChangeUserSecretCodeAsync(int userId)
+        {
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                Log.Error($"ChangeUserSecretCodeAsync only for existing users. UserId: {userId}");
+                throw new ProductionManagementException($"ChangeUserSecretCodeAsync: No user for id {userId}");
+            }
+
+            user.Code = await GetNewUserCodeAsync();
+            await _context.SaveChangesAsync();
+
+            return user.Code;
+        }
+
+        private async Task<string> GetNewUserCodeAsync()
+        {
+            var usersCodes = await _context.Users.Select(x => x.Code).ToListAsync();
+
+            int i = 0;
+            Random random = new Random();
+            string newCode = string.Empty;
+            while (i < 100)
+            {
+                int number = random.Next(1001, 10000);
+                newCode = number.ToString().PadLeft(4, '0');
+
+                if (!usersCodes.Contains(newCode))
+                {
+                    i = 100;
+                }
+
+                i++;
+            }
+
+            return newCode;
         }
     }
 }

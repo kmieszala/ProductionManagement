@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProductionManagement.Model;
 using ProductionManagement.Services.Services.ProductionLine.Models;
+using ProductionManagement.Services.Services.Shared.Models;
 
 namespace ProductionManagement.Services.Services.ProductionLine
 {
@@ -12,6 +13,8 @@ namespace ProductionManagement.Services.Services.ProductionLine
         Task<int> AddLineAsync(ProductionLineModel productionLineModel);
 
         Task<bool> EditLineAsync(ProductionLineModel productionLineModel);
+
+        Task<IEnumerable<DictModel>> GetProductionLinesAsync();
     }
 
     public class ProductionLineService : IProductionLineService
@@ -89,6 +92,21 @@ namespace ProductionManagement.Services.Services.ProductionLine
                         TankName = y.Tank.Name,
                     }).ToList(),
                 })
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DictModel>> GetProductionLinesAsync()
+        {
+            var result = await _context.ProductionLine
+                .Select(x => new DictModel()
+                {
+                    Id = x.Id,
+                    Value = x.Name
+                })
+                .OrderBy(x => x.Id)
                 .ToListAsync();
 
             return result;
