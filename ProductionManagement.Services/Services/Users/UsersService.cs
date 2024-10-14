@@ -109,6 +109,12 @@ namespace ProductionManagement.Services.Services.Users
             }
 
             await _context.SaveChangesAsync();
+
+            if (user.TimeBlockCount != 0 && user.Status == UserStatusEnum.Active)
+            {
+                return null;
+            }
+
             return new LoginUserModel()
             {
                 Id = user.Id,
